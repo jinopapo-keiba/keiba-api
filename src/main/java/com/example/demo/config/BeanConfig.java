@@ -10,6 +10,6 @@ import java.text.SimpleDateFormat;
 public class BeanConfig {
     @Bean
     public DateFormat dateFormat(){
-        return new SimpleDateFormat("yyyy-MM-dd");
+        return new SimpleDateFormat("yyyyMMdd");
     }
 }

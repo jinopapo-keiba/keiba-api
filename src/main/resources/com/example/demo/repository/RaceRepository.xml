@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.repository.RaceRepository">
+    <insert id="saveRace">
+        INSERT IGNORE INTO race (
+            raceName,
+            raceType,
+            raceLength,
+            clockwise,
+            raceCondition,
+            raceWeather,
+            grade,
+            raceDate
+        ) VALUES (
+            #{race.raceName},
+            #{race.raceType.value},
+            #{race.raceLength},
+            #{race.clockwise.value},
+            #{race.raceCondition.value},
+            #{race.raceWeather.value},
+            #{race.grade.value},
+            #{race.raceDate}
+        )
+    </insert>
+</mapper>

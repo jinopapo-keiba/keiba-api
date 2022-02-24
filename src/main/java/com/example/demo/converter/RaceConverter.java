@@ -1,13 +1,12 @@
 package com.example.demo.converter;
 
 import com.example.demo.entity.Race;
-import com.example.demo.valueobject.Clockwise;
-import com.example.demo.valueobject.Grad;
-import com.example.demo.valueobject.RaceType;
+import com.example.demo.valueobject.*;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -18,6 +17,7 @@ import java.text.DateFormat;
 @AllArgsConstructor
 public class RaceConverter extends JsonDeserializer<Race> {
     private DateFormat dateFormat;
+    private ObjectMapper objectMapper;
 
     @SneakyThrows
     @Override
@@ -26,10 +26,14 @@ public class RaceConverter extends JsonDeserializer<Race> {
         return Race.builder()
                 .raceName(treeNode.get("raceName").textValue())
                 .raceType(RaceType.toEnum(treeNode.get("raceType").textValue()))
-                .raceLenght(treeNode.get("raceLenght").intValue())
+                .raceLength(treeNode.get("raceLength").intValue())
                 .clockwise(Clockwise.toEnum(treeNode.get("clockwise").textValue()))
-                .grad(Grad.toEnum(treeNode.get("grad").textValue()))
+                .grade(treeNode.get("grade") != null ? Grade.toEnum(treeNode.get("grade").textValue()) : Grade.NONE)
+                .raceWeather(RaceWeather.toEnum(treeNode.get("raceWeather").textValue()))
+                .raceCondition(RaceCondition.toEnum(treeNode.get("raceCondition").textValue()))
                 .raceDate(dateFormat.parse(treeNode.get("raceDate").textValue()))
+//                .raceHorses((List<RaceHorse>) objectMapper.readValue(treeNode.get("raceHorses").textValue(),
+//                        GenericTypeResolver.resolveTypeArgument(RaceHorse.class,List.class)))
                 .build();
     }
 }

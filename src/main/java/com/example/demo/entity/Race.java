@@ -1,14 +1,12 @@
 package com.example.demo.entity;
 
 import com.example.demo.converter.RaceConverter;
-import com.example.demo.valueobject.Clockwise;
-import com.example.demo.valueobject.Grad;
-import com.example.demo.valueobject.RaceCondition;
-import com.example.demo.valueobject.RaceType;
+import com.example.demo.valueobject.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Value
 @Builder
@@ -16,10 +14,12 @@ import java.util.Date;
 public class Race {
     String raceName;
     RaceType raceType;
-    Integer raceLenght;
+    Integer raceLength;
     Clockwise clockwise;
     RaceCondition raceCondition;
-    Grad grad;
+    RaceWeather raceWeather;
+    Grade grade;
     Date raceDate;
     Integer id;
+    List<RaceHorse> raceHorses;
 }

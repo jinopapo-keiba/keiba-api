@@ -7,28 +7,27 @@ import lombok.Getter;
 import java.util.Arrays;
 import java.util.Objects;
 
-@AllArgsConstructor
 @Getter
-public enum Grad {
-    G3("G3",3),
-    G2("G2",2),
-    G1("G1",1),
-    NONE("",0);
+@AllArgsConstructor
+public enum RaceWeather {
+    SUNNY("晴",0),
+    CLOUDY("曇",1),
+    RAIN("雨",2);
     private String text;
     private int value;
 
-    public static Grad toEnum(int value){
+    public static RaceWeather toEnum(int value){
         return Arrays.stream(values())
                 .filter(v -> v.getValue() == value)
                 .findFirst()
-                .orElse(NONE);
+                .orElse(null);
     }
 
     @JsonCreator
-    public static Grad toEnum(String text){
+    public static RaceWeather toEnum(String text){
         return Arrays.stream(values())
                 .filter(v -> Objects.equals(v.getText(), text))
                 .findFirst()
-                .orElse(NONE);
+                .orElse(null);
     }
 }

@@ -21,11 +21,8 @@ public class RaceController {
 
     @PostMapping
     String saveRace(@RequestBody Race race) throws ParseException {
+        raceService.saveRace(race);
         log.info(race.getRaceType().getText());
-//        Race race = raceConverter.convert(request);
-//        raceService.saveRace(race);
-//        log.info(race.getRaceType().getText());
-//        log.info(String.valueOf(race.getRaceLenght()));
         return "success";
     }
 }
