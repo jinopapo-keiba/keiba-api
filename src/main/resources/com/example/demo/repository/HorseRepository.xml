@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.repository.HorseRepository">
+    <select id="fetchHorse" resultType="com.example.demo.entity.Horse">
+        SELECT name,gender,id from horse where id = #{id};
+    </select>
+    <insert id="saveHorse">
+        INSERT IGNORE INTO horse (name,gender) VALUES (#{name},#{gender})
+    </insert>
+</mapper>
