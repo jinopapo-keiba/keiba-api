@@ -6,6 +6,15 @@
     <select id="fetchHorse" resultType="com.example.demo.entity.Horse">
         SELECT name,gender,id from horse where id = #{id};
     </select>
+    <select id="fetchHorses" resultType="com.example.demo.entity.Horse" parameterType="com.example.demo.repository.dto.HorseQueryParam">
+        SELECT name,gender,id from horse where name in
+        <foreach item="name" collection="names" open="(" separator="," close=")">
+            #{name}
+        </foreach>
+    </select>
+    <insert id="saveHorse">
+        INSERT IGNORE INTO horse (name,gender) VALUES (#{name},#{gender})
+    </insert>
     <insert id="saveHorse">
         INSERT IGNORE INTO horse (name,gender) VALUES (#{name},#{gender})
     </insert>

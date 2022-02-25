@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.repository.RaceRepository">
-    <insert id="saveRace">
+    <insert id="saveRace" useGeneratedKeys="true" keyProperty="id">
         INSERT IGNORE INTO race (
             raceName,
             raceType,
