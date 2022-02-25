@@ -1,7 +1,7 @@
 package com.example.demo.utils;
 
 import lombok.experimental.UtilityClass;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.BiPredicate;
