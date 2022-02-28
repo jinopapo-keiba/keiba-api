@@ -13,12 +13,7 @@ public class JockeyController {
 
     @GetMapping
     Jockey getJockey(int id){
-        return jockeyRepository.fetchJoceky(id);
+        return jockeyRepository.fetchJockey(id);
     }
 
-    @PostMapping
-    String saveJockey(@RequestBody String name){
-        jockeyRepository.saveJockey(name);
-        return "success";
-    }
 }

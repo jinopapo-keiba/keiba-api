@@ -13,9 +13,6 @@
         </foreach>
     </select>
     <insert id="saveHorse">
-        INSERT IGNORE INTO horse (name,gender) VALUES (#{name},#{gender})
-    </insert>
-    <insert id="saveHorse">
-        INSERT IGNORE INTO horse (name,gender) VALUES (#{name},#{gender})
+        INSERT INTO horse (name,gender) VALUES (#{horse.name},#{horse.gender})
     </insert>
 </mapper>

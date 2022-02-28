@@ -24,4 +24,16 @@
             #{race.raceDate}
         )
     </insert>
+    <select id="fetchRace" resultType="com.example.demo.entity.Race">
+        SELECT
+            raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,raceDate
+        FROM
+            race
+        WHERE
+            stadium = #{queryParam.stadium}
+        AND
+            round = #{queryParam.round}
+        AND
+            raceDate = #{queryParam.raceDate}
+    </select>
 </mapper>

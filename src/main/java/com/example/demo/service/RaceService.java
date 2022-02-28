@@ -1,9 +1,12 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Horse;
+import com.example.demo.entity.Jockey;
 import com.example.demo.entity.Race;
 import com.example.demo.entity.RaceHorse;
 import com.example.demo.repository.HorseRepository;
+import com.example.demo.repository.JockeyRepository;
+import com.example.demo.repository.RaceHorseRepository;
 import com.example.demo.repository.RaceRepository;
 import com.example.demo.repository.dto.HorseQueryParam;
 import com.example.demo.repository.dto.RaceQueryParam;
@@ -12,7 +15,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 public class RaceService {
     private final RaceRepository raceRepository;
     private final HorseRepository horseRepository;
+    private final JockeyRepository jockeyRepository;
+    private final RaceHorseRepository raceHorseRepository;
 
     @Transactional
     public void saveRace(Race race){
@@ -33,36 +37,29 @@ public class RaceService {
             return;
         }
         raceRepository.saveRace(race);
-        List<String> jockeyNames = new ArrayList<>();
-        race.getRaceHorses().forEach(
-                raceHorse -> {
-                    jockeyNames.add(raceHorse.getJockey().getName());
-                });
 
-        //馬の情報の保存とidの取得
+        //馬の情報の保存
         List<Horse> horses = race.getRaceHorses().stream().map(RaceHorse::getHorse).collect(Collectors.toList());
         List<Horse> savedHorses = horseRepository.fetchHorses(
                 HorseQueryParam.builder()
                         .names(horses.stream().map(Horse::getName).collect(Collectors.toList()))
                         .build());
-        List<Horse> noSavedHorses = horses.stream()
-                .filter(horse -> !savedHorses.contains(horse))
-                .collect(Collectors.toList());
-        horseRepository.saveHorses(noSavedHorses);
-        horses = replaceHorse(horses,savedHorses);
-        horses = replaceHorse(horses,noSavedHorses);
+        horses.stream()
+                .filter(horse -> ListUtils.search(horse,savedHorses,(a,b) -> a.getName().equals(b.getName())) != null)
+                .forEach(horseRepository::saveHorse);
 
-    }
+        //ジョッキーの保存
+        List<Jockey> jockeys = race.getRaceHorses().stream().map(RaceHorse::getJockey).collect(Collectors.toList());
+        List<Jockey> savedJockey = jockeyRepository.fetchJockeys(
+                jockeys.stream().map(Jockey::getName).collect(Collectors.toList())
+        );
+        jockeys.stream()
+                .filter(jockey -> ListUtils.search(jockey,savedJockey,(a,b) -> a.getName().equals(b.getName())) != null)
+                .forEach(jockeyRepository::saveJockey);
 
-    private List<Horse> replaceHorse(List<Horse> targetHorses,List<Horse> resourceHorses){
-        return targetHorses.stream()
-                .map(targetHorse -> {
-                    Horse horse = ListUtils.search(targetHorse,resourceHorses,(t1,t2) -> t1.getName().equals(t2.getName()));
-                    if(horse == null){
-                        return targetHorse;
-                    } else {
-                        return horse;
-                    }})
-                .collect(Collectors.toList());
+        //レースの馬情報の保存
+        race.getRaceHorses().forEach(
+                raceHorse -> raceHorseRepository.saveRaceHorse(raceHorse,race)
+        );
     }
 }

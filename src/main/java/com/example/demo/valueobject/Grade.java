@@ -1,6 +1,5 @@
 package com.example.demo.valueobject;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -24,7 +23,6 @@ public enum Grade {
                 .orElse(NONE);
     }
 
-    @JsonCreator
     public static Grade toEnum(String text){
         return Arrays.stream(values())
                 .filter(v -> Objects.equals(v.getText(), text))

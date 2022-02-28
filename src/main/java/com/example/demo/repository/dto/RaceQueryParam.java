@@ -8,6 +8,7 @@ import java.util.Date;
 @Data
 @Builder
 public class RaceQueryParam {
-    private String raceName;
+    private String stadium;
+    private int round;
     private Date raceDate;
 }

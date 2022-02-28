@@ -2,8 +2,8 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.Horse;
 import com.example.demo.repository.dto.HorseQueryParam;
-import com.example.demo.repository.dto.SaveHorseQueryParam;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -11,6 +11,5 @@ import java.util.List;
 public interface HorseRepository {
     Horse fetchHorse(int id);
     List<Horse> fetchHorses(HorseQueryParam horseQueryParam);
-    void saveHorse(SaveHorseQueryParam param);
-    void saveHorses(List<Horse> horses);
+    void saveHorse(@Param("horse") Horse horse);
 }

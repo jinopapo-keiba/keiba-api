@@ -1,6 +1,5 @@
 package com.example.demo.valueobject;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -26,7 +25,6 @@ public enum RaceCondition {
                 .orElse(null);
     }
 
-    @JsonCreator
     public static RaceCondition toEnum(String text){
         return Arrays.stream(values())
                 .filter(v -> Objects.equals(v.getText(), text))

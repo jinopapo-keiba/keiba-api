@@ -6,7 +6,13 @@
     <select id="fetchJockey" resultType="com.example.demo.entity.Jockey">
         SELECT name,id from jockey where id = #{id};
     </select>
-    <insert id="saveJockey">
-        INSERT IGNORE INTO jockey (name) VALUES (#{name})
+    <select id="fetchJockeys" resultType="com.example.demo.entity.Jockey">
+        SELECT name,id from jockey where name in
+        <foreach item="name" collection="names" open="(" separator="," close=")">
+            #{name}
+        </foreach>
+    </select>
+    <insert id="saveJockey" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO jockey (name) VALUES (#{jockey.name})
     </insert>
 </mapper>
