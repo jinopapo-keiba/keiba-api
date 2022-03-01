@@ -4,10 +4,7 @@ import com.example.demo.entity.Horse;
 import com.example.demo.entity.Jockey;
 import com.example.demo.entity.Race;
 import com.example.demo.entity.RaceHorse;
-import com.example.demo.repository.HorseRepository;
-import com.example.demo.repository.JockeyRepository;
-import com.example.demo.repository.RaceHorseRepository;
-import com.example.demo.repository.RaceRepository;
+import com.example.demo.repository.*;
 import com.example.demo.repository.dto.HorseQueryParam;
 import com.example.demo.repository.dto.RaceQueryParam;
 import com.example.demo.utils.ListUtils;
@@ -25,12 +22,14 @@ public class RaceService {
     private final HorseRepository horseRepository;
     private final JockeyRepository jockeyRepository;
     private final RaceHorseRepository raceHorseRepository;
+    private final RaceResultRepository raceResultRepository;
 
     @Transactional
     public void saveRace(Race race){
         List<Race> races = raceRepository.fetchRace(
                 RaceQueryParam.builder()
-                        .raceName(race.getRaceName())
+                        .stadium(race.getStadium())
+                        .round(race.getRound())
                         .raceDate(race.getRaceDate())
                         .build());
         if(!races.isEmpty()) {
@@ -45,7 +44,7 @@ public class RaceService {
                         .names(horses.stream().map(Horse::getName).collect(Collectors.toList()))
                         .build());
         horses.stream()
-                .filter(horse -> ListUtils.search(horse,savedHorses,(a,b) -> a.getName().equals(b.getName())) != null)
+                .filter(horse -> ListUtils.search(horse,savedHorses,(a,b) -> a.getName().equals(b.getName())) == null)
                 .forEach(horseRepository::saveHorse);
 
         //ジョッキーの保存
@@ -54,12 +53,19 @@ public class RaceService {
                 jockeys.stream().map(Jockey::getName).collect(Collectors.toList())
         );
         jockeys.stream()
-                .filter(jockey -> ListUtils.search(jockey,savedJockey,(a,b) -> a.getName().equals(b.getName())) != null)
+                .filter(jockey -> ListUtils.search(jockey,savedJockey,(a,b) -> a.getName().equals(b.getName())) == null)
                 .forEach(jockeyRepository::saveJockey);
 
         //レースの馬情報の保存
         race.getRaceHorses().forEach(
                 raceHorse -> raceHorseRepository.saveRaceHorse(raceHorse,race)
+        );
+
+        //レース結果の情報保存
+        //予想するレースはまだ結果が出てないので、それの場合は何もしない
+        race.getRaceHorses().stream()
+                .filter(raceHorse -> raceHorse.getRaceResult() != null)
+                .forEach(raceHorse -> raceResultRepository.saveRaceResult(raceHorse.getRaceResult(),race,raceHorse)
         );
     }
 }
