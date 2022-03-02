@@ -22,7 +22,7 @@ public class RaceConverter {
                 .raceName(saveRaceRequest.getRaceName())
                 .raceType(RaceType.toEnum(saveRaceRequest.getRaceType()))
                 .raceLength(saveRaceRequest.getRaceLength())
-                .clockwise(Clockwise.toEnum(saveRaceRequest.getClockWise()))
+                .clockwise(Clockwise.toEnum(saveRaceRequest.getClockwise()))
                 .grade(Grade.toEnum(saveRaceRequest.getGrade()))
                 .raceWeather(RaceWeather.toEnum(saveRaceRequest.getRaceWeather()))
                 .raceCondition(RaceCondition.toEnum(saveRaceRequest.getRaceCondition()))

@@ -1,10 +1,8 @@
 package com.example.demo.contoller.request;
 
 import com.example.demo.entity.Jockey;
-import com.example.demo.entity.RaceResult;
 import lombok.Data;
 
-import java.time.Duration;
 import java.util.List;
 
 @Data
@@ -12,7 +10,7 @@ public class SaveRaceRequest {
     String raceName;
     String raceType;
     Integer raceLength;
-    String clockWise;
+    String clockwise;
     String grade;
     String stadium;
     Integer round;
