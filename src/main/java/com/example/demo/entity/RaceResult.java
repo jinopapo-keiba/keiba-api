@@ -1,11 +1,16 @@
 package com.example.demo.entity;
 
+import lombok.Builder;
 import lombok.Value;
 
+import java.time.Duration;
+
 @Value
+@Builder
 public class RaceResult {
-    Double fullTime;
+    Duration fullTime;
     String rapRanking;
     Integer ranking;
-    Double lastRapTime;
+    String cornerRanking;
+    Duration lastRapTime;
 }

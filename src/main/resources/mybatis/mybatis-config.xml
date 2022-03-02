@@ -5,5 +5,10 @@
 <configuration>
     <typeHandlers>
         <typeHandler handler="com.example.demo.repository.handler.HorseGenderTypeHandler"/>
+        <typeHandler handler="com.example.demo.repository.handler.DurationTypeHandler"/>
+        <typeHandler handler="com.example.demo.repository.handler.RaceTypeTypeHandler"/>
+        <typeHandler handler="com.example.demo.repository.handler.RaceWeatherTypeHandler"/>
+        <typeHandler handler="com.example.demo.repository.handler.ClockwiseTypeHandler"/>
+        <typeHandler handler="com.example.demo.repository.handler.GradeTypeHandler"/>
     </typeHandlers>
 </configuration>

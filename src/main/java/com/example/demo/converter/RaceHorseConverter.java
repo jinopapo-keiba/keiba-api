@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class RaceHorseConverter {
     private HorseConverter horseConverter;
+    private RaceResultConverter raceResultConverter;
 
     public RaceHorse convert(SaveRaceRequest.RaceHorse raceHorse){
         return RaceHorse.builder()
@@ -17,7 +18,7 @@ public class RaceHorseConverter {
                 .frameNumber(raceHorse.getFrameNumber())
                 .old(raceHorse.getOld())
                 .weight(raceHorse.getWeight())
-                .raceResult(raceHorse.getRaceResult())
+                .raceResult(raceResultConverter.converter(raceHorse.getRaceResult()))
                 .build();
     }
 }

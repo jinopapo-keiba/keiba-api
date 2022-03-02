@@ -17,7 +17,7 @@
             id as horseId,
             (
                 SELECT
-                    id as jockeyId
+                    id
                 FROM
                     jockey
                 WHERE

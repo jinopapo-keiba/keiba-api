@@ -18,7 +18,7 @@
             #{raceResult.fullTime},
             #{raceResult.cornerRanking},
             #{raceResult.ranking},
-            #{lastRapTime}
+            #{raceResult.lastRapTime}
         )
     </insert>
 </mapper>

@@ -3,5 +3,9 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost/keiba
     username: ji-no
+server:
+  tomcat:
+    accesslog:
+      enabled: true
 mybatis:
   configLocation: classpath:/mybatis/mybatis-config.xml

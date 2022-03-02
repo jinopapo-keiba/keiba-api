@@ -5,6 +5,8 @@
 <mapper namespace="com.example.demo.repository.RaceRepository">
     <insert id="saveRace" useGeneratedKeys="true" keyProperty="id">
         INSERT IGNORE INTO race (
+            stadium,
+            round,
             raceName,
             raceType,
             raceLength,
@@ -14,6 +16,8 @@
             grade,
             raceDate
         ) VALUES (
+            #{race.stadium},
+            #{race.round},
             #{race.raceName},
             #{race.raceType.value},
             #{race.raceLength},
@@ -26,7 +30,7 @@
     </insert>
     <select id="fetchRace" resultType="com.example.demo.entity.Race">
         SELECT
-            raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,raceDate
+            raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,raceDate,id,round,stadium,null
         FROM
             race
         WHERE

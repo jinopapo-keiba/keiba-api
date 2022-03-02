@@ -4,6 +4,7 @@ import com.example.demo.entity.Jockey;
 import com.example.demo.entity.RaceResult;
 import lombok.Data;
 
+import java.time.Duration;
 import java.util.List;
 
 @Data
@@ -34,5 +35,14 @@ public class SaveRaceRequest {
     static public class Horse {
         String name;
         String gender;
+    }
+
+    @Data
+    static public class RaceResult{
+        String fullTime;
+        String rapRanking;
+        Integer ranking;
+        String lastRapTime;
+        String cornerRanking;
     }
 }
