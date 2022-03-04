@@ -27,16 +27,9 @@ public class GetRaceResponse {
         Integer weight;
         Integer old;
         Integer frameNumber;
-        Horse horse;
+        HorseResponse horse;
         Jockey jockey;
         RaceResult raceResult;
-    }
-
-    @Getter
-    @Builder
-    static public class Horse{
-        String name;
-        String gender;
     }
 
     @Getter

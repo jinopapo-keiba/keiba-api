@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Horse {
+    Integer id;
     String name;
     HorseGender gender;
 }

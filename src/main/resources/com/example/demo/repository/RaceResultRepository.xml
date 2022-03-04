@@ -3,6 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.repository.RaceResultRepository">
+    <resultMap id="BestTimeResultMap" type="com.example.demo.entity.BestRaceTime">
+        <id column="id"/>
+        <result column="fullTime" property="fullTime"/>
+        <result column="lastRapTime" property="lastRapTime"/>
+        <result column="stadiumFullTime" property="stadiumFullTime"/>
+        <result column="stadiumLastRapTime" property="stadiumLastRapTime"/>
+        <association javaType="com.example.demo.entity.Horse" property="horse">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+            <result property="gender" column="gender"/>
+        </association>
+    </resultMap>
+
     <insert id="saveRaceResult">
         INSERT INTO raceResult (
             raceId,
@@ -21,4 +34,103 @@
             #{raceResult.lastRapTime}
         )
     </insert>
+
+    <select id="fetchBestRaceTimes" resultMap="BestTimeResultMap">
+        SELECT
+            id,
+            name,
+            gender,
+            (
+                SELECT
+                    min(fullTime)
+                FROM
+                    race
+                JOIN
+                    raceResult
+                ON
+                    race.id = raceResult.raceId
+                JOIN
+                    raceHorse
+                ON
+                    raceHorse.raceId = raceResult.raceId
+                AND
+                    raceHorse.frameNumber = raceResult.frameNumber
+                WHERE
+                    horseId = horse.id
+                AND
+                    race.raceLength = #{raceLength}
+            ) as fullTime,
+            (
+                SELECT
+                    min(lastRapTime)
+                FROM
+                    race
+                JOIN
+                    raceResult
+                ON
+                    race.id = raceResult.raceId
+                JOIN
+                    raceHorse
+                ON
+                    raceHorse.raceId = raceResult.raceId
+                AND
+                    raceHorse.frameNumber = raceResult.frameNumber
+                WHERE
+                    horseId = horse.id
+                AND
+                    race.raceLength = #{raceLength}
+            ) as lastRapTime,
+            (
+                SELECT
+                    min(fullTime)
+                FROM
+                    race
+                JOIN
+                    raceResult
+                ON
+                    race.id = raceResult.raceId
+                JOIN
+                    raceHorse
+                ON
+                    raceHorse.raceId = raceResult.raceId
+                AND
+                    raceHorse.frameNumber = raceResult.frameNumber
+                WHERE
+                    horseId = horse.id
+                AND
+                    race.stadium = #{stadium}
+                AND
+                    race.raceLength = #{raceLength}
+            ) as stadiumFullTime,
+            (
+                SELECT
+                    min(lastRapTime)
+                FROM
+                    race
+                JOIN
+                    raceResult
+                ON
+                    race.id = raceResult.raceId
+                JOIN
+                    raceHorse
+                ON
+                    raceHorse.raceId = raceResult.raceId
+                AND
+                    raceHorse.frameNumber = raceResult.frameNumber
+                WHERE
+                    horseId = horse.id
+                AND
+                    race.stadium = #{stadium}
+                AND
+                    race.raceLength = #{raceLength}
+        ) as stadiumLastRapTime
+        FROM
+            horse
+        WHERE
+            id
+        IN
+        <foreach item="horseId" collection="horseIds" open="(" separator="," close=")">
+            #{horseId}
+        </foreach>
+    </select>
 </mapper>

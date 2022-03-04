@@ -23,6 +23,7 @@
             <result property="old" column="old"/>
             <result property="frameNumber" column="frameNumber"/>
             <association javaType="com.example.demo.entity.Horse" property="horse">
+                <id property="id" column="horseId"/>
                 <result property="name" column="horseName"/>
                 <result property="gender" column="gender"/>
             </association>

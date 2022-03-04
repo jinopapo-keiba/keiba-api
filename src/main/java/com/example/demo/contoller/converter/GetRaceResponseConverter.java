@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class GetRaceResponseConverter {
     private DateFormat dateFormat;
+    private HorseResponseConverter horseResponseConverter;
 
     public GetRaceResponse convert(Race race){
         return GetRaceResponse.builder()
@@ -38,16 +39,9 @@ public class GetRaceResponseConverter {
                 .weight(raceHorse.getWeight())
                 .old(raceHorse.getOld())
                 .frameNumber(raceHorse.getFrameNumber())
-                .horse(this.horseConvert(raceHorse.getHorse()))
+                .horse(horseResponseConverter.convert(raceHorse.getHorse()))
                 .jockey(this.jockeyConvert(raceHorse.getJockey()))
                 .raceResult(raceHorse.getRaceResult() == null ? null : this.raceResultConvert(raceHorse.getRaceResult()))
-                .build();
-    }
-
-    private GetRaceResponse.Horse horseConvert(Horse horse){
-        return GetRaceResponse.Horse.builder()
-                .name(horse.getName())
-                .gender(horse.getGender().getText())
                 .build();
     }
 
