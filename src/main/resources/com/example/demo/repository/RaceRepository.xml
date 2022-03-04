@@ -3,6 +3,45 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.repository.RaceRepository">
+    <resultMap id="raceResultMap" type="com.example.demo.entity.Race">
+        <id property="id" column="id"/>
+        <result property="raceName" column="raceName"/>
+        <result property="stadium" column="stadium"/>
+        <result property="round" column="round"/>
+        <result property="raceType" column="raceType"/>
+        <result property="raceLength" column="raceLength"/>
+        <result property="clockwise" column="clockwise"/>
+        <result property="raceCondition" column="raceCondition"/>
+        <result property="raceWeather" column="raceWeather"/>
+        <result property="grade" column="grade"/>
+        <result property="raceDate" column="raceDate"/>
+        <collection property="raceHorses" ofType="com.example.demo.entity.RaceHorse">
+            <id column="horseId"/>
+            <id column="jockeyId"/>
+            <id column="id"/>
+            <result property="weight" column="weight"/>
+            <result property="old" column="old"/>
+            <result property="frameNumber" column="frameNumber"/>
+            <association javaType="com.example.demo.entity.Horse" property="horse">
+                <result property="name" column="horseName"/>
+                <result property="gender" column="gender"/>
+            </association>
+            <association javaType="com.example.demo.entity.Jockey" property="jockey">
+                <id column="horseId"/>
+                <id column="jockeyId"/>
+                <result property="name" column="jockeyName"/>
+            </association>
+            <association javaType="com.example.demo.entity.RaceResult" property="raceResult">
+                <id column="id"/>
+                <id column="frameNumber"/>
+                <result property="fullTime" column="fullTime"/>
+                <result property="ranking" column="ranking"/>
+                <result property="cornerRanking" column="cornerRanking"/>
+                <result property="lastRapTime" column="lastRapTime"/>
+            </association>
+        </collection>
+    </resultMap>
+
     <insert id="saveRace" useGeneratedKeys="true" keyProperty="id">
         INSERT IGNORE INTO race (
             stadium,
@@ -28,11 +67,33 @@
             #{race.raceDate}
         )
     </insert>
-    <select id="fetchRace" resultType="com.example.demo.entity.Race">
+    <select id="fetchRace" resultMap="raceResultMap">
         SELECT
-            raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,raceDate,id,round,stadium,null
+            raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,raceDate,race.id as id,round,stadium,
+            weight,old,raceHorse.frameNumber as frameNumber,
+            jockey.id as jockeyId,jockey.name as jockeyName,
+            horse.id as horseId,horse.name as horseName, gender,
+            fullTime,ranking,cornerRanking,lastRapTime
         FROM
             race
+        JOIN
+            raceHorse
+        ON
+            raceHorse.raceId = race.id
+        JOIN
+            horse
+        ON
+            horseId = horse.id
+        JOIN
+            jockey
+        ON
+            jockeyId = jockey.id
+        JOIN
+            raceResult
+        ON
+            raceResult.raceId = race.id
+        AND
+            raceHorse.frameNumber = raceResult.frameNumber
         WHERE
             stadium = #{queryParam.stadium}
         AND

@@ -6,7 +6,9 @@ import lombok.*;
 import java.util.Date;
 import java.util.List;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Race {
     String raceName;

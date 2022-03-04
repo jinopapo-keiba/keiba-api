@@ -35,7 +35,6 @@ public class RaceResultConverter {
         return RaceResult.builder()
                 .fullTime(fullTime)
                 .ranking(raceResult.getRanking())
-                .rapRanking(raceResult.getRapRanking())
                 .lastRapTime(lastRapTime)
                 .cornerRanking(raceResult.getCornerRanking())
                 .build();

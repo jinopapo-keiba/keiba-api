@@ -1,9 +1,10 @@
 package com.example.demo.entity;
 
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@NoArgsConstructor
 public class Jockey {
     String name;
-    int id;
 }

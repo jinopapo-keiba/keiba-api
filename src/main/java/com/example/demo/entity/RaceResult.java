@@ -1,15 +1,15 @@
 package com.example.demo.entity;
 
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
 import java.time.Duration;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class RaceResult {
     Duration fullTime;
-    String rapRanking;
     Integer ranking;
     String cornerRanking;
     Duration lastRapTime;

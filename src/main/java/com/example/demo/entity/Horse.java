@@ -1,13 +1,13 @@
 package com.example.demo.entity;
 
 import com.example.demo.valueobject.HorseGender;
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Horse {
     String name;
     HorseGender gender;
-    int id;
 }

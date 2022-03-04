@@ -1,15 +1,16 @@
 package com.example.demo.entity;
 
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class RaceHorse {
-    Horse horse;
-    Jockey jockey;
     Integer weight;
     Integer old;
     Integer frameNumber;
+    Horse horse;
+    Jockey jockey;
     RaceResult raceResult;
 }

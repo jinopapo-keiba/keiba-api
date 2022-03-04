@@ -38,7 +38,6 @@ public class SaveRaceRequest {
     @Data
     static public class RaceResult{
         String fullTime;
-        String rapRanking;
         Integer ranking;
         String lastRapTime;
         String cornerRanking;

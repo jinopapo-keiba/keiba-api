@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,5 +68,14 @@ public class RaceService {
                 .filter(raceHorse -> raceHorse.getRaceResult() != null)
                 .forEach(raceHorse -> raceResultRepository.saveRaceResult(raceHorse.getRaceResult(),race,raceHorse)
         );
+    }
+
+    public List<Race> fetchRace(String stadium, int round, Date raceDate){
+        return raceRepository.fetchRace(
+                RaceQueryParam.builder()
+                        .stadium(stadium)
+                        .round(round)
+                        .raceDate(raceDate)
+                        .build());
     }
 }
