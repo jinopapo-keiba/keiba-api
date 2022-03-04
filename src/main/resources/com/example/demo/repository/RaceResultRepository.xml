@@ -33,6 +33,12 @@
             #{raceResult.ranking},
             #{raceResult.lastRapTime}
         )
+        ON DUPLICATE KEY
+        UPDATE
+            fullTime = #{raceResult.fullTime},
+            cornerRanking = #{raceResult.cornerRanking},
+            ranking = #{raceResult.ranking},
+            lastRapTime = #{raceResult.lastRapTime}
     </insert>
 
     <select id="fetchBestRaceTimes" resultMap="BestTimeResultMap">

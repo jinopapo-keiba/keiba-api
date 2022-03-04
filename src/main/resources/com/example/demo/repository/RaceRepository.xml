@@ -44,7 +44,7 @@
     </resultMap>
 
     <insert id="saveRace" useGeneratedKeys="true" keyProperty="id">
-        INSERT IGNORE INTO race (
+        INSERT INTO race (
             stadium,
             round,
             raceName,
@@ -68,6 +68,25 @@
             #{race.raceDate}
         )
     </insert>
+
+    <update id="updateRace">
+        UPDATE
+            race
+        SET
+            stadium = #{race.stadium},
+            round = #{race.round},
+            raceName = #{race.raceName},
+            raceType = #{race.raceType.value},
+            raceLength = #{race.raceLength},
+            clockwise = #{race.clockwise.value},
+            raceCondition = #{race.raceCondition.value},
+            raceWeather = #{race.raceWeather.value},
+            grade = #{race.grade.value},
+            raceDate = #{race.raceDate}
+        WHERE
+            id = #{race.id}
+    </update>
+
     <select id="fetchRace" resultMap="raceResultMap">
         SELECT
             raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,raceDate,race.id as id,round,stadium,

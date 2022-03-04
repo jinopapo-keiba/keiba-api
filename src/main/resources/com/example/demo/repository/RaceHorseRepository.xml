@@ -30,5 +30,10 @@
             horse
         WHERE
             name = #{raceHorse.horse.name}
+        ON DUPLICATE KEY
+        UPDATE
+            frameNumber = #{raceHorse.frameNumber},
+            weight = #{raceHorse.weight},
+            old = #{raceHorse.old}
     </insert>
 </mapper>

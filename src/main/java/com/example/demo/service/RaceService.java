@@ -34,9 +34,11 @@ public class RaceService {
                         .raceDate(race.getRaceDate())
                         .build());
         if(!races.isEmpty()) {
-            return;
+            raceRepository.updateRace(races.get(0));
+            race.setId(races.get(0).getId());
+        } else {
+            raceRepository.saveRace(race);
         }
-        raceRepository.saveRace(race);
 
         //馬の情報の保存
         List<Horse> horses = race.getRaceHorses().stream().map(RaceHorse::getHorse).collect(Collectors.toList());
