@@ -70,12 +70,17 @@ public class RaceService {
         );
     }
 
-    public List<Race> fetchRace(String stadium, int round, Date raceDate){
-        return raceRepository.fetchRace(
+    public Race fetchRace(String stadium, int round, Date raceDate){
+        List<Race> races = raceRepository.fetchRace(
                 RaceQueryParam.builder()
                         .stadium(stadium)
                         .round(round)
                         .raceDate(raceDate)
                         .build());
+        if(races == null || races.isEmpty()){
+            return null;
+        } else {
+            return races.get(0);
+        }
     }
 }

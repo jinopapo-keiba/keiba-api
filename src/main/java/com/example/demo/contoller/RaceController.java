@@ -1,6 +1,8 @@
 package com.example.demo.contoller;
 
+import com.example.demo.contoller.converter.GetRaceResponseConverter;
 import com.example.demo.contoller.request.SaveRaceRequest;
+import com.example.demo.contoller.response.GetRaceResponse;
 import com.example.demo.converter.RaceConverter;
 import com.example.demo.entity.Race;
 import com.example.demo.service.RaceService;
@@ -19,6 +21,7 @@ import java.util.List;
 public class RaceController {
     private RaceService raceService;
     private RaceConverter raceConverter;
+    private GetRaceResponseConverter getRaceResponseConverter;
     private DateFormat dateFormat;
 
     @PostMapping
@@ -28,11 +31,13 @@ public class RaceController {
     }
 
     @GetMapping
-    List<Race> getRace(String stadium, Integer round, String raceDate) throws ParseException {
-        return raceService.fetchRace(
-                stadium,
-                round,
-                dateFormat.parse(raceDate)
+    GetRaceResponse getRace(String stadium, Integer round, String raceDate) throws ParseException {
+        return getRaceResponseConverter.convert(
+                raceService.fetchRace(
+                        stadium,
+                        round,
+                        dateFormat.parse(raceDate)
+                )
         );
     }
 }

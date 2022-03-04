@@ -100,5 +100,7 @@
             round = #{queryParam.round}
         AND
             raceDate = #{queryParam.raceDate}
+        ORDER BY
+            raceHorse.frameNumber
     </select>
 </mapper>
