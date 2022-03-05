@@ -10,6 +10,9 @@
         <result column="stadiumFullTime" property="stadiumFullTime"/>
         <result column="stadiumLastRapTime" property="stadiumLastRapTime"/>
         <result column="fullTimeStadium" property="fullTimeStadium"/>
+        <result column="allLastRapTime" property="allLastRapTime"/>
+        <result column="allLastRapTimeStadium" property="allLastRapTimeStadium"/>
+        <result column="allLastRapTimeLength" property="allLastRapTimeLength"/>
         <association javaType="com.example.demo.entity.Horse" property="horse">
             <id property="id" column="id"/>
             <result property="name" column="name"/>
@@ -86,6 +89,8 @@
                         <include refid="raceJoin">
                             <property name="column" value="min(fullTime)"/>
                         </include>
+                        AND
+                            race.raceLength = #{raceLength}
                     )
                 GROUP BY
                     stadium
@@ -114,7 +119,34 @@
                     race.stadium = #{stadium}
                 AND
                     race.raceLength = #{raceLength}
-        ) as stadiumLastRapTime
+            ) as stadiumLastRapTime,
+            (
+                <include refid="raceJoin">
+                    <property name="column" value="min(lastRapTime)"/>
+                </include>
+            ) as allLastRapTime,
+            (
+                <include refid="raceJoin">
+                    <property name="column" value="stadium"/>
+                </include>
+                AND
+                    lastRapTime =(
+                        <include refid="raceJoin">
+                            <property name="column" value="min(lastRapTime)"/>
+                        </include>
+                    )
+            ) as allLastRapTimeStadium,
+            (
+                <include refid="raceJoin">
+                    <property name="column" value="raceLength"/>
+                </include>
+                AND
+                    lastRapTime =(
+                        <include refid="raceJoin">
+                            <property name="column" value="min(lastRapTime)"/>
+                        </include>
+                    )
+            ) as allLastRapTimeLength
         FROM
             horse
         WHERE

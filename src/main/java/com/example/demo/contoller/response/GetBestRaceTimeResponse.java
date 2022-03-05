@@ -3,6 +3,7 @@ package com.example.demo.contoller.response;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.Duration;
 import java.util.List;
 
 @Getter
@@ -19,5 +20,8 @@ public class GetBestRaceTimeResponse {
         Long stadiumFullTime;
         Long stadiumLastRapTime;
         String fullTimeStadium;
+        Long allLastRapTime;
+        String allLastRapTimeStadium;
+        Integer allLastRapTimeLength;
     }
 }

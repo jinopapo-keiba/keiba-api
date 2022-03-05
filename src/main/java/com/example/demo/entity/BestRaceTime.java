@@ -14,4 +14,7 @@ public class BestRaceTime {
     String fullTimeStadium;
     Duration stadiumFullTime;
     Duration stadiumLastRapTime;
+    Duration allLastRapTime;
+    String allLastRapTimeStadium;
+    Integer allLastRapTimeLength;
 }
