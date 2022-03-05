@@ -25,6 +25,7 @@ public class GetBestRaceTimeResponseConverter {
                                         .fullTime(bestRaceTime.getFullTime().toMillis())
                                         .stadiumLastRapTime(bestRaceTime.getStadiumLastRapTime().toMillis())
                                         .stadiumFullTime(bestRaceTime.getStadiumFullTime().toMillis())
+                                        .fullTimeStadium(bestRaceTime.getFullTimeStadium())
                                         .build())
                                 .collect(Collectors.toList()))
                 .build();

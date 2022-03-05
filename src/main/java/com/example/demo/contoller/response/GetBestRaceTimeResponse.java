@@ -18,5 +18,6 @@ public class GetBestRaceTimeResponse {
         Long lastRapTime;
         Long stadiumFullTime;
         Long stadiumLastRapTime;
+        String fullTimeStadium;
     }
 }

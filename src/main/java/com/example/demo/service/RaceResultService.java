@@ -12,7 +12,7 @@ import java.util.List;
 public class RaceResultService {
     private final RaceResultRepository raceResultRepository;
 
-    public List<BestRaceTime> fetchBestRaceTime(String stadium, Integer raceLength,List<Integer> horseIds){
-        return raceResultRepository.fetchBestRaceTimes(stadium,raceLength,horseIds);
+    public List<BestRaceTime> fetchBestRaceTime(String stadium, Integer raceLength,String raceId){
+        return raceResultRepository.fetchBestRaceTimes(stadium,raceLength,raceId);
     }
 }

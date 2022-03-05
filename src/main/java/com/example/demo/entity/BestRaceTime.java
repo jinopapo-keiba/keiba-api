@@ -11,6 +11,7 @@ public class BestRaceTime {
     Horse horse;
     Duration fullTime;
     Duration lastRapTime;
+    String fullTimeStadium;
     Duration stadiumFullTime;
     Duration stadiumLastRapTime;
 }
