@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 @Getter
 @AllArgsConstructor
 public enum HorseGender {
     LADY("牝",0),
     MAN("牡",1),
+    CASTRATION("セ",2),
     NONE("",-1);
     private String text;
     private int value;
@@ -24,7 +24,7 @@ public enum HorseGender {
 
     public static HorseGender toEnum(String text){
         return Arrays.stream(values())
-                .filter(v -> Objects.equals(v.getText(), text))
+                .filter(v -> v.getText().equals(text))
                 .findFirst()
                 .orElse(NONE);
     }

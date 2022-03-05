@@ -25,7 +25,7 @@ public enum Grade {
 
     public static Grade toEnum(String text){
         return Arrays.stream(values())
-                .filter(v -> Objects.equals(v.getText(), text))
+                .filter(v -> v.getText().equals(text))
                 .findFirst()
                 .orElse(NONE);
     }
