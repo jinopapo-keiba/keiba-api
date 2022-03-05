@@ -2,7 +2,6 @@ package com.example.demo.contoller;
 
 import com.example.demo.contoller.converter.GetBestRaceTimeResponseConverter;
 import com.example.demo.contoller.response.GetBestRaceTimeResponse;
-import com.example.demo.entity.BestRaceTime;
 import com.example.demo.service.RaceResultService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
