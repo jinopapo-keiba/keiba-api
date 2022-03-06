@@ -3,6 +3,14 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost/keiba
     username: ji-no
+logging:
+  level:
+    org:
+      springframework: WARN
+    com:
+      example:
+        demo:
+          repository: DEBUG
 server:
   tomcat:
     accesslog:

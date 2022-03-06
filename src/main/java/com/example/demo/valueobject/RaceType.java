@@ -10,7 +10,7 @@ import java.util.Objects;
 @Getter
 public enum RaceType {
     TURF("芝",0),
-    DIRT("ダート",1);
+    DIRT("ダ",1);
 
     private String text;
     private int value;

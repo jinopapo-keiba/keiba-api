@@ -19,9 +19,14 @@ public class RaceResultController {
     private final GetBestRaceTimeResponseConverter getBestRaceTimeResponseConverter;
 
     @GetMapping("/bestTime")
-    public GetBestRaceTimeResponse getBestTime(@RequestParam("stadium") String stadium, @RequestParam("raceLength") Integer raceLength, @RequestParam("raceId") String raceId){
+    public GetBestRaceTimeResponse getBestTime(
+            @RequestParam("stadium") String stadium,
+            @RequestParam("raceLength") Integer raceLength,
+            @RequestParam("raceId") String raceId,
+            String sort
+            ){
         return getBestRaceTimeResponseConverter.converter(
-                raceResultService.fetchBestRaceTime(stadium,raceLength,raceId)
+                raceResultService.fetchBestRaceTime(stadium,raceLength,raceId,sort)
         );
     }
 }

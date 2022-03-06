@@ -155,5 +155,9 @@
             (
                 select horse.id from race join raceHorse on race.id = raceHorse.raceId join horse on raceHorse.horseId = horse.id WHERE race.id = #{raceId}
             )
+        <if test="sort != null">
+            ORDER BY
+                ${sort}
+        </if>
     </select>
 </mapper>
