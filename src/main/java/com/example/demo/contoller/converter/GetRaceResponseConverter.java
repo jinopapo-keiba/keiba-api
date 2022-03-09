@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class GetRaceResponseConverter {
     private DateFormat dateFormat;
-    private HorseResponseConverter horseResponseConverter;
+    private RaceHorseResponseConverter raceHorseResponseConverter;
 
     public GetRaceResponse convert(Race race){
         return GetRaceResponse.builder()
@@ -28,35 +28,9 @@ public class GetRaceResponseConverter {
                 .stadium(race.getStadium())
                 .raceCondition(race.getRaceCondition().getText())
                 .raceHorses(race.getRaceHorses().stream()
-                        .map(this::raceHorseConvert)
+                        .map(raceHorseResponseConverter::convert)
                         .collect(Collectors.toList())
                 )
-                .build();
-    }
-
-    private GetRaceResponse.RaceHorse raceHorseConvert(RaceHorse raceHorse){
-        return GetRaceResponse.RaceHorse.builder()
-                .weight(raceHorse.getWeight())
-                .old(raceHorse.getOld())
-                .frameNumber(raceHorse.getFrameNumber())
-                .horse(horseResponseConverter.convert(raceHorse.getHorse()))
-                .jockey(this.jockeyConvert(raceHorse.getJockey()))
-                .raceResult(raceHorse.getRaceResult() == null ? null : this.raceResultConvert(raceHorse.getRaceResult()))
-                .build();
-    }
-
-    private GetRaceResponse.Jockey jockeyConvert(Jockey jockey){
-        return GetRaceResponse.Jockey.builder()
-                .name(jockey.getName())
-                .build();
-    }
-
-    private GetRaceResponse.RaceResult raceResultConvert(RaceResult raceResult){
-        return GetRaceResponse.RaceResult.builder()
-                .fullTime(raceResult.getFullTime().toMillis())
-                .ranking(raceResult.getRanking())
-                .cornerRanking(raceResult.getCornerRanking())
-                .lastRapTime(raceResult.getLastRapTime().toMillis())
                 .build();
     }
 }

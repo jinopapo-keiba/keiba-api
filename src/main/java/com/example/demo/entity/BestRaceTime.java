@@ -8,13 +8,7 @@ import java.time.Duration;
 @Data
 @NoArgsConstructor
 public class BestRaceTime {
-    Horse horse;
+    RaceHorse raceHorse;
     Duration fullTime;
     Duration lastRapTime;
-    String fullTimeStadium;
-    Duration stadiumFullTime;
-    Duration stadiumLastRapTime;
-    Duration allLastRapTime;
-    String allLastRapTimeStadium;
-    Integer allLastRapTimeLength;
 }

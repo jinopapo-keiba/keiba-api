@@ -1,4 +1,4 @@
-package com.example.demo.contoller.response;
+package com.example.demo.contoller.response.dto;
 
 import lombok.Builder;
 import lombok.Getter;

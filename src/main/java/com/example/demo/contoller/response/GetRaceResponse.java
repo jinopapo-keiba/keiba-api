@@ -1,5 +1,6 @@
 package com.example.demo.contoller.response;
 
+import com.example.demo.contoller.response.dto.RaceHorseResponse;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,31 +20,5 @@ public class GetRaceResponse {
     int id;
     int round;
     String stadium;
-    List<RaceHorse> raceHorses;
-
-    @Getter
-    @Builder
-    static public class RaceHorse{
-        Integer weight;
-        Integer old;
-        Integer frameNumber;
-        HorseResponse horse;
-        Jockey jockey;
-        RaceResult raceResult;
-    }
-
-    @Getter
-    @Builder
-    static public class Jockey{
-        String name;
-    }
-
-    @Getter
-    @Builder
-    static public class RaceResult{
-        long fullTime;
-        int ranking;
-        String cornerRanking;
-        long lastRapTime;
-    }
+    List<RaceHorseResponse> raceHorses;
 }

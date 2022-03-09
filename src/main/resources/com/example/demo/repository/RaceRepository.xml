@@ -92,7 +92,7 @@
             raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,raceDate,race.id as id,round,stadium,
             weight,old,raceHorse.frameNumber as frameNumber,
             jockey.id as jockeyId,jockey.name as jockeyName,
-            horse.id as horseId,horse.name as horseName, gender,
+            horse.id as horseId,horse.name as horseName, gender as horseGender,
             fullTime,ranking,cornerRanking,lastRapTime
         FROM
             race

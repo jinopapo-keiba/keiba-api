@@ -1,9 +1,10 @@
 package com.example.demo.contoller.response;
 
+import com.example.demo.contoller.response.dto.HorseResponse;
+import com.example.demo.contoller.response.dto.RaceHorseResponse;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.Duration;
 import java.util.List;
 
 @Getter
@@ -14,14 +15,8 @@ public class GetBestRaceTimeResponse {
     @Getter
     @Builder
     public static class BestRaceTime{
-        HorseResponse horse;
+        RaceHorseResponse raceHorse;
         Long fullTime;
         Long lastRapTime;
-        Long stadiumFullTime;
-        Long stadiumLastRapTime;
-        String fullTimeStadium;
-        Long allLastRapTime;
-        String allLastRapTimeStadium;
-        Integer allLastRapTimeLength;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.demo.contoller.converter;
 
-import com.example.demo.contoller.response.HorseResponse;
+import com.example.demo.contoller.response.dto.HorseResponse;
 import com.example.demo.entity.Horse;
 import org.springframework.stereotype.Component;
 

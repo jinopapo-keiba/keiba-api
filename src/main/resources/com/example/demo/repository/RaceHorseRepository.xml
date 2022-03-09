@@ -3,6 +3,33 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.repository.RaceHorseRepository">
+    <resultMap id="raceHorsesResultMap" type="com.example.demo.entity.RaceHorse">
+        <id column="horseId"/>
+        <id column="jockeyId"/>
+        <id column="id"/>
+        <result property="weight" column="weight"/>
+        <result property="old" column="old"/>
+        <result property="frameNumber" column="frameNumber"/>
+        <association javaType="com.example.demo.entity.Horse" property="horse">
+            <id property="id" column="horseId"/>
+            <result property="name" column="horseName"/>
+            <result property="gender" column="horseGender"/>
+        </association>
+        <association javaType="com.example.demo.entity.Jockey" property="jockey">
+            <id column="horseId"/>
+            <id column="jockeyId"/>
+            <result property="name" column="jockeyName"/>
+        </association>
+        <association javaType="com.example.demo.entity.RaceResult" property="raceResult">
+            <id column="id"/>
+            <id column="frameNumber"/>
+            <result property="fullTime" column="fullTime"/>
+            <result property="ranking" column="ranking"/>
+            <result property="cornerRanking" column="cornerRanking"/>
+            <result property="lastRapTime" column="lastRapTime"/>
+        </association>
+    </resultMap>
+
     <insert id="saveRaceHorse">
         INSERT INTO raceHorse (
             raceId,

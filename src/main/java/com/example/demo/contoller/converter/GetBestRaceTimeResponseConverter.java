@@ -13,22 +13,16 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Slf4j
 public class GetBestRaceTimeResponseConverter {
-    private HorseResponseConverter horseResponseConverter;
+    private RaceHorseResponseConverter raceHorseResponseConverter;
 
     public GetBestRaceTimeResponse converter(List<BestRaceTime> bestRaceTimes){
         return GetBestRaceTimeResponse.builder()
                 .bestRaceTimes(
                         bestRaceTimes.stream()
                                 .map(bestRaceTime -> GetBestRaceTimeResponse.BestRaceTime.builder()
-                                        .horse(horseResponseConverter.convert(bestRaceTime.getHorse()))
+                                        .raceHorse(raceHorseResponseConverter.convert(bestRaceTime.getRaceHorse()))
                                         .lastRapTime(bestRaceTime.getLastRapTime().toMillis())
                                         .fullTime(bestRaceTime.getFullTime().toMillis())
-                                        .stadiumLastRapTime(bestRaceTime.getStadiumLastRapTime().toMillis())
-                                        .stadiumFullTime(bestRaceTime.getStadiumFullTime().toMillis())
-                                        .fullTimeStadium(bestRaceTime.getFullTimeStadium())
-                                        .allLastRapTime(bestRaceTime.getAllLastRapTime().toMillis())
-                                        .allLastRapTimeStadium(bestRaceTime.getAllLastRapTimeStadium())
-                                        .allLastRapTimeLength(bestRaceTime.getAllLastRapTimeLength())
                                         .build())
                                 .collect(Collectors.toList()))
                 .build();
