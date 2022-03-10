@@ -9,6 +9,7 @@ import java.util.Date;
 @Builder
 public class RaceQueryParam {
     private String stadium;
-    private int round;
+    private Integer round;
     private Date raceDate;
+    private Boolean beforeRace;
 }

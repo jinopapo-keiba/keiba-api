@@ -72,17 +72,15 @@ public class RaceService {
         );
     }
 
-    public Race fetchRace(String stadium, int round, Date raceDate){
-        List<Race> races = raceRepository.fetchRace(
+    /**
+     * 結果が出てないレースを取得
+     *
+     * @return
+     */
+    public List<Race> fetchBeforeRace(){
+        return raceRepository.fetchRace(
                 RaceQueryParam.builder()
-                        .stadium(stadium)
-                        .round(round)
-                        .raceDate(raceDate)
+                        .beforeRace(true)
                         .build());
-        if(races == null || races.isEmpty()){
-            return null;
-        } else {
-            return races.get(0);
-        }
     }
 }

@@ -25,7 +25,7 @@
             <association javaType="com.example.demo.entity.Horse" property="horse">
                 <id property="id" column="horseId"/>
                 <result property="name" column="horseName"/>
-                <result property="gender" column="gender"/>
+                <result property="gender" column="horseGender"/>
             </association>
             <association javaType="com.example.demo.entity.Jockey" property="jockey">
                 <id column="horseId"/>
@@ -92,8 +92,10 @@
             raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,raceDate,race.id as id,round,stadium,
             weight,old,raceHorse.frameNumber as frameNumber,
             jockey.id as jockeyId,jockey.name as jockeyName,
-            horse.id as horseId,horse.name as horseName, gender as horseGender,
-            fullTime,ranking,cornerRanking,lastRapTime
+            horse.id as horseId,horse.name as horseName, gender as horseGender
+        <if test="queryParam.beforeRace == null">
+            ,fullTime,ranking,cornerRanking,lastRapTime
+        </if>
         FROM
             race
         JOIN
@@ -108,18 +110,28 @@
             jockey
         ON
             jockeyId = jockey.id
-        JOIN
-            raceResult
-        ON
-            raceResult.raceId = race.id
-        AND
-            raceHorse.frameNumber = raceResult.frameNumber
-        WHERE
-            stadium = #{queryParam.stadium}
-        AND
-            round = #{queryParam.round}
-        AND
-            raceDate = #{queryParam.raceDate}
+        <if test="queryParam.beforeRace == null">
+            JOIN
+                raceResult
+            ON
+                raceResult.raceId = race.id
+            AND
+                raceHorse.frameNumber = raceResult.frameNumber
+        </if>
+        <where>
+            <if test="queryParam.stadium != null">
+                stadium = #{queryParam.stadium}
+            </if>
+            <if test="queryParam.round != null">
+                AND round = #{queryParam.round}
+            </if>
+            <if test="queryParam.raceDate != null">
+                AND raceDate = #{queryParam.raceDate}
+            </if>
+            <if test="queryParam.beforeRace == true">
+                AND raceDate >= CURDATE()
+            </if>
+        </where>
         ORDER BY
             raceHorse.frameNumber
     </select>
