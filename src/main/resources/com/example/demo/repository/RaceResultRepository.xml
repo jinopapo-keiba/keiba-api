@@ -64,6 +64,7 @@
             raceHorse.old as old,
             raceHorse.weight as weight,
             raceHorse.frameNumber as frameNumber,
+            race.stadium as raceStadium,
             jockey.name as jockeyName,
             (
                 <choose>
@@ -80,8 +81,14 @@
                 </choose>
                 AND
                     race.raceLength = #{raceLength}
+                <if test="stadium != null">
                 AND
                     race.stadium = #{stadium}
+                </if>
+                <if test="stadium == null">
+                AND
+                    race.stadium = raceStadium
+                </if>
             ) as summaryFullTime,
             (
                 <choose>
@@ -98,8 +105,14 @@
                 </choose>
                 AND
                     race.raceLength = #{raceLength}
+                <if test="stadium != null">
                 AND
                     race.stadium = #{stadium}
+                </if>
+                <if test="stadium == null">i
+                AND
+                    race.stadium = raceStadium
+                </if>
             ) as summaryLastRapTime
         FROM
             horse
@@ -111,6 +124,10 @@
             jockey
         ON
             raceHorse.jockeyId = jockey.id
+        JOIN
+            race
+        ON
+            raceHorse.raceId = race.id
         WHERE
             horse.id
         IN

@@ -21,9 +21,9 @@ public class RaceResultController {
 
     @GetMapping("/bestTime")
     public GetBestRaceTimeResponse getBestTime(
-            @RequestParam("stadium") String stadium,
             @RequestParam("raceLength") Integer raceLength,
             @RequestParam("raceId") String raceId,
+            String stadium,
             SummaryType summaryType
             ){
         return getBestRaceTimeResponseConverter.converter(
