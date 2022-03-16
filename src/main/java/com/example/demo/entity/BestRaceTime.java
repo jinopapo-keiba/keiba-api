@@ -11,4 +11,5 @@ public class BestRaceTime {
     RaceHorse raceHorse;
     Duration fullTime;
     Duration lastRapTime;
+    Integer count;
 }

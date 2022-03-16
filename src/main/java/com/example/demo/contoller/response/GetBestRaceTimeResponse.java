@@ -18,5 +18,6 @@ public class GetBestRaceTimeResponse {
         RaceHorseResponse raceHorse;
         Long fullTime;
         Long lastRapTime;
+        Integer count;
     }
 }

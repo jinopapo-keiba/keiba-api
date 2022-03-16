@@ -23,6 +23,7 @@ public class GetBestRaceTimeResponseConverter {
                                         .raceHorse(raceHorseResponseConverter.convert(bestRaceTime.getRaceHorse()))
                                         .lastRapTime(bestRaceTime.getLastRapTime().toMillis())
                                         .fullTime(bestRaceTime.getFullTime().toMillis())
+                                        .count(bestRaceTime.getCount())
                                         .build())
                                 .collect(Collectors.toList()))
                 .build();

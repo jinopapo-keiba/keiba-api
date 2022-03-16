@@ -7,6 +7,7 @@
         <id column="id"/>
         <result column="summaryFullTime" property="fullTime"/>
         <result column="summaryLastRapTime" property="lastRapTime"/>
+        <result column="count" property="count"/>
         <association resultMap="com.example.demo.repository.RaceHorseRepository.raceHorsesResultMap" property="raceHorse"/>
     </resultMap>
 
@@ -91,6 +92,21 @@
                 </if>
             ) as summaryFullTime,
             (
+                <include refid="raceJoin">
+                    <property name="column" value="count(fullTime)"/>
+                </include>
+                AND
+                    race.raceLength = #{raceLength}
+                <if test="stadium != null">
+                AND
+                    race.stadium = #{stadium}
+                </if>
+                <if test="stadium == null">
+                AND
+                    race.stadium = raceStadium
+                </if>
+            ) as count,
+            (
                 <choose>
                     <when test='summaryType == @com.example.demo.valueobject.SummaryType@AVG'>
                         <include refid="raceJoin">
@@ -109,7 +125,7 @@
                 AND
                     race.stadium = #{stadium}
                 </if>
-                <if test="stadium == null">i
+                <if test="stadium == null">
                 AND
                     race.stadium = raceStadium
                 </if>
