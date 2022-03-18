@@ -155,4 +155,36 @@
         ORDER BY
             raceHorse.frameNumber
     </select>
+
+    <select id="fetchStadiumSummaryTimes" resultType="com.example.demo.entity.StadiumTime">
+        SELECT DISTINCT
+            <if test="time == 'fullTime'">
+                avg(fullTime) as time,
+            </if>
+            <if test="time == 'lastRapTime'">
+                avg(lastRapTime) as time,
+            </if>
+            count(fullTime) as count,
+            race.stadium
+        FROM
+            race
+        JOIN
+            raceResult
+        ON
+            race.id = raceResult.raceId
+        JOIN
+            raceHorse
+        ON
+            raceHorse.raceId = raceResult.raceId
+        AND
+            raceHorse.frameNumber = raceResult.frameNumber
+        WHERE
+            race.raceLength = #{raceLength}
+        <if test="grade != null">
+        AND
+            race.grade = #{grade.value}
+        </if>
+        GROUP BY
+            race.stadium
+    </select>
 </mapper>
