@@ -180,6 +180,8 @@
             raceHorse.frameNumber = raceResult.frameNumber
         WHERE
             race.raceLength = #{raceLength}
+        AND
+            raceResult.ranking = 1
         <if test="grade != null">
         AND
             race.grade = #{grade.value}

@@ -32,6 +32,7 @@ public class RaceService {
                         .stadium(race.getStadium())
                         .round(race.getRound())
                         .raceDate(race.getRaceDate())
+                        .beforeRace(false)
                         .build());
         if(!races.isEmpty()) {
             raceRepository.updateRace(races.get(0));
