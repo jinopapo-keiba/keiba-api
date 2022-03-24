@@ -54,6 +54,8 @@
         WHERE
             raceHorse.horseId = horse.id
         AND
+            race.raceCondition = #{raceCondition.value}
+        AND
             race.raceDate &gt; now() - INTERVAL 24 MONTH
     </sql>
 

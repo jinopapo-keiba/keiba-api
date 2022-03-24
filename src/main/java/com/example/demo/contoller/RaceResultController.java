@@ -6,6 +6,7 @@ import com.example.demo.contoller.response.GetBestRaceTimeResponse;
 import com.example.demo.contoller.response.GetStadiumSummaryResponse;
 import com.example.demo.service.RaceResultService;
 import com.example.demo.valueobject.Grade;
+import com.example.demo.valueobject.RaceCondition;
 import com.example.demo.valueobject.SummaryType;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +30,12 @@ public class RaceResultController {
             @RequestParam("raceLength") Integer raceLength,
             @RequestParam("raceId") String raceId,
             String stadium,
+            @RequestParam(name="raceCondition", required = false) String raceConditionParam,
             SummaryType summaryType
             ){
+        RaceCondition raceCondition = raceConditionParam == null ? RaceCondition.GOOD : RaceCondition.toEnum(raceConditionParam);
         return getBestRaceTimeResponseConverter.converter(
-                raceResultService.fetchBestRaceTime(stadium,raceLength,raceId,summaryType)
+                raceResultService.fetchBestRaceTime(stadium,raceLength,raceId,summaryType,raceCondition)
         );
     }
 
