@@ -19,5 +19,7 @@ public class GetBestRaceTimeResponse {
         Long fullTime;
         Long lastRapTime;
         Integer count;
+        Float devFullTime;
+        Float devLastRapTime;
     }
 }

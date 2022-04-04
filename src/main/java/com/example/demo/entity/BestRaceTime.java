@@ -1,15 +1,17 @@
 package com.example.demo.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
 
 import java.time.Duration;
 
-@Data
-@NoArgsConstructor
+@Value
+@Builder
 public class BestRaceTime {
     RaceHorse raceHorse;
     Duration fullTime;
     Duration lastRapTime;
     Integer count;
+    Float devFullTime;
+    Float devLastRapTime;
 }

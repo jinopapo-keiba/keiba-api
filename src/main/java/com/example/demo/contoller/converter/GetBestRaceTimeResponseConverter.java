@@ -24,6 +24,8 @@ public class GetBestRaceTimeResponseConverter {
                                         .lastRapTime(bestRaceTime.getLastRapTime().toMillis())
                                         .fullTime(bestRaceTime.getFullTime().toMillis())
                                         .count(bestRaceTime.getCount())
+                                        .devFullTime(bestRaceTime.getDevFullTime())
+                                        .devLastRapTime(bestRaceTime.getDevLastRapTime())
                                         .build())
                                 .collect(Collectors.toList()))
                 .build();

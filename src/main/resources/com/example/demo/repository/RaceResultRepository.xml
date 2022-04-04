@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.repository.RaceResultRepository">
-    <resultMap id="BestTimeResultMap" type="com.example.demo.entity.BestRaceTime">
+    <resultMap id="BestTimeResultMap" type="com.example.demo.service.dto.BestRaceTimeDto">
         <id column="id"/>
         <result column="summaryFullTime" property="fullTime"/>
         <result column="summaryLastRapTime" property="lastRapTime"/>
@@ -190,5 +190,50 @@
         </if>
         GROUP BY
             race.stadium
+    </select>
+
+    <select id="fetchRaceResultSummary" resultType="com.example.demo.entity.RaceResultSummary">
+        SELECT
+            avg(fullTIme) as meanFullTime,
+            avg(lastRapTime) as meanLastRapTime,
+            stddev_pop(fullTime) as stdevpFullTime,
+            stddev_pop(lastRapTime) as stdevpLastRapTime
+        FROM
+            race
+        JOIN
+            raceResult
+        ON
+            race.id = raceResult.raceId
+        JOIN
+            raceHorse
+        ON
+            raceHorse.raceId = raceResult.raceId
+        AND
+            raceHorse.frameNumber = raceResult.frameNumber
+        WHERE
+            race.raceLength = #{raceLength}
+        AND
+            raceResult.ranking = 1
+        <if test="stadium != null">
+        AND
+            race.stadium = #{stadium}
+        </if>
+        <if test="stadium == null">
+            AND
+            race.stadium = (
+                SELECT
+                    race.stadium
+                FROM
+                    race
+                WHERE
+                    race.id = #{raceId}
+            )
+        </if>
+        AND
+            race.raceCondition = #{raceCondition.value}
+        <if test="grade != null">
+        AND
+            race.grade = #{grade.value}
+        </if>
     </select>
 </mapper>
