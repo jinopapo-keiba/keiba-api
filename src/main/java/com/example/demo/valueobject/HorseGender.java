@@ -10,7 +10,7 @@ import java.util.Arrays;
 public enum HorseGender {
     LADY("牝",0),
     MAN("牡",1),
-    CASTRATION("セ",2),
+    CASTRATION("せん",2),
     NONE("",-1);
     private String text;
     private int value;
