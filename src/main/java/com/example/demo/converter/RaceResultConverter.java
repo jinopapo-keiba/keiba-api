@@ -18,11 +18,19 @@ public class RaceResultConverter {
         Pattern fullTimePattern = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)");
         Matcher fullTimeMatcher = fullTimePattern.matcher(raceResult.getFullTime());
         // matchesが走らないとgroupが取れない
+        if(!fullTimeMatcher.matches()) {
+            return RaceResult.builder()
+                    .fullTime(Duration.ZERO)
+                    .ranking(raceResult.getRanking())
+                    .lastRapTime(Duration.ZERO)
+                    .cornerRanking(raceResult.getCornerRanking())
+                    .build();
+        }
         fullTimeMatcher.matches();
         Duration fullTime = Duration.ofMillis(
-                Long.parseLong(fullTimeMatcher.group(1))*60000
-                + Long.parseLong(fullTimeMatcher.group(2))*1000
-                + Long.parseLong(fullTimeMatcher.group(3))*100
+                Long.parseLong(fullTimeMatcher.group(1)) * 60000
+                        + Long.parseLong(fullTimeMatcher.group(2)) * 1000
+                        + Long.parseLong(fullTimeMatcher.group(3)) * 100
         );
         Pattern lastRapTimePattern = Pattern.compile("(\\d+)\\.(\\d+)");
         Matcher lastRapTimeMatcher = lastRapTimePattern.matcher(raceResult.getLastRapTime());
