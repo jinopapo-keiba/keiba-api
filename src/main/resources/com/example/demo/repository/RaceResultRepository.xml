@@ -11,6 +11,37 @@
         <association resultMap="com.example.demo.repository.RaceHorseRepository.raceHorsesResultMap" property="raceHorse"/>
     </resultMap>
 
+    <resultMap id="RaceResultMap" type="com.example.demo.entity.RaceResult">
+        <id column="id"/>
+        <id column="frameNumber"/>
+        <result property="fullTime" column="fullTime"/>
+        <result property="ranking" column="ranking"/>
+        <result property="cornerRanking" column="cornerRanking"/>
+        <result property="lastRapTime" column="lastRapTime"/>
+    </resultMap>
+
+    <resultMap id="HorseResultMap" type="com.example.demo.service.dto.HorseResultDto">
+        <id column="race.id"/>
+        <result column="meanFullTime" property="meanFullTime"/>
+        <result column="meanLastRapTime" property="meanLastRapTime"/>
+        <result column="stdevpFullTime" property="stdevpFullTime"/>
+        <result column="stdevpLastRapTime" property="stdevpLastRapTime"/>
+        <association resultMap="RaceResultMap" property="raceResult"/>
+        <association javaType="com.example.demo.entity.Race" property="race">
+            <id property="id" column="id"/>
+            <result property="raceName" column="raceName"/>
+            <result property="stadium" column="stadium"/>
+            <result property="round" column="round"/>
+            <result property="raceType" column="raceType"/>
+            <result property="raceLength" column="raceLength"/>
+            <result property="clockwise" column="clockwise"/>
+            <result property="raceCondition" column="raceCondition"/>
+            <result property="raceWeather" column="raceWeather"/>
+            <result property="grade" column="grade"/>
+            <result property="raceDate" column="raceDate"/>
+        </association>
+    </resultMap>
+
     <insert id="saveRaceResult">
         INSERT INTO raceResult (
             raceId,
@@ -57,6 +88,25 @@
             race.raceCondition = #{raceCondition.value}
         AND
             race.raceDate &gt; now() - INTERVAL 24 MONTH
+    </sql>
+
+    <sql id="fetchHorseResultSub">
+        SELECT
+            ${column}
+        FROM
+            race as subRace
+        JOIN
+            raceResult as subRaceResult
+        ON
+            subRace.id = subRaceResult.raceId
+        JOIN
+            raceHorse
+        ON
+            raceHorse.raceId = subRaceResult.raceId
+        AND
+            raceHorse.frameNumber = subRaceResult.frameNumber
+        WHERE
+            subRace.id = race.id
     </sql>
 
     <select id="fetchBestRaceTimes" resultMap="BestTimeResultMap">
@@ -235,5 +285,49 @@
         AND
             race.grade = #{grade.value}
         </if>
+    </select>
+
+    <select id="fetchHorseResult" resultMap="HorseResultMap">
+        SELECT
+            raceResult.*,
+            race.*,
+            (
+                <include refid="fetchHorseResultSub">
+                    <property name="column" value="avg(fullTIme) as meanFullTime"/>
+                </include>
+            ) as meanFullTime,
+            (
+                <include refid="fetchHorseResultSub">
+                    <property name="column" value="avg(lastRapTime) as meanLastRapTime"/>
+                </include>
+            ) as meanLastRapTime,
+            (
+                <include refid="fetchHorseResultSub">
+                    <property name="column" value="stddev_pop(fullTime) as stdevpFullTime"/>
+                </include>
+            ) as stdevpFullTime,
+            (
+                <include refid="fetchHorseResultSub">
+                    <property name="column" value="stddev_pop(lastRapTime) as stdevpLastRapTime"/>
+                </include>
+            ) as stdevpLastRapTime
+        FROM
+            race
+        JOIN
+            raceResult
+        ON
+            race.id = raceResult.raceId
+        JOIN
+            raceHorse
+        ON
+            raceHorse.raceId = raceResult.raceId
+        AND
+            raceHorse.frameNumber = raceResult.frameNumber
+        JOIN
+            horse
+        ON
+            horse.id = raceHorse.horseId
+        WHERE
+            horse.id = #{horseId}
     </select>
 </mapper>

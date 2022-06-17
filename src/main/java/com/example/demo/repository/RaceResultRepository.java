@@ -2,6 +2,7 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.*;
 import com.example.demo.service.dto.BestRaceTimeDto;
+import com.example.demo.service.dto.HorseResultDto;
 import com.example.demo.valueobject.Grade;
 import com.example.demo.valueobject.RaceCondition;
 import com.example.demo.valueobject.SummaryType;
@@ -22,4 +23,5 @@ public interface RaceResultRepository {
     RaceResultSummary fetchRaceResultSummary(@Param("stadium") String stadium, @Param("raceLength") Integer raceLength,
                                              @Param("raceCondition") RaceCondition raceCondition,
                                              @Param("grade")Grade grade, @Param("raceId") String raceId);
+    List<HorseResultDto> fetchHorseResult(@Param("horseId") Integer horseId);
 }

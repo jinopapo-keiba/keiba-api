@@ -1,11 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.converter.BestRaceTimeConverter;
+import com.example.demo.converter.HorseResultConverter;
 import com.example.demo.entity.BestRaceTime;
+import com.example.demo.entity.HorseResult;
 import com.example.demo.entity.RaceResultSummary;
 import com.example.demo.entity.StadiumTime;
 import com.example.demo.repository.RaceResultRepository;
 import com.example.demo.service.dto.BestRaceTimeDto;
+import com.example.demo.service.dto.HorseResultDto;
 import com.example.demo.valueobject.Grade;
 import com.example.demo.valueobject.RaceCondition;
 import com.example.demo.valueobject.SummaryType;
@@ -14,12 +17,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
 public class RaceResultService {
     private final RaceResultRepository raceResultRepository;
     private final BestRaceTimeConverter bestRaceTimeConverter;
+    private final HorseResultConverter horseResultConverter;
 
     public List<BestRaceTime> fetchBestRaceTime(String stadium, Integer raceLength, String raceId,
                                                 SummaryType summaryType, RaceCondition raceCondition){
@@ -61,6 +66,25 @@ public class RaceResultService {
                 }
         );
         return bestRaceTimes;
+    }
+
+    public List<HorseResult> fetchHorseResult(Integer horseId) {
+        List<HorseResultDto> horseResultDtos = raceResultRepository.fetchHorseResult(horseId);
+        return horseResultDtos.stream().map(
+                (horseResultDto) -> {
+                    float devFullTime = calcDev(
+                            horseResultDto.getRaceResult().getFullTime().toMillis(),
+                            horseResultDto.getMeanFullTime(),
+                            horseResultDto.getStdevpFullTime()
+                    );
+                    float devLastRapTime = calcDev(
+                            horseResultDto.getRaceResult().getLastRapTime().toMillis(),
+                            horseResultDto.getMeanLastRapTime(),
+                            horseResultDto.getStdevpLastRapTime()
+                    );
+                    return horseResultConverter.converter(horseResultDto,devFullTime,devLastRapTime);
+                }
+        ).collect(Collectors.toList());
     }
 
     private float calcDev(long time,long ave, float stdevp) {

@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,7 +80,17 @@ public class RaceService {
     public List<Race> fetchBeforeRace(){
         return raceRepository.fetchRace(
                 RaceQueryParam.builder()
-                        .beforeRace(true)
+                        .beforeRace(false)
                         .build());
+    }
+
+    /**
+     * 該当レースの出走馬が走ったことのあるレースの距離一覧を取得
+     *
+     * @param raceId raceid
+     * @return 出走経験のある距離
+     */
+    public List<Integer> fetchRaceLength(String raceId) {
+        return raceRepository.fetchRanRaceLength(raceId);
     }
 }

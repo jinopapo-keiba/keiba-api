@@ -1,7 +1,9 @@
 package com.example.demo.contoller;
 
+import com.example.demo.contoller.converter.GetLengthResponseConverter;
 import com.example.demo.contoller.converter.GetRaceResponseConverter;
 import com.example.demo.contoller.request.SaveRaceRequest;
+import com.example.demo.contoller.response.GetLengthResponse;
 import com.example.demo.contoller.response.GetRaceResponse;
 import com.example.demo.converter.RaceConverter;
 import com.example.demo.service.RaceService;
@@ -9,8 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +22,7 @@ public class RaceController {
     private RaceService raceService;
     private RaceConverter raceConverter;
     private GetRaceResponseConverter getRaceResponseConverter;
-    private DateFormat dateFormat;
+    private GetLengthResponseConverter getLengthResponseConverter;
 
     @PostMapping
     String saveRace(@RequestBody SaveRaceRequest saveRaceRequest) {
@@ -31,9 +31,16 @@ public class RaceController {
     }
 
     @GetMapping("/before")
-    List<GetRaceResponse> getRace() throws ParseException {
+    List<GetRaceResponse> getRace() {
         return raceService.fetchBeforeRace().stream()
                 .map(getRaceResponseConverter::convert)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/length")
+    GetLengthResponse getLength(String raceId) {
+        return getLengthResponseConverter.convert(
+                raceService.fetchRaceLength(raceId)
+        );
     }
 }

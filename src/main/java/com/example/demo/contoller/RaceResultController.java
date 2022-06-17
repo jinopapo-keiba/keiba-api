@@ -4,6 +4,7 @@ import com.example.demo.contoller.converter.GetBestRaceTimeResponseConverter;
 import com.example.demo.contoller.converter.GetStadiumSummaryResponseConverter;
 import com.example.demo.contoller.response.GetBestRaceTimeResponse;
 import com.example.demo.contoller.response.GetStadiumSummaryResponse;
+import com.example.demo.entity.HorseResult;
 import com.example.demo.service.RaceResultService;
 import com.example.demo.valueobject.Grade;
 import com.example.demo.valueobject.RaceCondition;
@@ -48,5 +49,12 @@ public class RaceResultController {
         return raceResultService.fetchStadiumSummaryTimes(time,raceLength, grade == null ? null : Grade.toEnum(grade)).stream()
                 .map(getStadiumSummaryResponseConverter::convert)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/horseResult")
+    public List<HorseResult> getHorseResult(
+     Integer horseId
+    ){
+        return raceResultService.fetchHorseResult(horseId);
     }
 }

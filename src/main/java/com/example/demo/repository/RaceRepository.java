@@ -12,4 +12,5 @@ public interface RaceRepository {
     void saveRace(@Param("race") Race race);
     void updateRace(@Param("race")Race race);
     List<Race> fetchRace(@Param("queryParam")RaceQueryParam queryParam);
+    List<Integer> fetchRanRaceLength(@Param("raceId")String raceId);
 }

@@ -32,14 +32,7 @@
                 <id column="jockeyId"/>
                 <result property="name" column="jockeyName"/>
             </association>
-            <association javaType="com.example.demo.entity.RaceResult" property="raceResult">
-                <id column="id"/>
-                <id column="frameNumber"/>
-                <result property="fullTime" column="fullTime"/>
-                <result property="ranking" column="ranking"/>
-                <result property="cornerRanking" column="cornerRanking"/>
-                <result property="lastRapTime" column="lastRapTime"/>
-            </association>
+            <association resultMap="com.example.demo.repository.RaceResultRepository.RaceResultMap" property="raceResult"/>
         </collection>
     </resultMap>
 
@@ -134,5 +127,33 @@
         </where>
         ORDER BY
             raceHorse.frameNumber
+    </select>
+
+    <select id="fetchRanRaceLength" resultType="Integer">
+        SELECT DISTINCT
+            raceLength
+        FROM
+            race
+        JOIN
+            raceResult
+        ON
+            race.id = raceResult.raceId
+        JOIN
+            raceHorse
+        ON
+            raceHorse.raceId = raceResult.raceId
+        AND
+            raceHorse.frameNumber = raceResult.frameNumber
+        JOIN
+            horse
+        ON
+            raceHorse.horseId = horse.id
+        WHERE
+            race.raceDate &gt; now() - INTERVAL 24 MONTH
+        AND
+            horse.id
+        IN (
+            select horse.id from race join raceHorse on race.id = raceHorse.raceId join horse on raceHorse.horseId = horse.id WHERE race.id = #{raceId}
+        )
     </select>
 </mapper>

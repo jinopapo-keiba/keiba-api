@@ -1,13 +1,13 @@
 package com.example.demo.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-import java.util.List;
-
-@Data
-@NoArgsConstructor
+@Getter
+@Builder
 public class HorseResult {
-    Horse horse;
-    List<Result> results;
+    float devLastRapTime;
+    float devFullTime;
+    RaceResult raceResult;
+    Race race;
 }
