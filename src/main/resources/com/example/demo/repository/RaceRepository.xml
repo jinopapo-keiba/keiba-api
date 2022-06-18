@@ -129,9 +129,9 @@
             raceHorse.frameNumber
     </select>
 
-    <select id="fetchRanRaceLength" resultType="Integer">
-        SELECT DISTINCT
-            raceLength
+    <select id="fetchRanRaceLength" resultType="com.example.demo.entity.RaceLength">
+        SELECT
+            raceLength,count(DISTINCT horse.id) as count
         FROM
             race
         JOIN
@@ -155,5 +155,9 @@
         IN (
             select horse.id from race join raceHorse on race.id = raceHorse.raceId join horse on raceHorse.horseId = horse.id WHERE race.id = #{raceId}
         )
+        GROUP BY
+            raceLength
+        ORDER BY
+            raceLength
     </select>
 </mapper>

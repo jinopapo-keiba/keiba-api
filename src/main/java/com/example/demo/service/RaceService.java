@@ -1,9 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Horse;
-import com.example.demo.entity.Jockey;
-import com.example.demo.entity.Race;
-import com.example.demo.entity.RaceHorse;
+import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import com.example.demo.repository.dto.HorseQueryParam;
 import com.example.demo.repository.dto.RaceQueryParam;
@@ -80,7 +77,7 @@ public class RaceService {
     public List<Race> fetchBeforeRace(){
         return raceRepository.fetchRace(
                 RaceQueryParam.builder()
-                        .beforeRace(false)
+                        .beforeRace(true)
                         .build());
     }
 
@@ -90,7 +87,7 @@ public class RaceService {
      * @param raceId raceid
      * @return 出走経験のある距離
      */
-    public List<Integer> fetchRaceLength(String raceId) {
+    public List<RaceLength> fetchRaceLength(String raceId) {
         return raceRepository.fetchRanRaceLength(raceId);
     }
 }
