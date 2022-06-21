@@ -285,6 +285,17 @@
         AND
             race.grade = #{grade.value}
         </if>
+        <if test="grade == null">
+        AND
+            race.grade =  (
+            SELECT
+                race.grade
+            FROM
+                race
+            WHERE
+                race.id = #{raceId}
+            )
+        </if>
     </select>
 
     <select id="fetchHorseResult" resultMap="HorseResultMap">
