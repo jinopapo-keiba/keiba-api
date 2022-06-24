@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class RaceHorseResponseConverter {
     private HorseResponseConverter horseResponseConverter;
     private JockeyResponseConverter jockeyResponseConverter;
-    private RaceResultResponseConverter raceResultResponseConverter;
+    private ResultResponseConverter resultResponseConverter;
 
     public RaceHorseResponse convert(RaceHorse raceHorse){
         return RaceHorseResponse.builder()
@@ -19,7 +19,7 @@ public class RaceHorseResponseConverter {
                 .frameNumber(raceHorse.getFrameNumber())
                 .horse(horseResponseConverter.convert(raceHorse.getHorse()))
                 .jockey(jockeyResponseConverter.convert(raceHorse.getJockey()))
-                .raceResult(raceHorse.getRaceResult() == null ? null : raceResultResponseConverter.convert(raceHorse.getRaceResult()))
+                .raceResult(raceHorse.getRaceResult() == null ? null : resultResponseConverter.convert(raceHorse.getRaceResult()))
                 .build();
     }
 }

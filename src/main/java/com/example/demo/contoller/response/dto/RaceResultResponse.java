@@ -6,8 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class RaceResultResponse {
-    long fullTime;
-    int ranking;
-    String cornerRanking;
-    long lastRapTime;
+    RaceResponse race;
+    ResultResponse result;
 }

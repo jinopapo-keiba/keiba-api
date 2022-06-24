@@ -18,6 +18,10 @@
         <result property="ranking" column="ranking"/>
         <result property="cornerRanking" column="cornerRanking"/>
         <result property="lastRapTime" column="lastRapTime"/>
+        <result property="meanFullTime" column="meanFullTime"/>
+        <result property="meanLastRapTime" column="meanLastRapTime"/>
+        <result property="stdDeviFullTime" column="stdDeviFullTime"/>
+        <result property="stdDeviLastRapTime" column="stdDeviLastRapTime"/>
     </resultMap>
 
     <resultMap id="HorseResultMap" type="com.example.demo.service.dto.HorseResultDto">

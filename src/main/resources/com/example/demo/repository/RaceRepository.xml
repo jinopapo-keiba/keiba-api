@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.repository.RaceRepository">
-    <resultMap id="raceResultMap" type="com.example.demo.entity.Race">
+    <resultMap id="raceMap" type="com.example.demo.entity.Race">
         <id property="id" column="id"/>
         <result property="raceName" column="raceName"/>
         <result property="stadium" column="stadium"/>
@@ -35,6 +35,35 @@
             <association resultMap="com.example.demo.repository.RaceResultRepository.RaceResultMap" property="raceResult"/>
         </collection>
     </resultMap>
+
+    <sql id="topHorseResultsColumn">
+        SELECT
+            ${column}
+        FROM
+            race
+        JOIN
+            raceResult
+        ON
+            race.id = raceResult.raceId
+        JOIN
+            raceHorse
+        ON
+            raceHorse.raceId = raceResult.raceId
+        AND
+            raceHorse.frameNumber = raceResult.frameNumber
+        JOIN
+            horse
+        ON
+            horse.id = raceHorse.horseId
+        WHERE
+            raceResult.ranking &lt;= 5
+        AND
+            race.raceLength = ${raceLength}
+        AND
+            race.stadium = ${stadium}
+        AND
+            race.grade = ${grade}
+    </sql>
 
     <insert id="saveRace" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO race (
@@ -80,14 +109,55 @@
             id = #{race.id}
     </update>
 
-    <select id="fetchRace" resultMap="raceResultMap">
+    <select id="fetchRace" resultMap="raceMap">
         SELECT
             raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,raceDate,race.id as id,round,stadium,
             weight,old,raceHorse.frameNumber as frameNumber,
             jockey.id as jockeyId,jockey.name as jockeyName,
             horse.id as horseId,horse.name as horseName, gender as horseGender
-        <if test="queryParam.beforeRace == null">
-            ,fullTime,ranking,cornerRanking,lastRapTime
+        <if test="queryParam.beforeRace == null || queryParam.beforeRace == false">
+            ,fullTime,ranking,cornerRanking,lastRapTime,
+            (
+            <include refid="topHorseResultsColumn">
+                <property name="column" value="avg(fullTime)"/>
+                <property name="raceLength" value="raceLength"/>
+                <property name="grade" value="grade"/>
+                <property name="stadium" value="stadium"/>
+            </include>
+                AND
+                    raceCondition = #{queryParam.raceCondition.value}
+            ) as meanFullTime,
+            (
+            <include refid="topHorseResultsColumn">
+                <property name="column" value="avg(lastRapTime)"/>
+                <property name="raceLength" value="raceLength"/>
+                <property name="grade" value="grade"/>
+                <property name="stadium" value="stadium"/>
+            </include>
+                AND
+                    raceCondition = #{queryParam.raceCondition.value}
+            ) as meanLastRapTime,
+            (
+            <include refid="topHorseResultsColumn">
+                <property name="column" value="stddev_pop(fullTime)"/>
+                <property name="raceLength" value="raceLength"/>
+                <property name="grade" value="grade"/>
+                <property name="stadium" value="stadium"/>
+            </include>
+                AND
+                    raceCondition = #{queryParam.raceCondition.value}
+            ) as stdDeviFullTime,
+            (
+            <include refid="topHorseResultsColumn">
+                <property name="column" value="stddev_pop(lastRapTime)"/>
+                <property name="raceLength" value="raceLength"/>
+                <property name="grade" value="grade"/>
+                <property name="stadium" value="stadium"/>
+                <property name="raceCondition" value="raceCondition"/>
+            </include>
+                AND
+                    raceCondition = #{queryParam.raceCondition.value}
+            ) as stdDeviLastRapTime
         </if>
         FROM
             race
@@ -103,7 +173,7 @@
             jockey
         ON
             jockeyId = jockey.id
-        <if test="queryParam.beforeRace == null">
+        <if test="queryParam.beforeRace == null || queryParam.beforeRace == false">
             JOIN
                 raceResult
             ON
@@ -123,6 +193,18 @@
             </if>
             <if test="queryParam.beforeRace == true">
                 AND raceDate >= CURDATE()
+            </if>
+            <if test="queryParam.horseIds != null">
+                AND
+                    raceHorse.horseId
+                IN
+                <foreach item="horseId" collection="queryParam.horseIds" open="(" separator="," close=")">
+                    #{horseId}
+                </foreach>
+            </if>
+            <if test="queryParam.raceCondition != null">
+                AND
+                    raceCondition = #{queryParam.raceCondition.value}
             </if>
         </where>
         ORDER BY

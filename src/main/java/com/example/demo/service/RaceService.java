@@ -4,12 +4,15 @@ import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import com.example.demo.repository.dto.HorseQueryParam;
 import com.example.demo.repository.dto.RaceQueryParam;
+import com.example.demo.service.dto.RecentHorseResultDto;
 import com.example.demo.utils.ListUtils;
+import com.example.demo.valueobject.RaceCondition;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +31,6 @@ public class RaceService {
                         .stadium(race.getStadium())
                         .round(race.getRound())
                         .raceDate(race.getRaceDate())
-                        .beforeRace(false)
                         .build());
         if(!races.isEmpty()) {
             raceRepository.updateRace(races.get(0));
@@ -79,6 +81,37 @@ public class RaceService {
                 RaceQueryParam.builder()
                         .beforeRace(true)
                         .build());
+    }
+
+    /**
+     * 出走馬の直近のレースを取得
+     *
+     * @param raceId
+     * @param raceCondition
+     * @return
+     */
+    public List<RecentHorseResultDto> fetchHorseRanRecentRace(Integer raceId, RaceCondition raceCondition){
+        List<RaceHorse> targetRaceHorse = raceHorseRepository.fetchRaceHorses(raceId);
+        List<Race> recentRanRaces = raceRepository.fetchRace(
+                RaceQueryParam.builder()
+                        .horseIds(targetRaceHorse.stream()
+                                .map(raceHorse -> raceHorse.getHorse().getId())
+                                .collect(Collectors.toList()))
+                        .raceCondition(raceCondition)
+                        .build()
+        );
+        return targetRaceHorse.stream()
+                .map(
+                        raceHorse -> RecentHorseResultDto.builder()
+                                .raceHorse(raceHorse)
+                                .races(recentRanRaces.stream()
+                                        .filter(
+                                            race -> race.getRaceHorses().stream()
+                                                .anyMatch(horse -> Objects.equals(raceHorse.getHorse().getId(),horse.getHorse().getId()))
+                                        )
+                                        .collect(Collectors.toList()))
+                                .build())
+                .collect(Collectors.toList());
     }
 
     /**
