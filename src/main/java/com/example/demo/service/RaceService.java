@@ -88,13 +88,27 @@ public class RaceService {
     }
 
     /**
+     * レース情報を取得
+     *
+     * @param raceId レースid
+     * @return レース
+     */
+    public List<Race> fetchRace(Integer raceId) {
+        return raceRepository.fetchRace(RaceQueryParam.builder()
+                .raceId(raceId)
+                .beforeRace(true)
+                .build());
+    }
+
+    /**
      * 出走馬の直近のレースを取得
      *
      * @param raceId
      * @param raceCondition
      * @return
      */
-    public List<RecentHorseResultDto> fetchHorseRanRecentRace(Integer raceId, RaceCondition raceCondition){
+    public List<RecentHorseResultDto> fetchHorseRanRecentRace(
+            Integer raceId, RaceCondition raceCondition, String stadium, Integer raceLength){
         Race targeRace = raceRepository.fetchRace(RaceQueryParam.builder()
                 .raceId(raceId)
                 .beforeRace(true)
@@ -106,6 +120,8 @@ public class RaceService {
                                 .collect(Collectors.toList()))
                         .raceCondition(raceCondition)
                         .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.now().minusYears(2)))
+                        .stadium(stadium)
+                        .raceLength(raceLength)
                         .build()
         );
         return targeRace.getRaceHorses().stream()

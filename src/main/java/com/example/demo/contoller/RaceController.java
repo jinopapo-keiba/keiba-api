@@ -35,7 +35,7 @@ public class RaceController {
     }
 
     @GetMapping("/before")
-    List<GetRaceResponse> getRace() {
+    List<GetRaceResponse> getCurrentRace() {
         return raceService.fetchBeforeRace().stream()
                 .map(getRaceResponseConverter::convert)
                 .collect(Collectors.toList());
@@ -48,6 +48,18 @@ public class RaceController {
         );
     }
 
+    /**
+     * レース情報を取得する
+     *
+     * @param raceId
+     * @return
+     */
+    @GetMapping("/")
+    List<GetRaceResponse> getRace(Integer raceId) {
+        return raceService.fetchRace(raceId).stream()
+                .map(getRaceResponseConverter::convert)
+                .collect(Collectors.toList());
+    }
 
     /**
      * 該当レースの直近のレース結果を取得する
@@ -59,10 +71,12 @@ public class RaceController {
     @GetMapping("/recent")
     public List<GetHorseRaceResultResponse> getRecentRaceResult(
             Integer raceId,
-            String raceConditionParam
+            String raceConditionParam,
+            String stadiumParam,
+            Integer raceLengthParam
     ){
         RaceCondition raceCondition = raceConditionParam == null ? RaceCondition.GOOD : RaceCondition.toEnum(raceConditionParam);
-        return raceService.fetchHorseRanRecentRace(raceId,raceCondition).stream()
+        return raceService.fetchHorseRanRecentRace(raceId,raceCondition,stadiumParam,raceLengthParam).stream()
                 .map(getHorseRaceResultResponseConverter::converter)
                 .collect(Collectors.toList());
     }

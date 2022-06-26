@@ -211,6 +211,10 @@
                 AND
                     raceCondition = #{queryParam.raceCondition.value}
             </if>
+            <if test="queryParam.raceLength != null">
+                AND
+                raceLength = #{queryParam.raceLength.value}
+            </if>
         </where>
         ORDER BY
         race.raceDate DESC,

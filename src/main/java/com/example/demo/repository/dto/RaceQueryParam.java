@@ -18,4 +18,5 @@ public class RaceQueryParam {
     private RaceCondition raceCondition;
     private List<Integer> horseIds;
     private Integer raceId;
+    private Integer raceLength;
 }
