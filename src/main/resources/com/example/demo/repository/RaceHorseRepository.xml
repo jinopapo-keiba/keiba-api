@@ -63,33 +63,4 @@
             weight = #{raceHorse.weight},
             old = #{raceHorse.old}
     </insert>
-
-    <select id="fetchRaceHorses" resultMap="raceHorsesResultMap">
-        SELECT
-            horse.id as horseId,
-            horse.name as horseName,
-            horse.gender as horseGender,
-            raceHorse.old as old,
-            raceHorse.weight as weight,
-            raceHorse.frameNumber as frameNumber,
-            jockey.name as jockeyName
-        FROM
-            horse
-        JOIN
-            raceHorse
-        ON
-            raceHorse.horseId = horse.id
-        JOIN
-            jockey
-        ON
-            raceHorse.jockeyId = jockey.id
-        JOIN
-            race
-        ON
-            raceHorse.raceId = race.id
-        WHERE
-            race.id = #{raceId}
-        ORDER BY
-        raceHorse.frameNumber
-    </select>
 </mapper>

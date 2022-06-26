@@ -5,14 +5,18 @@ import com.example.demo.repository.*;
 import com.example.demo.repository.dto.HorseQueryParam;
 import com.example.demo.repository.dto.RaceQueryParam;
 import com.example.demo.service.dto.RecentHorseResultDto;
+import com.example.demo.utils.DateUtils;
 import com.example.demo.utils.ListUtils;
 import com.example.demo.valueobject.RaceCondition;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,16 +95,20 @@ public class RaceService {
      * @return
      */
     public List<RecentHorseResultDto> fetchHorseRanRecentRace(Integer raceId, RaceCondition raceCondition){
-        List<RaceHorse> targetRaceHorse = raceHorseRepository.fetchRaceHorses(raceId);
+        Race targeRace = raceRepository.fetchRace(RaceQueryParam.builder()
+                .raceId(raceId)
+                .beforeRace(true)
+                .build()).get(0);
         List<Race> recentRanRaces = raceRepository.fetchRace(
                 RaceQueryParam.builder()
-                        .horseIds(targetRaceHorse.stream()
+                        .horseIds(targeRace.getRaceHorses().stream()
                                 .map(raceHorse -> raceHorse.getHorse().getId())
                                 .collect(Collectors.toList()))
                         .raceCondition(raceCondition)
+                        .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.now().minusYears(2)))
                         .build()
         );
-        return targetRaceHorse.stream()
+        return targeRace.getRaceHorses().stream()
                 .map(
                         raceHorse -> RecentHorseResultDto.builder()
                                 .raceHorse(raceHorse)

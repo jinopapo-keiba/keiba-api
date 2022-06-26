@@ -45,24 +45,18 @@
             raceResult
         ON
             race.id = raceResult.raceId
-        JOIN
-            raceHorse
-        ON
-            raceHorse.raceId = raceResult.raceId
-        AND
-            raceHorse.frameNumber = raceResult.frameNumber
-        JOIN
-            horse
-        ON
-            horse.id = raceHorse.horseId
         WHERE
-            raceResult.ranking &lt;= 5
+            raceResult.ranking = 1
         AND
             race.raceLength = ${raceLength}
         AND
+            race.raceType = ${raceType}
+        AND
             race.stadium = ${stadium}
+        <!-- グレードが取れてないレースがあるので一旦コメントあうと
         AND
             race.grade = ${grade}
+        -->
     </sql>
 
     <insert id="saveRace" useGeneratedKeys="true" keyProperty="id">
@@ -114,15 +108,17 @@
             raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,raceDate,race.id as id,round,stadium,
             weight,old,raceHorse.frameNumber as frameNumber,
             jockey.id as jockeyId,jockey.name as jockeyName,
-            horse.id as horseId,horse.name as horseName, gender as horseGender
+            horse.id as horseId,horse.name as horseName, gender as horseGender,
+            raceLength as subRaceLength,stadium as subStadium,raceType as subRaceType
         <if test="queryParam.beforeRace == null || queryParam.beforeRace == false">
             ,fullTime,ranking,cornerRanking,lastRapTime,
             (
             <include refid="topHorseResultsColumn">
                 <property name="column" value="avg(fullTime)"/>
-                <property name="raceLength" value="raceLength"/>
+                <property name="raceLength" value="subRaceLength"/>
                 <property name="grade" value="grade"/>
-                <property name="stadium" value="stadium"/>
+                <property name="stadium" value="subStadium"/>
+                <property name="raceType" value="subRaceType"/>
             </include>
                 AND
                     raceCondition = #{queryParam.raceCondition.value}
@@ -130,9 +126,10 @@
             (
             <include refid="topHorseResultsColumn">
                 <property name="column" value="avg(lastRapTime)"/>
-                <property name="raceLength" value="raceLength"/>
+                <property name="raceLength" value="subRaceLength"/>
                 <property name="grade" value="grade"/>
-                <property name="stadium" value="stadium"/>
+                <property name="stadium" value="subStadium"/>
+                <property name="raceType" value="subRaceType"/>
             </include>
                 AND
                     raceCondition = #{queryParam.raceCondition.value}
@@ -140,9 +137,10 @@
             (
             <include refid="topHorseResultsColumn">
                 <property name="column" value="stddev_pop(fullTime)"/>
-                <property name="raceLength" value="raceLength"/>
+                <property name="raceLength" value="subRaceLength"/>
                 <property name="grade" value="grade"/>
-                <property name="stadium" value="stadium"/>
+                <property name="stadium" value="subStadium"/>
+                <property name="raceType" value="subRaceType"/>
             </include>
                 AND
                     raceCondition = #{queryParam.raceCondition.value}
@@ -150,10 +148,11 @@
             (
             <include refid="topHorseResultsColumn">
                 <property name="column" value="stddev_pop(lastRapTime)"/>
-                <property name="raceLength" value="raceLength"/>
+                <property name="raceLength" value="subRaceLength"/>
                 <property name="grade" value="grade"/>
-                <property name="stadium" value="stadium"/>
+                <property name="stadium" value="subStadium"/>
                 <property name="raceCondition" value="raceCondition"/>
+                <property name="raceType" value="subRaceType"/>
             </include>
                 AND
                     raceCondition = #{queryParam.raceCondition.value}
@@ -182,14 +181,20 @@
                 raceHorse.frameNumber = raceResult.frameNumber
         </if>
         <where>
+            <if test="queryParam.raceId != null">
+                race.id = #{queryParam.raceId}
+            </if>
             <if test="queryParam.stadium != null">
-                stadium = #{queryParam.stadium}
+                AND stadium = #{queryParam.stadium}
             </if>
             <if test="queryParam.round != null">
                 AND round = #{queryParam.round}
             </if>
             <if test="queryParam.raceDate != null">
                 AND raceDate = #{queryParam.raceDate}
+            </if>
+            <if test="queryParam.startRaceDate != null">
+                AND raceDate > #{queryParam.startRaceDate}
             </if>
             <if test="queryParam.beforeRace == true">
                 AND raceDate >= CURDATE()
@@ -208,7 +213,8 @@
             </if>
         </where>
         ORDER BY
-            raceHorse.frameNumber
+        race.raceDate DESC,
+        raceHorse.frameNumber ASC
     </select>
 
     <select id="fetchRanRaceLength" resultType="com.example.demo.entity.RaceLength">

@@ -10,5 +10,4 @@ import java.util.List;
 @Mapper
 public interface RaceHorseRepository {
     void saveRaceHorse(@Param("raceHorse")RaceHorse raceHorse, @Param("race") Race race);
-    List<RaceHorse> fetchRaceHorses(@Param("raceId")Integer raceId);
 }
