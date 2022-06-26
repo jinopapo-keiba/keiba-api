@@ -54,7 +54,7 @@ public class RaceController {
      * @param raceId
      * @return
      */
-    @GetMapping("/")
+    @GetMapping
     List<GetRaceResponse> getRace(Integer raceId) {
         return raceService.fetchRace(raceId).stream()
                 .map(getRaceResponseConverter::convert)
