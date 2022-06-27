@@ -62,7 +62,7 @@ public class RaceController {
     }
 
     /**
-     * 該当レースの直近のレース結果を取得する
+     * 該当の出走前のレースの直近のレース結果を取得する
      * 検査値は該当レースのグレード内の偏差値
      *
      * @param raceId
@@ -71,12 +71,12 @@ public class RaceController {
     @GetMapping("/recent")
     public List<GetHorseRaceResultResponse> getRecentRaceResult(
             Integer raceId,
-            String raceConditionParam,
-            String stadiumParam,
-            Integer raceLengthParam
+            @RequestParam("raceCondition") String raceConditionParam,
+            String stadium,
+            Integer raceLength
     ){
         RaceCondition raceCondition = raceConditionParam == null ? RaceCondition.GOOD : RaceCondition.toEnum(raceConditionParam);
-        return raceService.fetchHorseRanRecentRace(raceId,raceCondition,stadiumParam,raceLengthParam).stream()
+        return raceService.fetchHorseRanRecentRace(raceId,raceCondition,stadium,raceLength).stream()
                 .map(getHorseRaceResultResponseConverter::converter)
                 .collect(Collectors.toList());
     }
