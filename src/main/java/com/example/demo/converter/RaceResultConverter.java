@@ -21,8 +21,6 @@ public class RaceResultConverter {
         Matcher lastRapTimeMatcher = lastRapTimePattern.matcher(raceResult.getLastRapTime());
         // matchesが走らないとgroupが取れない
         if(!fullTimeMatcher.matches() || !lastRapTimeMatcher.matches()) {
-            log.error(raceResult.getFullTime());
-            log.error(raceResult.getLastRapTime());
             return RaceResult.builder()
                     .fullTime(Duration.ZERO)
                     .ranking(raceResult.getRanking())

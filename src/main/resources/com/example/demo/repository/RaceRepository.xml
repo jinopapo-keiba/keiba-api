@@ -110,7 +110,7 @@
             jockey.id as jockeyId,jockey.name as jockeyName,
             horse.id as horseId,horse.name as horseName, gender as horseGender,
             raceLength as subRaceLength,stadium as subStadium,raceType as subRaceType
-        <if test="queryParam.beforeRace == null || queryParam.beforeRace == false">
+        <if test="queryParam.beforeRace == false">
             ,fullTime,ranking,cornerRanking,lastRapTime,
             (
             <include refid="topHorseResultsColumn">
@@ -172,7 +172,7 @@
             jockey
         ON
             jockeyId = jockey.id
-        <if test="queryParam.beforeRace == null || queryParam.beforeRace == false">
+        <if test="queryParam.beforeRace == false">
             JOIN
                 raceResult
             ON
