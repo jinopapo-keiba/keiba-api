@@ -39,37 +39,37 @@ public class RaceService {
             race.setId(races.get(0).getId());
         } else {
             raceRepository.saveRace(race);
-            //馬の情報の保存
-            List<Horse> horses = race.getRaceHorses().stream().map(RaceHorse::getHorse).collect(Collectors.toList());
-            List<Horse> savedHorses = horseRepository.fetchHorses(
-                    HorseQueryParam.builder()
-                            .names(horses.stream().map(Horse::getName).collect(Collectors.toList()))
-                            .build());
-            horses.stream()
-                    .filter(horse -> ListUtils.search(horse,savedHorses,(a,b) -> a.getName().equals(b.getName())) == null)
-                    .forEach(horseRepository::saveHorse);
-
-            //ジョッキーの保存
-            List<Jockey> jockeys = race.getRaceHorses().stream().map(RaceHorse::getJockey).collect(Collectors.toList());
-            List<Jockey> savedJockey = jockeyRepository.fetchJockeys(
-                    jockeys.stream().map(Jockey::getName).collect(Collectors.toList())
-            );
-            jockeys.stream()
-                    .filter(jockey -> ListUtils.search(jockey,savedJockey,(a,b) -> a.getName().equals(b.getName())) == null)
-                    .forEach(jockeyRepository::saveJockey);
-
-            //レースの馬情報の保存
-            race.getRaceHorses().forEach(
-                    raceHorse -> raceHorseRepository.saveRaceHorse(raceHorse,race)
-            );
-
-            //レース結果の情報保存
-            //予想するレースはまだ結果が出てないので、それの場合は何もしない
-            race.getRaceHorses().stream()
-                    .filter(raceHorse -> raceHorse.getRaceResult() != null)
-                    .forEach(raceHorse -> raceResultRepository.saveRaceResult(raceHorse.getRaceResult(),race,raceHorse)
-                    );
         }
+        //馬の情報の保存
+        List<Horse> horses = race.getRaceHorses().stream().map(RaceHorse::getHorse).collect(Collectors.toList());
+        List<Horse> savedHorses = horseRepository.fetchHorses(
+                HorseQueryParam.builder()
+                        .names(horses.stream().map(Horse::getName).collect(Collectors.toList()))
+                        .build());
+        horses.stream()
+                .filter(horse -> ListUtils.search(horse,savedHorses,(a,b) -> a.getName().equals(b.getName())) == null)
+                .forEach(horseRepository::saveHorse);
+
+        //ジョッキーの保存
+        List<Jockey> jockeys = race.getRaceHorses().stream().map(RaceHorse::getJockey).collect(Collectors.toList());
+        List<Jockey> savedJockey = jockeyRepository.fetchJockeys(
+                jockeys.stream().map(Jockey::getName).collect(Collectors.toList())
+        );
+        jockeys.stream()
+                .filter(jockey -> ListUtils.search(jockey,savedJockey,(a,b) -> a.getName().equals(b.getName())) == null)
+                .forEach(jockeyRepository::saveJockey);
+
+        //レースの馬情報の保存
+        race.getRaceHorses().forEach(
+                raceHorse -> raceHorseRepository.saveRaceHorse(raceHorse,race)
+        );
+
+        //レース結果の情報保存
+        //予想するレースはまだ結果が出てないので、それの場合は何もしない
+        race.getRaceHorses().stream()
+                .filter(raceHorse -> raceHorse.getRaceResult() != null)
+                .forEach(raceHorse -> raceResultRepository.saveRaceResult(raceHorse.getRaceResult(),race,raceHorse)
+                );
     }
 
     /**
