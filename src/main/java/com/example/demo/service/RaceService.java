@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -78,9 +79,22 @@ public class RaceService {
      * @return
      */
     public List<Race> fetchBeforeRace(){
+        LocalDateTime now = LocalDateTime.now();
         return raceRepository.fetchRace(
                 RaceQueryParam.builder()
                         .beforeRace(true)
+                        .startRaceDate(
+                                DateUtils.convertLocalDateTime2Date(
+                                        LocalDateTime.of(
+                                                now.getYear(),
+                                                now.getMonth(),
+                                                now.getDayOfMonth(),
+                                                0,
+                                                0,
+                                                0
+                                        )
+                                )
+                        )
                         .build());
     }
 

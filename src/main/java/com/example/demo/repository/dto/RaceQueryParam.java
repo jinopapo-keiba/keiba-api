@@ -13,7 +13,7 @@ public class RaceQueryParam {
     private String stadium;
     private Integer round;
     private Date raceDate;
-    private Boolean beforeRace;
+    private boolean beforeRace;
     private Date startRaceDate;
     private RaceCondition raceCondition;
     private List<Integer> horseIds;
