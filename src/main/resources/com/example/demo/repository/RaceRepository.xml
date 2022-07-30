@@ -215,7 +215,7 @@
         </where>
         ORDER BY
         race.raceDate DESC,
-        race.round DESC,
+        race.round ASC,
         raceHorse.frameNumber ASC
     </select>
 
