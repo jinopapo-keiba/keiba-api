@@ -109,7 +109,8 @@
             weight,old,raceHorse.frameNumber as frameNumber,
             jockey.id as jockeyId,jockey.name as jockeyName,
             horse.id as horseId,horse.name as horseName, gender as horseGender,
-            raceLength as subRaceLength,stadium as subStadium,raceType as subRaceType
+            raceLength as subRaceLength,stadium as subStadium,raceType as subRaceType,
+            raceCondition as subRaceCondition
         <if test="queryParam.beforeRace == false">
             ,fullTime,ranking,cornerRanking,lastRapTime,
             (
@@ -121,7 +122,7 @@
                 <property name="raceType" value="subRaceType"/>
             </include>
                 AND
-                    raceCondition = #{queryParam.raceCondition.value}
+                    raceCondition = subRaceCondition
             ) as meanFullTime,
             (
             <include refid="topHorseResultsColumn">
@@ -132,7 +133,7 @@
                 <property name="raceType" value="subRaceType"/>
             </include>
                 AND
-                    raceCondition = #{queryParam.raceCondition.value}
+                    raceCondition = subRaceCondition
             ) as meanLastRapTime,
             (
             <include refid="topHorseResultsColumn">
@@ -143,7 +144,7 @@
                 <property name="raceType" value="subRaceType"/>
             </include>
                 AND
-                    raceCondition = #{queryParam.raceCondition.value}
+                    raceCondition = subRaceCondition
             ) as stdDeviFullTime,
             (
             <include refid="topHorseResultsColumn">
@@ -155,7 +156,7 @@
                 <property name="raceType" value="subRaceType"/>
             </include>
                 AND
-                    raceCondition = #{queryParam.raceCondition.value}
+                    raceCondition = subRaceCondition
             ) as stdDeviLastRapTime
         </if>
         FROM
@@ -203,10 +204,6 @@
                 <foreach item="horseId" collection="queryParam.horseIds" open="(" separator="," close=")">
                     #{horseId}
                 </foreach>
-            </if>
-            <if test="queryParam.raceCondition != null">
-                AND
-                    raceCondition = #{queryParam.raceCondition.value}
             </if>
             <if test="queryParam.raceLength != null">
                 AND

@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class RaceResultConverter {
     public RaceResult converter(SaveRaceRequest.RaceResult raceResult){
-        Pattern fullTimePattern = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)");
+        Pattern fullTimePattern = Pattern.compile("(\\d+):(\\d+)\\.(\\d+)");
         Matcher fullTimeMatcher = fullTimePattern.matcher(raceResult.getFullTime());
         Pattern lastRapTimePattern = Pattern.compile("(\\d+)\\.(\\d+)");
         Matcher lastRapTimeMatcher = lastRapTimePattern.matcher(raceResult.getLastRapTime());

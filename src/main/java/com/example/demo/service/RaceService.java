@@ -33,6 +33,7 @@ public class RaceService {
                 RaceQueryParam.builder()
                         .stadium(race.getStadium())
                         .round(race.getRound())
+                        .beforeRace(true)
                         .raceDate(race.getRaceDate())
                         .build());
         if(!races.isEmpty()) {
