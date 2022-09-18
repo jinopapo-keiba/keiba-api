@@ -1,6 +1,5 @@
 package com.example.demo.contoller.response;
 
-import com.example.demo.contoller.response.dto.HorseResponse;
 import com.example.demo.contoller.response.dto.RaceHorseResponse;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +18,9 @@ public class GetBestRaceTimeResponse {
         Long fullTime;
         Long lastRapTime;
         Integer count;
-        Float devFullTime;
-        Float devLastRapTime;
+        Float devBestFullTime;
+        Float devAvgFullTime;
+        Float devBestLastRapTime;
+        Float devAvgLastRapTime;
     }
 }

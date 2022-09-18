@@ -28,15 +28,14 @@ public class RaceResultController {
 
     @GetMapping("/bestTime")
     public GetBestRaceTimeResponse getBestTime(
-            @RequestParam("raceLength") Integer raceLength,
-            @RequestParam("raceId") String raceId,
+            @RequestParam(name="raceLength", required = false) Integer raceLength,
+            @RequestParam("raceId") Integer raceId,
             String stadium,
-            @RequestParam(name="raceCondition", required = false) String raceConditionParam,
-            SummaryType summaryType
+            @RequestParam(name="raceCondition", required = false) String raceConditionParam
             ){
-        RaceCondition raceCondition = raceConditionParam == null ? RaceCondition.GOOD : RaceCondition.toEnum(raceConditionParam);
+        RaceCondition raceCondition = RaceCondition.toEnum(raceConditionParam);
         return getBestRaceTimeResponseConverter.converter(
-                raceResultService.fetchBestRaceTime(stadium,raceLength,raceId,summaryType,raceCondition)
+                raceResultService.fetchBestRaceTime(stadium,raceLength,raceId,raceCondition)
         );
     }
 

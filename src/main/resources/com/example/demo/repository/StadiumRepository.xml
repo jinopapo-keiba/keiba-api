@@ -30,7 +30,9 @@
         IN (
             select horse.id from race join raceHorse on race.id = raceHorse.raceId join horse on raceHorse.horseId = horse.id WHERE race.id = #{raceId}
         )
+        <if test="raceLength != null">
         AND
-            race.raceLength = #{raceLength}
+            raceLength = #{raceLength}
+        </if>
     </select>
 </mapper>

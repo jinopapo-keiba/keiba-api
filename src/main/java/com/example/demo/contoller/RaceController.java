@@ -75,7 +75,7 @@ public class RaceController {
             String stadium,
             Integer raceLength
     ){
-        RaceCondition raceConditionValue = raceCondition == null ? RaceCondition.GOOD : RaceCondition.toEnum(raceCondition);
+        RaceCondition raceConditionValue = RaceCondition.toEnum(raceCondition);
         return raceService.fetchHorseRanRecentRace(raceId,raceConditionValue,stadium,raceLength).stream()
                 .map(getHorseRaceResultResponseConverter::converter)
                 .collect(Collectors.toList());

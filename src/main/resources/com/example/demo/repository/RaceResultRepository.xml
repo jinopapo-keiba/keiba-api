@@ -89,8 +89,6 @@
         WHERE
             raceHorse.horseId = horse.id
         AND
-            race.raceCondition = #{raceCondition.value}
-        AND
             race.raceDate &gt; now() - INTERVAL 24 MONTH
     </sql>
 
@@ -136,8 +134,14 @@
                         </include>
                     </otherwise>
                 </choose>
+                <if test="raceLength != null">
                 AND
                     race.raceLength = #{raceLength}
+                </if>
+                <if test="raceCondition != null">
+                AND
+                    race.raceCondition = #{raceCondition.value}
+                </if>
                 <if test="stadium != null">
                 AND
                     race.stadium = #{stadium}
@@ -151,8 +155,14 @@
                 <include refid="raceJoin">
                     <property name="column" value="count(fullTime)"/>
                 </include>
+                <if test="raceLength != null">
                 AND
                     race.raceLength = #{raceLength}
+                </if>
+                <if test="raceCondition != null">
+                AND
+                    race.raceCondition = #{raceCondition.value}
+                </if>
                 <if test="stadium != null">
                 AND
                     race.stadium = #{stadium}
@@ -175,8 +185,14 @@
                         </include>
                     </otherwise>
                 </choose>
+                <if test="raceLength != null">
                 AND
                     race.raceLength = #{raceLength}
+                </if>
+                <if test="raceCondition != null">
+                AND
+                    race.raceCondition = #{raceCondition.value}
+                </if>
                 <if test="stadium != null">
                 AND
                     race.stadium = #{stadium}
@@ -265,9 +281,11 @@
         AND
             raceHorse.frameNumber = raceResult.frameNumber
         WHERE
-            race.raceLength = #{raceLength}
-        AND
             raceResult.ranking = 1
+        <if test="raceLength != null">
+        AND
+            race.raceLength = #{raceLength}
+        </if>
         <if test="stadium != null">
         AND
             race.stadium = #{stadium}
@@ -283,8 +301,10 @@
                     race.id = #{raceId}
             )
         </if>
+        <if test="raceCondition != null">
         AND
             race.raceCondition = #{raceCondition.value}
+        </if>
     </select>
 
     <select id="fetchHorseResult" resultMap="HorseResultMap">
