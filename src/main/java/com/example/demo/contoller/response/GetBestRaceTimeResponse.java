@@ -15,8 +15,6 @@ public class GetBestRaceTimeResponse {
     @Builder
     public static class BestRaceTime{
         RaceHorseResponse raceHorse;
-        Long fullTime;
-        Long lastRapTime;
         Integer count;
         Float devBestFullTime;
         Float devAvgFullTime;
