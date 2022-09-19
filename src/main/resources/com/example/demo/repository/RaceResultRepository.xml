@@ -22,6 +22,10 @@
         <result property="meanLastRapTime" column="meanLastRapTime"/>
         <result property="stdDeviFullTime" column="stdDeviFullTime"/>
         <result property="stdDeviLastRapTime" column="stdDeviLastRapTime"/>
+        <result property="meanTargetRaceFullTime" column="meanTargetRaceFullTime"/>
+        <result property="meanTargetRaceLastRapTime" column="meanTargetRaceLastRapTime"/>
+        <result property="stdDeviTargetRaceFullTime" column="stdDeviTargetRaceFullTime"/>
+        <result property="stdDeviTargetRaceLastRapTime" column="stdDeviTargetRaceLastRapTime"/>
     </resultMap>
 
     <resultMap id="HorseResultMap" type="com.example.demo.service.dto.HorseResultDto">

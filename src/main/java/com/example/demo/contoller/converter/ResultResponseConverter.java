@@ -14,6 +14,8 @@ public class ResultResponseConverter {
                 .lastRapTime(raceResult.getLastRapTime().toMillis())
                 .devLastRapTime(raceResult.calcDevLastRapTime())
                 .devFullTime(raceResult.calcDevFullTime())
+                .devTargetRaceFullTime(raceResult.calcTargetRaceDevFullTime())
+                .devTargetRaceLastRapTime(raceResult.calcTargetRaceDevLastRapTime())
                 .build();
     }
 }
