@@ -23,14 +23,14 @@ public class RaceResult {
     Float stdDeviTargetRaceLastRapTime;
 
     public float calcDevFullTime() {
-        if(fullTime.toMillis() == 0) {
+        if(fullTime.toMillis() == 0 || stdDeviFullTime == null) {
             return 0;
         }
         return (((meanFullTime.toMillis() - fullTime.toMillis()) * 10) / stdDeviFullTime) + 50;
     }
 
     public float calcDevLastRapTime() {
-        if(lastRapTime.toMillis() == 0) {
+        if(lastRapTime.toMillis() == 0 || getStdDeviLastRapTime() == null) {
             return 0;
         }
         return (((meanLastRapTime.toMillis() - lastRapTime.toMillis()) * 10) / stdDeviLastRapTime) + 50;
