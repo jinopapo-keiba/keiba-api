@@ -89,7 +89,7 @@ public class RaceService {
                                         LocalDateTime.of(
                                                 now.getYear(),
                                                 now.getMonth(),
-                                                now.getDayOfMonth(),
+                                                now.minusDays(7).getDayOfMonth(),
                                                 0,
                                                 0,
                                                 0
@@ -131,7 +131,7 @@ public class RaceService {
                                 .map(raceHorse -> raceHorse.getHorse().getId())
                                 .collect(Collectors.toList()))
                         .raceCondition(raceCondition)
-                        .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.now().minusYears(2)))
+                        .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.now().minusYears(1)))
                         .stadium(stadium)
                         .raceLength(raceLength)
                         .build()

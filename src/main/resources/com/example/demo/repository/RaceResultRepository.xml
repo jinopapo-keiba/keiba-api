@@ -93,7 +93,7 @@
         WHERE
             raceHorse.horseId = horse.id
         AND
-            race.raceDate &gt; now() - INTERVAL 24 MONTH
+            race.raceDate &gt; now() - INTERVAL 12 MONTH
     </sql>
 
     <sql id="fetchHorseResultSub">

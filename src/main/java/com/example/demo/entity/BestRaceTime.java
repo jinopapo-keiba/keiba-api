@@ -12,4 +12,8 @@ public class BestRaceTime {
     Float devAvgFullTime;
     Float devBestLastRapTime;
     Float devAvgLastRapTime;
+    Float raceDevBestFullTime;
+    Float raceDevAvgFullTime;
+    Float raceDevBestLastRapTime;
+    Float raceDevAvgLastRapTime;
 }

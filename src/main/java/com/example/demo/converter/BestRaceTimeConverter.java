@@ -6,7 +6,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BestRaceTimeConverter {
-    public BestRaceTime convert(RaceHorse raceHorse,int count,float devBestFullTime,float devAvgFullTime,float devBestLastRapTime,float devAvgLastRapTime){
+    public BestRaceTime convert(
+            RaceHorse raceHorse,int count,float devBestFullTime,float devAvgFullTime,float devBestLastRapTime,
+            float devAvgLastRapTime,float raceDevBestFullTime,float raceDevAvgFullTime,float raceDevBestLastRapTime,
+            float raceDevAvgLastRapTime
+            ){
         return BestRaceTime.builder()
                 .raceHorse(raceHorse)
                 .count(count)
@@ -14,6 +18,10 @@ public class BestRaceTimeConverter {
                 .devAvgFullTime(devAvgFullTime)
                 .devBestLastRapTime(devBestLastRapTime)
                 .devAvgLastRapTime(devAvgLastRapTime)
+                .raceDevBestFullTime(raceDevBestFullTime)
+                .raceDevAvgFullTime(raceDevAvgFullTime)
+                .raceDevBestLastRapTime(raceDevBestLastRapTime)
+                .raceDevAvgLastRapTime(raceDevAvgLastRapTime)
                 .build();
     }
 }

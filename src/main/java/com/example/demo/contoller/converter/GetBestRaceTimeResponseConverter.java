@@ -26,6 +26,10 @@ public class GetBestRaceTimeResponseConverter {
                                         .devAvgFullTime(bestRaceTime.getDevAvgFullTime())
                                         .devBestLastRapTime(bestRaceTime.getDevBestLastRapTime())
                                         .devAvgLastRapTime(bestRaceTime.getDevAvgLastRapTime())
+                                        .raceDevBestFullTime(bestRaceTime.getRaceDevBestFullTime())
+                                        .raceDevAvgFullTime(bestRaceTime.getRaceDevAvgFullTime())
+                                        .raceDevBestLastRapTime(bestRaceTime.getRaceDevBestLastRapTime())
+                                        .raceDevAvgLastRapTime(bestRaceTime.getRaceDevAvgLastRapTime())
                                         .build())
                                 .collect(Collectors.toList()))
                 .build();

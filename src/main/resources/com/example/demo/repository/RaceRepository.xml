@@ -271,7 +271,7 @@
         ON
             raceHorse.horseId = horse.id
         WHERE
-            race.raceDate &gt; now() - INTERVAL 24 MONTH
+            race.raceDate &gt; now() - INTERVAL 12 MONTH
         AND
             horse.id
         IN (

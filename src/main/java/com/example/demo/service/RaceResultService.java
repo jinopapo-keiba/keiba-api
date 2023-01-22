@@ -41,7 +41,7 @@ public class RaceResultService {
                                 .map(raceHorse -> raceHorse.getHorse().getId())
                                 .collect(Collectors.toList()))
                         .raceCondition(raceCondition)
-                        .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.now().minusYears(2)))
+                        .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.now().minusYears(1)))
                         .stadium(stadium)
                         .raceLength(raceLength)
                         .build()
@@ -65,6 +65,10 @@ public class RaceResultService {
                     if(targetRaceHorse.getRaces().isEmpty()){
                         bestRaceTimes.add(bestRaceTimeConverter.convert(
                             targetRaceHorse.getRaceHorse(),
+                                0,
+                                0,
+                                0,
+                                0,
                                 0,
                                 0,
                                 0,
@@ -97,13 +101,33 @@ public class RaceResultService {
                     float avgLastRapTime = devLastRapTimes.stream()
                             .reduce(Float::sum).get()/devLastRapTimes.size();
 
+                    List<Float> raceDevFullTimes = results.stream()
+                            .map(RaceResult::calcTargetRaceDevFullTime)
+                            .collect(Collectors.toList());
+                    Float raceBestFullTime = raceDevFullTimes.stream()
+                            .max(Float::compareTo).get();
+                    float raceAvgFullTime = raceDevFullTimes.stream()
+                            .reduce(Float::sum).get()/raceDevFullTimes.size();
+                    List<Float> raceDevLastRapTimes = results.stream()
+                            .map(RaceResult::calcTargetRaceDevLastRapTime)
+                            .collect(Collectors.toList());
+                    Float raceBestLastRapTime = raceDevLastRapTimes.stream()
+                            .max(Float::compareTo).get();
+                    float raceAvgLastRapTime = raceDevLastRapTimes.stream()
+                            .reduce(Float::sum).get()/raceDevLastRapTimes.size();
+
                     bestRaceTimes.add(bestRaceTimeConverter.convert(
                             targetRaceHorse.getRaceHorse(),
                             results.size(),
                             bestFullTime,
                             avgFullTime,
                             bestLastRapTime,
-                            avgLastRapTime));
+                            avgLastRapTime,
+                            raceBestFullTime,
+                            raceAvgFullTime,
+                            raceBestLastRapTime,
+                            raceAvgLastRapTime
+                            ));
                 }
         );
         return bestRaceTimes;
