@@ -29,7 +29,7 @@ public class RaceResultService {
     private final HorseResultConverter horseResultConverter;
     private final RaceRepository raceRepository;
 
-    public List<BestRaceTime> fetchBestRaceTime(String stadium, Integer raceLength, Integer raceId,
+    public List<BestRaceTime> fetchBestRaceTime(List<String> stadiums, Integer raceLength, Integer raceId,
                                                 RaceCondition raceCondition){
         Race targeRace = raceRepository.fetchRace(RaceQueryParam.builder()
                 .raceId(raceId)
@@ -42,7 +42,7 @@ public class RaceResultService {
                                 .collect(Collectors.toList()))
                         .raceCondition(raceCondition)
                         .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.now().minusYears(1)))
-                        .stadium(stadium)
+                        .stadiums(stadiums)
                         .raceLength(raceLength)
                         .build()
         );

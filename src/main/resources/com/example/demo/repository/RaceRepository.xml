@@ -220,8 +220,11 @@
             <if test="queryParam.raceId != null">
                 race.id = #{queryParam.raceId}
             </if>
-            <if test="queryParam.stadium != null">
-                AND stadium = #{queryParam.stadium}
+            <if test="queryParam.stadiums != null and queryParam.stadiums.size &gt; 0">
+                AND stadium IN
+                <foreach item="stadium" open="(" close=")" collection="queryParam.stadiums" separator=",">
+                    #{stadium}
+                </foreach>
             </if>
             <if test="queryParam.round != null">
                 AND round = #{queryParam.round}

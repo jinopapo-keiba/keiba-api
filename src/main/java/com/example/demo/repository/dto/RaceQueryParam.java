@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Builder
 public class RaceQueryParam {
-    private String stadium;
+    private List<String> stadiums;
     private Integer round;
     private Date raceDate;
     private boolean beforeRace;

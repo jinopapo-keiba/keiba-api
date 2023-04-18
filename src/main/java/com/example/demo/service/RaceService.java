@@ -31,7 +31,7 @@ public class RaceService {
     public void saveRace(Race race){
         List<Race> races = raceRepository.fetchRace(
                 RaceQueryParam.builder()
-                        .stadium(race.getStadium())
+                        .stadiums(List.of(race.getStadium()))
                         .round(race.getRound())
                         .beforeRace(true)
                         .raceDate(race.getRaceDate())
@@ -120,7 +120,7 @@ public class RaceService {
      * @return
      */
     public List<RecentHorseResultDto> fetchHorseRanRecentRace(
-            Integer raceId, RaceCondition raceCondition, String stadium, Integer raceLength){
+            Integer raceId, RaceCondition raceCondition, List<String> stadiums, Integer raceLength){
         Race targeRace = raceRepository.fetchRace(RaceQueryParam.builder()
                 .raceId(raceId)
                 .beforeRace(true)
@@ -132,7 +132,7 @@ public class RaceService {
                                 .collect(Collectors.toList()))
                         .raceCondition(raceCondition)
                         .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.now().minusYears(1)))
-                        .stadium(stadium)
+                        .stadiums(stadiums)
                         .raceLength(raceLength)
                         .build()
         );

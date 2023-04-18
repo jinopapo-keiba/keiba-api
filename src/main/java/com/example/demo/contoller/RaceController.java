@@ -72,11 +72,11 @@ public class RaceController {
     public List<GetHorseRaceResultResponse> getRecentRaceResult(
             Integer raceId,
             String raceCondition,
-            String stadium,
+            @RequestParam(required = false) List<String> stadiums,
             Integer raceLength
     ){
         RaceCondition raceConditionValue = RaceCondition.toEnum(raceCondition);
-        return raceService.fetchHorseRanRecentRace(raceId,raceConditionValue,stadium,raceLength).stream()
+        return raceService.fetchHorseRanRecentRace(raceId,raceConditionValue,stadiums,raceLength).stream()
                 .map(getHorseRaceResultResponseConverter::converter)
                 .collect(Collectors.toList());
     }

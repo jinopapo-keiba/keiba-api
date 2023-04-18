@@ -30,12 +30,12 @@ public class RaceResultController {
     public GetBestRaceTimeResponse getBestTime(
             @RequestParam(name="raceLength", required = false) Integer raceLength,
             @RequestParam("raceId") Integer raceId,
-            String stadium,
+            @RequestParam(required = false) List<String> stadiums,
             @RequestParam(name="raceCondition", required = false) String raceConditionParam
             ){
         RaceCondition raceCondition = RaceCondition.toEnum(raceConditionParam);
         return getBestRaceTimeResponseConverter.converter(
-                raceResultService.fetchBestRaceTime(stadium,raceLength,raceId,raceCondition)
+                raceResultService.fetchBestRaceTime(stadiums,raceLength,raceId,raceCondition)
         );
     }
 
