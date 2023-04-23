@@ -9,6 +9,7 @@ import com.example.demo.contoller.response.GetLengthResponse;
 import com.example.demo.contoller.response.GetRaceResponse;
 import com.example.demo.converter.RaceConverter;
 import com.example.demo.service.RaceService;
+import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.valueobject.RaceCondition;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,10 +74,17 @@ public class RaceController {
             Integer raceId,
             String raceCondition,
             @RequestParam(required = false) List<String> stadiums,
-            Integer raceLength
+            @RequestParam(required = false) Integer minRaceLength,
+            @RequestParam(required = false) Integer maxRaceLength
     ){
-        RaceCondition raceConditionValue = RaceCondition.toEnum(raceCondition);
-        return raceService.fetchHorseRanRecentRace(raceId,raceConditionValue,stadiums,raceLength).stream()
+        RecentRaceQuery query = RecentRaceQuery.builder()
+                .raceId(raceId)
+                .raceCondition(RaceCondition.toEnum(raceCondition))
+                .stadiums(stadiums)
+                .minRaceLength(minRaceLength)
+                .maxRaceLength(maxRaceLength)
+                .build();
+        return raceService.fetchHorseRanRecentRace(query).stream()
                 .map(getHorseRaceResultResponseConverter::converter)
                 .collect(Collectors.toList());
     }

@@ -5,6 +5,7 @@ import com.example.demo.repository.*;
 import com.example.demo.repository.dto.HorseQueryParam;
 import com.example.demo.repository.dto.RaceQueryParam;
 import com.example.demo.service.dto.RecentHorseResultDto;
+import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.utils.DateUtils;
 import com.example.demo.utils.ListUtils;
 import com.example.demo.valueobject.RaceCondition;
@@ -115,14 +116,12 @@ public class RaceService {
     /**
      * 出走馬の直近のレースを取得
      *
-     * @param raceId
-     * @param raceCondition
+     * @param query 絞り込みパラメーター
      * @return
      */
-    public List<RecentHorseResultDto> fetchHorseRanRecentRace(
-            Integer raceId, RaceCondition raceCondition, List<String> stadiums, Integer raceLength){
+    public List<RecentHorseResultDto> fetchHorseRanRecentRace(RecentRaceQuery query){
         Race targeRace = raceRepository.fetchRace(RaceQueryParam.builder()
-                .raceId(raceId)
+                .raceId(query.getRaceId())
                 .beforeRace(true)
                 .build()).get(0);
         List<Race> recentRanRaces = raceRepository.fetchRace(
@@ -130,10 +129,11 @@ public class RaceService {
                         .horseIds(targeRace.getRaceHorses().stream()
                                 .map(raceHorse -> raceHorse.getHorse().getId())
                                 .collect(Collectors.toList()))
-                        .raceCondition(raceCondition)
+                        .raceCondition(query.getRaceCondition())
                         .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.now().minusYears(1)))
-                        .stadiums(stadiums)
-                        .raceLength(raceLength)
+                        .stadiums(query.getStadiums())
+                        .minRaceLength(query.getMinRaceLength())
+                        .maxRaceLength(query.getMaxRaceLength())
                         .build()
         );
         return targeRace.getRaceHorses().stream()

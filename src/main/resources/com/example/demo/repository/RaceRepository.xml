@@ -243,9 +243,13 @@
                     #{horseId}
                 </foreach>
             </if>
-            <if test="queryParam.raceLength != null">
+            <if test="queryParam.minRaceLength != null">
                 AND
-                    raceLength = #{queryParam.raceLength}
+                raceLength &gt;= #{queryParam.minRaceLength}
+            </if>
+            <if test="queryParam.maxRaceLength != null">
+                AND
+                raceLength &lt;= #{queryParam.maxRaceLength}
             </if>
         </where>
         ORDER BY

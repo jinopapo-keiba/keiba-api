@@ -8,6 +8,7 @@ import com.example.demo.repository.RaceResultRepository;
 import com.example.demo.repository.dto.RaceQueryParam;
 import com.example.demo.service.dto.HorseResultDto;
 import com.example.demo.service.dto.RecentHorseResultDto;
+import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.utils.DateUtils;
 import com.example.demo.valueobject.Grade;
 import com.example.demo.valueobject.RaceCondition;
@@ -29,10 +30,9 @@ public class RaceResultService {
     private final HorseResultConverter horseResultConverter;
     private final RaceRepository raceRepository;
 
-    public List<BestRaceTime> fetchBestRaceTime(List<String> stadiums, Integer raceLength, Integer raceId,
-                                                RaceCondition raceCondition){
+public List<BestRaceTime> fetchBestRaceTime(RecentRaceQuery query){
         Race targeRace = raceRepository.fetchRace(RaceQueryParam.builder()
-                .raceId(raceId)
+                .raceId(query.getRaceId())
                 .beforeRace(true)
                 .build()).get(0);
         List<Race> recentRanRaces = raceRepository.fetchRace(
@@ -40,10 +40,11 @@ public class RaceResultService {
                         .horseIds(targeRace.getRaceHorses().stream()
                                 .map(raceHorse -> raceHorse.getHorse().getId())
                                 .collect(Collectors.toList()))
-                        .raceCondition(raceCondition)
+                        .raceCondition(query.getRaceCondition())
                         .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.now().minusYears(1)))
-                        .stadiums(stadiums)
-                        .raceLength(raceLength)
+                        .stadiums(query.getStadiums())
+                        .minRaceLength(query.getMinRaceLength())
+                        .maxRaceLength(query.getMaxRaceLength())
                         .build()
         );
         List<RecentHorseResultDto> targetRaceHorses = targeRace.getRaceHorses().stream()

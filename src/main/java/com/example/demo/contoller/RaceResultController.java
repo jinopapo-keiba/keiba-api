@@ -6,9 +6,9 @@ import com.example.demo.contoller.response.GetBestRaceTimeResponse;
 import com.example.demo.contoller.response.GetStadiumSummaryResponse;
 import com.example.demo.entity.HorseResult;
 import com.example.demo.service.RaceResultService;
+import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.valueobject.Grade;
 import com.example.demo.valueobject.RaceCondition;
-import com.example.demo.valueobject.SummaryType;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,11 +31,19 @@ public class RaceResultController {
             @RequestParam(name="raceLength", required = false) Integer raceLength,
             @RequestParam("raceId") Integer raceId,
             @RequestParam(required = false) List<String> stadiums,
-            @RequestParam(name="raceCondition", required = false) String raceConditionParam
+            @RequestParam(name="raceCondition", required = false) String raceCondition,
+            @RequestParam(required = false) Integer minRaceLength,
+            @RequestParam(required = false) Integer maxRaceLength
             ){
-        RaceCondition raceCondition = RaceCondition.toEnum(raceConditionParam);
+        RecentRaceQuery query = RecentRaceQuery.builder()
+                .raceId(raceId)
+                .raceCondition(RaceCondition.toEnum(raceCondition))
+                .stadiums(stadiums)
+                .minRaceLength(minRaceLength)
+                .maxRaceLength(maxRaceLength)
+                .build();
         return getBestRaceTimeResponseConverter.converter(
-                raceResultService.fetchBestRaceTime(stadiums,raceLength,raceId,raceCondition)
+                raceResultService.fetchBestRaceTime(query)
         );
     }
 
