@@ -62,16 +62,23 @@
     <sql id="targetRaceHorseResultsColumn">
         SELECT
             ${column}
-        FROM
-            race
-        JOIN
-            raceResult
-        ON
-            race.id = raceResult.raceId
-        WHERE
-            race.id = subId
-        AND
-            ranking > 0
+        FROM (
+            SELECT
+                ${sortColumn}
+            FROM
+                race
+            JOIN
+                raceResult
+            ON
+                race.id = raceResult.raceId
+            WHERE
+                race.id = subId
+            AND
+                ranking > 0
+            ORDER BY
+                ${sortColumn}
+            LIMIT 5
+        ) ${sortColumn}
     </sql>
 
     <insert id="saveRace" useGeneratedKeys="true" keyProperty="id">
@@ -176,21 +183,25 @@
             (
             <include refid="targetRaceHorseResultsColumn">
                 <property name="column" value="avg(fullTime)"/>
+                <property name="sortColumn" value="fullTime"/>
             </include>
             ) as meanTargetRaceFullTime,
             (
             <include refid="targetRaceHorseResultsColumn">
                 <property name="column" value="avg(lastRapTime)"/>
+                <property name="sortColumn" value="lastRapTime"/>
             </include>
             ) as meanTargetRaceLastRapTime,
             (
             <include refid="targetRaceHorseResultsColumn">
                 <property name="column" value="stddev_pop(fullTime)"/>
+                <property name="sortColumn" value="fullTime"/>
             </include>
             ) as stdDeviTargetRaceFullTime,
             (
             <include refid="targetRaceHorseResultsColumn">
                 <property name="column" value="stddev_pop(lastRapTime)"/>
+                <property name="sortColumn" value="lastRapTime"/>
             </include>
             ) as stdDeviTargetRaceLastRapTime
         </if>

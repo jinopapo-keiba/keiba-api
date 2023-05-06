@@ -81,7 +81,7 @@ public class RaceService {
      * @return
      */
     public List<Race> fetchBeforeRace(){
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().minusDays(14);
         return raceRepository.fetchRace(
                 RaceQueryParam.builder()
                         .beforeRace(true)
@@ -90,7 +90,7 @@ public class RaceService {
                                         LocalDateTime.of(
                                                 now.getYear(),
                                                 now.getMonth(),
-                                                now.minusDays(7).getDayOfMonth(),
+                                                now.getDayOfMonth(),
                                                 0,
                                                 0,
                                                 0
