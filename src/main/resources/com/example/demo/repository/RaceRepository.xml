@@ -39,24 +39,31 @@
     <sql id="topHorseResultsColumn">
         SELECT
             ${column}
-        FROM
-            race
-        JOIN
-            raceResult
-        ON
-            race.id = raceResult.raceId
-        WHERE
-            raceResult.ranking = 1
-        AND
-            race.raceLength = ${raceLength}
-        AND
-            race.raceType = ${raceType}
-        AND
-            race.stadium = ${stadium}
-        <!-- グレードが取れてないレースがあるので一旦コメントあうと
-        AND
-            race.grade = ${grade}
-        -->
+        FROM (
+            SELECT
+                min(${sortColumn}) as ${sortColumn}
+            FROM
+                race
+            JOIN
+                raceResult
+            ON
+                race.id = raceResult.raceId
+            WHERE
+                ranking > 0
+            AND
+                race.raceLength = ${raceLength}
+            AND
+                race.raceType = ${raceType}
+            AND
+                race.stadium = ${stadium}
+            AND
+                race.raceCondition = ${raceCondition}
+            GROUP BY race.id
+            <!-- グレードが取れてないレースがあるので一旦コメントあうと
+            AND
+                race.grade = ${grade}
+            -->
+        ) ${sortColumn}
     </sql>
 
     <sql id="targetRaceHorseResultsColumn">
@@ -141,10 +148,10 @@
                 <property name="raceLength" value="subRaceLength"/>
                 <property name="grade" value="grade"/>
                 <property name="stadium" value="subStadium"/>
+                <property name="raceCondition" value="subRaceCondition"/>
                 <property name="raceType" value="subRaceType"/>
+                <property name="sortColumn" value="fullTime"/>
             </include>
-                AND
-                    raceCondition = subRaceCondition
             ) as meanFullTime,
             (
             <include refid="topHorseResultsColumn">
@@ -152,10 +159,10 @@
                 <property name="raceLength" value="subRaceLength"/>
                 <property name="grade" value="grade"/>
                 <property name="stadium" value="subStadium"/>
+                <property name="raceCondition" value="subRaceCondition"/>
                 <property name="raceType" value="subRaceType"/>
+                <property name="sortColumn" value="lastRapTime"/>
             </include>
-                AND
-                    raceCondition = subRaceCondition
             ) as meanLastRapTime,
             (
             <include refid="topHorseResultsColumn">
@@ -163,10 +170,10 @@
                 <property name="raceLength" value="subRaceLength"/>
                 <property name="grade" value="grade"/>
                 <property name="stadium" value="subStadium"/>
+                <property name="raceCondition" value="subRaceCondition"/>
                 <property name="raceType" value="subRaceType"/>
+                <property name="sortColumn" value="fullTime"/>
             </include>
-                AND
-                    raceCondition = subRaceCondition
             ) as stdDeviFullTime,
             (
             <include refid="topHorseResultsColumn">
@@ -176,9 +183,8 @@
                 <property name="stadium" value="subStadium"/>
                 <property name="raceCondition" value="raceCondition"/>
                 <property name="raceType" value="subRaceType"/>
+                <property name="sortColumn" value="lastRapTime"/>
             </include>
-                AND
-                    raceCondition = subRaceCondition
             ) as stdDeviLastRapTime,
             (
             <include refid="targetRaceHorseResultsColumn">
