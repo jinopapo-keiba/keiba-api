@@ -9,6 +9,8 @@ import com.example.demo.contoller.response.GetLengthResponse;
 import com.example.demo.contoller.response.GetRaceResponse;
 import com.example.demo.converter.RaceConverter;
 import com.example.demo.service.RaceService;
+import com.example.demo.service.ScoreService;
+import com.example.demo.entity.HorseScore;
 import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.valueobject.RaceCondition;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RaceController {
     private RaceService raceService;
+    private ScoreService scoreService;
     private RaceConverter raceConverter;
     private GetRaceResponseConverter getRaceResponseConverter;
     private GetLengthResponseConverter getLengthResponseConverter;
@@ -88,4 +91,10 @@ public class RaceController {
                 .map(getHorseRaceResultResponseConverter::converter)
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/score")
+    public List<HorseScore> calcScore(Integer raceId) {
+        return scoreService.calcScore(raceId);
+    }
+
 }
