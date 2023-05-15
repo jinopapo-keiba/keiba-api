@@ -11,12 +11,11 @@ import com.example.demo.service.dto.RecentHorseResultDto;
 import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.utils.DateUtils;
 import com.example.demo.valueobject.Grade;
-import com.example.demo.valueobject.RaceCondition;
-import com.example.demo.valueobject.SummaryType;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,7 +40,7 @@ public List<BestRaceTime> fetchBestRaceTime(RecentRaceQuery query){
                                 .map(raceHorse -> raceHorse.getHorse().getId())
                                 .collect(Collectors.toList()))
                         .raceCondition(query.getRaceCondition())
-                        .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.now().minusYears(1)))
+                        .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.ofInstant(targeRace.getRaceDate().toInstant(), ZoneId.systemDefault()).minusYears(1)))
                         .stadiums(query.getStadiums())
                         .minRaceLength(query.getMinRaceLength())
                         .maxRaceLength(query.getMaxRaceLength())

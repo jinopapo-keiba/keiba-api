@@ -9,6 +9,7 @@ import com.example.demo.valueobject.Grade;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -22,12 +23,16 @@ public class ScoreService {
 
     public List<HorseScore> calcScore(int id) {
         Race targetRace = raceService.fetchRace(id).get(0);
+        List<String> targetStadium = new ArrayList<>();
+        if(targetRace.getGrade() != Grade.NONE) {
+            targetStadium = Arrays.asList("東京","中山","阪神","京都",targetRace.getStadium());
+        }
 
         RecentRaceQuery recentRaceQuery = RecentRaceQuery.builder()
                 .raceId(id)
                 .minRaceLength(targetRace.getRaceLength() <= 1800 ? targetRace.getRaceLength() : 2000)
                 .maxRaceLength(targetRace.getRaceLength() <= 1800 ? targetRace.getRaceLength() + 400 : 9999)
-                .stadiums(Arrays.asList("東京","中山","阪神","京都",targetRace.getStadium()))
+                .stadiums(targetStadium)
                 .build();
 
         List<RecentHorseResultDto> recentRaces = raceService.fetchHorseRanRecentRace(recentRaceQuery);
@@ -65,11 +70,17 @@ public class ScoreService {
 
                                 double conditionWeight = 1;
                                 if(targetRace.getStadium().equals(recentRace.getStadium())) {
-                                    conditionWeight += 0.5;
+                                    conditionWeight = 1.1;
                                 }
                                 if((targetRace.getRaceLength() <= 1800 && Objects.equals(recentRace.getRaceLength(), targetRace.getRaceLength()))
                                         || (targetRace.getRaceLength() > 1800 && recentRace.getRaceLength() >= targetRace.getRaceLength())) {
-                                    conditionWeight += 0.5;
+                                    conditionWeight = 1.3;
+                                }
+                                if(((targetRace.getRaceLength() <= 1800 && Objects.equals(recentRace.getRaceLength(), targetRace.getRaceLength()))
+                                        || (targetRace.getRaceLength() > 1800 && recentRace.getRaceLength() >= targetRace.getRaceLength()))
+                                        && targetRace.getStadium().equals(recentRace.getStadium())
+                                ) {
+                                    conditionWeight = 1.5;
                                 }
 
                                 int rankScore = 0;
