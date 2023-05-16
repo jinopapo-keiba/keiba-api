@@ -59,8 +59,8 @@ public class RaceController {
      * @return
      */
     @GetMapping
-    List<GetRaceResponse> getRace(Integer raceId) {
-        return raceService.fetchRace(raceId).stream()
+    List<GetRaceResponse> getRace(Integer raceId,@RequestParam(required = false,defaultValue = "true") Boolean beforeFlag) {
+        return raceService.fetchRace(raceId,beforeFlag).stream()
                 .map(getRaceResponseConverter::convert)
                 .collect(Collectors.toList());
     }

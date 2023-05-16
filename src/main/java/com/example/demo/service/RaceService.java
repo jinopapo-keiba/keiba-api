@@ -104,10 +104,10 @@ public class RaceService {
      * @param raceId レースid
      * @return レース
      */
-    public List<Race> fetchRace(Integer raceId) {
+    public List<Race> fetchRace(Integer raceId, Boolean beforeFlag) {
         return raceRepository.fetchRace(RaceQueryParam.builder()
                 .raceId(raceId)
-                .beforeRace(true)
+                .beforeRace(beforeFlag)
                 .build());
     }
 
@@ -129,6 +129,7 @@ public class RaceService {
                                 .collect(Collectors.toList()))
                         .raceCondition(query.getRaceCondition())
                         .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.ofInstant(targeRace.getRaceDate().toInstant(), ZoneId.systemDefault()).minusYears(1)))
+                        .endRaceDate(targeRace.getRaceDate())
                         .stadiums(query.getStadiums())
                         .minRaceLength(query.getMinRaceLength())
                         .maxRaceLength(query.getMaxRaceLength())

@@ -15,6 +15,7 @@ public class RaceQueryParam {
     private Date raceDate;
     private boolean beforeRace;
     private Date startRaceDate;
+    private Date endRaceDate;
     private RaceCondition raceCondition;
     private List<Integer> horseIds;
     private Integer raceId;

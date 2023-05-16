@@ -22,7 +22,7 @@ public class ScoreService {
     private final RaceService raceService;
 
     public List<HorseScore> calcScore(int id) {
-        Race targetRace = raceService.fetchRace(id).get(0);
+        Race targetRace = raceService.fetchRace(id,true).get(0);
         List<String> targetStadium = new ArrayList<>();
         if(targetRace.getGrade() != Grade.NONE) {
             targetStadium = Arrays.asList("東京","中山","阪神","京都",targetRace.getStadium());
@@ -106,20 +106,19 @@ public class ScoreService {
                                 if(targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 70) {
                                     timeScore = 200;
                                 } else if (targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 65) {
-                                    timeScore = 125;
+                                    timeScore = 150;
                                 } else if (targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 60) {
-                                    timeScore = 100;
+                                    timeScore = 125;
                                 } else if (targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 55) {
-                                    timeScore = 75;
+                                    timeScore = 100;
                                 } else if (targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 50) {
-                                    timeScore = 50;
+                                    timeScore = 75;
                                 } else if (targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 45) {
-                                    timeScore = 25;
+                                    timeScore = 50;
                                 } else if (targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 40) {
-                                    timeScore = 1;
+                                    timeScore = 25;
                                 }
 
-                                int tmpScore = (int) (gradeWeight * conditionWeight *(timeScore + rankScore));
                                 score.addAndGet((int) (gradeWeight * conditionWeight *(timeScore + rankScore)));
                                 if(gradeDiff > -3) {
                                     count.addAndGet(1);
