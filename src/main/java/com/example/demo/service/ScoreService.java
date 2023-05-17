@@ -30,8 +30,8 @@ public class ScoreService {
 
         RecentRaceQuery recentRaceQuery = RecentRaceQuery.builder()
                 .raceId(id)
-                .minRaceLength(targetRace.getRaceLength() <= 1800 ? targetRace.getRaceLength() : 2000)
-                .maxRaceLength(targetRace.getRaceLength() <= 1800 ? targetRace.getRaceLength() + 400 : 9999)
+                .minRaceLength(targetRace.getRaceLength() < 2000 ? targetRace.getRaceLength() : 2000)
+                .maxRaceLength(targetRace.getRaceLength() < 2000 ? 2000 : 9999)
                 .stadiums(targetStadium)
                 .build();
 
@@ -61,25 +61,18 @@ public class ScoreService {
                                 } else if (gradeDiff == 0) {
                                     gradeWeight = 1;
                                 } else if (gradeDiff == -1) {
-                                    gradeWeight = 0.7;
+                                    gradeWeight = 0.5;
                                 } else if (gradeDiff == -2) {
-                                    gradeWeight = 0.3;
+                                    gradeWeight = 0.1;
                                 } else {
                                     gradeWeight = 0;
                                 }
 
                                 double conditionWeight = 1;
-                                if(targetRace.getStadium().equals(recentRace.getStadium())) {
-                                    conditionWeight = 1.1;
-                                }
-                                if((targetRace.getRaceLength() <= 1800 && Objects.equals(recentRace.getRaceLength(), targetRace.getRaceLength()))
-                                        || (targetRace.getRaceLength() > 1800 && recentRace.getRaceLength() >= targetRace.getRaceLength())) {
+                                if(Objects.equals(recentRace.getRaceLength(), targetRace.getRaceLength())) {
                                     conditionWeight = 1.3;
                                 }
-                                if(((targetRace.getRaceLength() <= 1800 && Objects.equals(recentRace.getRaceLength(), targetRace.getRaceLength()))
-                                        || (targetRace.getRaceLength() > 1800 && recentRace.getRaceLength() >= targetRace.getRaceLength()))
-                                        && targetRace.getStadium().equals(recentRace.getStadium())
-                                ) {
+                                if(Objects.equals(recentRace.getRaceLength(), targetRace.getRaceLength()) && targetRace.getStadium().equals(recentRace.getStadium())) {
                                     conditionWeight = 1.5;
                                 }
 
@@ -119,8 +112,8 @@ public class ScoreService {
                                     timeScore = 25;
                                 }
 
-                                score.addAndGet((int) (gradeWeight * conditionWeight *(timeScore + rankScore)));
                                 if(gradeDiff > -3) {
+                                    score.addAndGet((int) (gradeWeight * conditionWeight *(timeScore + rankScore)));
                                     count.addAndGet(1);
                                 }
                             }
