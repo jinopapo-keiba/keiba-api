@@ -6,11 +6,10 @@ import com.example.demo.entity.HorseScore;
 import com.example.demo.service.dto.RecentHorseResultDto;
 import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.valueobject.Grade;
+import com.example.demo.valueobject.HorseGender;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,16 +22,9 @@ public class ScoreService {
 
     public List<HorseScore> calcScore(int id) {
         Race targetRace = raceService.fetchRace(id,true).get(0);
-        List<String> targetStadium = new ArrayList<>();
-        if(targetRace.getGrade() != Grade.NONE) {
-            targetStadium = Arrays.asList("東京","中山","阪神","京都",targetRace.getStadium());
-        }
 
         RecentRaceQuery recentRaceQuery = RecentRaceQuery.builder()
                 .raceId(id)
-                .minRaceLength(targetRace.getRaceLength() < 2000 ? targetRace.getRaceLength() : 2000)
-                .maxRaceLength(targetRace.getRaceLength() < 2000 ? 2000 : 9999)
-                .stadiums(targetStadium)
                 .build();
 
         List<RecentHorseResultDto> recentRaces = raceService.fetchHorseRanRecentRace(recentRaceQuery);
@@ -49,79 +41,36 @@ public class ScoreService {
                                         .findFirst()
                                         .get();
 
-                                double gradeWeight;
+                                double gradeScore = (double) (recentRace.getGrade() == Grade.NONE ? 4 : recentRace.getGrade().getValue()) /4;
+                                double stadiumScore = Objects.equals(targetRace.getStadium(), recentRace.getStadium()) ? 1 : 0;
+                                double rankScore = (double) targetHorse.getRaceResult().getRanking()/18;
+                                double fullTimeScore = targetHorse.getRaceResult().calcNormalizeFulltime();
+                                double lastRapTimeScore = targetHorse.getRaceResult().calcNormalizeLastRapTime();
+                                double raceFullTimeScore = targetHorse.getRaceResult().calcNormalizeRaceFulltime();
+                                double raceLastRapTimeScore = targetHorse.getRaceResult().calcNormalizeRaceLastRapTime();
+                                double sexScore = targetHorse.getHorse().getGender() == HorseGender.MAN ? 1 : 0;
+                                double raceTypeScore = targetRace.getRaceType() == recentRace.getRaceType() ? 1 : 0;
+                                double lengthScore = Objects.equals(targetRace.getRaceLength(), recentRace.getRaceLength()) ? 1 : 0;
+                                double lengthDiffScore = (double) Math.abs(targetRace.getRaceLength() - recentRace.getRaceLength()) /2600;
+                                double frameScore = (double) targetHorse.getFrameNumber()/18;
+                                double oldScore = (double) Math.abs(targetHorse.getOld() - 4) /5;
 
-                                int gradeDiff = (targetRace.getGrade() == Grade.NONE ? 4 : targetRace.getGrade().getValue()) - (recentRace.getGrade() == Grade.NONE ? 4 : recentRace.getGrade().getValue());
-                                if (gradeDiff == 3) {
-                                    gradeWeight = 2;
-                                } else if (gradeDiff == 2) {
-                                    gradeWeight = 1.7;
-                                } else if (gradeDiff == 1) {
-                                    gradeWeight = 1.3;
-                                } else if (gradeDiff == 0) {
-                                    gradeWeight = 1;
-                                } else if (gradeDiff == -1) {
-                                    gradeWeight = 0.5;
-                                } else if (gradeDiff == -2) {
-                                    gradeWeight = 0.1;
-                                } else {
-                                    gradeWeight = 0;
-                                }
 
-                                double conditionWeight = 1;
-                                if(Objects.equals(recentRace.getRaceLength(), targetRace.getRaceLength())) {
-                                    conditionWeight = 1.3;
-                                }
-                                if(Objects.equals(recentRace.getRaceLength(), targetRace.getRaceLength()) && targetRace.getStadium().equals(recentRace.getStadium())) {
-                                    conditionWeight = 1.5;
-                                }
-
-                                int rankScore = 0;
-                                switch (targetHorse.getRaceResult().getRanking()) {
-                                    case 1:
-                                        rankScore = 50;
-                                        break;
-                                    case 2:
-                                        rankScore = 40;
-                                        break;
-                                    case 3:
-                                        rankScore = 30;
-                                        break;
-                                    case 4:
-                                        rankScore = 20;
-                                        break;
-                                    case 5:
-                                        rankScore = 10;
-                                        break;
-                                }
-
-                                int timeScore = 0;
-                                if(targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 70) {
-                                    timeScore = 200;
-                                } else if (targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 65) {
-                                    timeScore = 150;
-                                } else if (targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 60) {
-                                    timeScore = 125;
-                                } else if (targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 55) {
-                                    timeScore = 100;
-                                } else if (targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 50) {
-                                    timeScore = 75;
-                                } else if (targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 45) {
-                                    timeScore = 50;
-                                } else if (targetHorse.getRaceResult().calcTargetRaceDevFullTime() >= 40) {
-                                    timeScore = 25;
-                                }
-
-                                if(gradeDiff > -3) {
-                                    score.addAndGet((int) (gradeWeight * conditionWeight *(timeScore + rankScore)));
-                                    count.addAndGet(1);
-                                }
+                                score.addAndGet((int) ((gradeScore*(-1)+rankScore*(-0.3)+fullTimeScore*0.3+lastRapTimeScore*0.1+raceFullTimeScore*0.5+raceLastRapTimeScore*0.3+sexScore*0.2+frameScore*0.1+oldScore*0.1+raceTypeScore+lengthDiffScore+lengthScore*0.3+lengthScore*stadiumScore*0.5)*100));
+                                count.addAndGet(1);
                             }
                     );
 
-                    sumScore.addAndGet(count.get() != 0 ? score.get()/count.get() : 0);
+                    double frameScore = (double) recentHorseResultDto.getRaceHorse().getFrameNumber() /18;
+                    double oldScore = (double) Math.abs(recentHorseResultDto.getRaceHorse().getOld() - 4) /5;
+                    int tmpScore = count.get() != 0 ? score.get()/count.get() : 0;
+                    tmpScore += (int)((frameScore*(-0.1)+oldScore*(-0.1))*100);
+                    if(tmpScore < 0) {
+                        tmpScore = 0;
+                    }
+                    sumScore.addAndGet(tmpScore);
                     return HorseScore.builder()
-                            .score(count.get() != 0 ? score.get()/count.get() : 0)
+                            .score(tmpScore)
                             .horseId(recentHorseResultDto.getRaceHorse().getHorse().getId())
                             .horseName(recentHorseResultDto.getRaceHorse().getHorse().getName())
                             .build();
