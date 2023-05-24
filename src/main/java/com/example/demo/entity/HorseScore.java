@@ -9,5 +9,6 @@ public class HorseScore {
     int horseId;
     String horseName;
     int score;
+    int maxScore;
     double rate;
 }

@@ -12,6 +12,16 @@
             #{name}
         </foreach>
     </select>
+    <select id="fetchJockeyRanking" resultType="Float">
+        SELECT avg(ranking)
+        FROM race
+        JOIN raceResult ON race.id = raceResult.raceId
+        JOIN raceHorse ON race.id = raceHorse.raceId AND raceResult.frameNumber = raceHorse.frameNumber
+        join jockey on jockey.id = raceHorse.jockeyId
+        where jockey.id = #{id} AND stadium = #{stadium} AND raceLength = #{raceLength} AND raceType = #{raceType}
+        group by jockeyId,stadium,raceLength
+        having count(ranking) > 10;
+    </select>
     <insert id="saveJockey" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO jockey (name) VALUES (#{jockey.name})
     </insert>

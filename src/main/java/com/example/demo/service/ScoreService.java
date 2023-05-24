@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.Race;
 import com.example.demo.entity.RaceHorse;
 import com.example.demo.entity.HorseScore;
+import com.example.demo.repository.JockeyRepository;
 import com.example.demo.service.dto.RecentHorseResultDto;
 import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.valueobject.Grade;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ScoreService {
     private final RaceService raceService;
+    private final JockeyRepository jockeyRepository;
 
     public List<HorseScore> calcScore(int id) {
         Race targetRace = raceService.fetchRace(id,true).get(0);
@@ -33,6 +35,7 @@ public class ScoreService {
         List<HorseScore> horseScores = recentRaces.stream().map(
                 recentHorseResultDto -> {
                     AtomicInteger score = new AtomicInteger();
+                    AtomicInteger maxScore = new AtomicInteger();
                     AtomicInteger count = new AtomicInteger();
                     recentHorseResultDto.getRaces().forEach(
                             recentRace -> {
@@ -41,9 +44,9 @@ public class ScoreService {
                                         .findFirst()
                                         .get();
 
-                                double gradeScore = (double) (recentRace.getGrade() == Grade.NONE ? 4 : recentRace.getGrade().getValue()) /4;
+                                double gradeScore = 1 - (double) (recentRace.getGrade() == Grade.NONE ? 4 : recentRace.getGrade().getValue()) /4;
                                 double stadiumScore = Objects.equals(targetRace.getStadium(), recentRace.getStadium()) ? 1 : 0;
-                                double rankScore = (double) targetHorse.getRaceResult().getRanking()/18;
+                                double rankScore = 1- (double) targetHorse.getRaceResult().getRanking()/18;
                                 double fullTimeScore = targetHorse.getRaceResult().calcNormalizeFulltime();
                                 double lastRapTimeScore = targetHorse.getRaceResult().calcNormalizeLastRapTime();
                                 double raceFullTimeScore = targetHorse.getRaceResult().calcNormalizeRaceFulltime();
@@ -54,23 +57,37 @@ public class ScoreService {
                                 double lengthDiffScore = (double) Math.abs(targetRace.getRaceLength() - recentRace.getRaceLength()) /2600;
                                 double frameScore = (double) targetHorse.getFrameNumber()/18;
                                 double oldScore = (double) Math.abs(targetHorse.getOld() - 4) /5;
-
-
-                                score.addAndGet((int) ((gradeScore*(-1)+rankScore*(-0.3)+fullTimeScore*0.3+lastRapTimeScore*0.1+raceFullTimeScore*0.5+raceLastRapTimeScore*0.3+sexScore*0.2+frameScore*0.1+oldScore*0.1+raceTypeScore+lengthDiffScore+lengthScore*0.3+lengthScore*stadiumScore*0.5)*100));
+                                double weightScore = (double) Math.abs(targetHorse.getWeight() - 490) /200;
+                                Float jockeyRanking = jockeyRepository.fetchJockeyRanking(targetHorse.getJockey().getId(),recentRace.getRaceLength(),recentRace.getStadium(),recentRace.getRaceType());
+                                if(jockeyRanking == null) {
+                                    jockeyRanking = (float) 0;
+                                }
+                                double jockeyScore = 1-jockeyRanking/18;
+                                int tmpScore = (int) ((gradeScore+rankScore*0.3+fullTimeScore*0.3+lastRapTimeScore*0.1+raceFullTimeScore*0.5+raceLastRapTimeScore*0.1+sexScore*0.2+frameScore*0.1+oldScore*0.1+raceTypeScore+weightScore*0.05+lengthDiffScore+lengthScore*0.3+lengthScore*stadiumScore*0.2+jockeyScore*0.2)*100);
+                                score.addAndGet(tmpScore);
+                                maxScore.set(Math.max(maxScore.get(),tmpScore));
                                 count.addAndGet(1);
                             }
                     );
 
-                    double frameScore = (double) recentHorseResultDto.getRaceHorse().getFrameNumber() /18;
-                    double oldScore = (double) Math.abs(recentHorseResultDto.getRaceHorse().getOld() - 4) /5;
+                    double frameScore = 1 - (double) recentHorseResultDto.getRaceHorse().getFrameNumber() /18;
+                    double oldScore = 1 - (double) Math.abs(recentHorseResultDto.getRaceHorse().getOld() - 4) /5;
+                    Float jockeyRanking = jockeyRepository.fetchJockeyRanking(recentHorseResultDto.getRaceHorse().getJockey().getId(),targetRace.getRaceLength(),targetRace.getStadium(),targetRace.getRaceType());
+                    if(jockeyRanking == null) {
+                        jockeyRanking = (float) 0;
+                    }
+                    double jockeyScore = 1 - jockeyRanking/18;
+
                     int tmpScore = count.get() != 0 ? score.get()/count.get() : 0;
-                    tmpScore += (int)((frameScore*(-0.1)+oldScore*(-0.1))*100);
+                    tmpScore += (int)((frameScore*0.1+oldScore*0.1+jockeyScore*0.2)*100);
+                    maxScore.getAndAdd((int)((frameScore*(-0.1)+oldScore*(-0.1))*100));
                     if(tmpScore < 0) {
                         tmpScore = 0;
                     }
                     sumScore.addAndGet(tmpScore);
                     return HorseScore.builder()
                             .score(tmpScore)
+                            .maxScore(maxScore.get())
                             .horseId(recentHorseResultDto.getRaceHorse().getHorse().getId())
                             .horseName(recentHorseResultDto.getRaceHorse().getHorse().getName())
                             .build();

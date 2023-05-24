@@ -29,7 +29,7 @@
             </association>
             <association javaType="com.example.demo.entity.Jockey" property="jockey">
                 <id column="horseId"/>
-                <id column="jockeyId"/>
+                <id property="id" column="jockeyId"/>
                 <result property="name" column="jockeyName"/>
             </association>
             <association resultMap="com.example.demo.repository.RaceResultRepository.RaceResultMap" property="raceResult"/>
