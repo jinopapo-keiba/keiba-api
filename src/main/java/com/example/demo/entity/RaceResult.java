@@ -56,12 +56,12 @@ public class RaceResult {
         }
 
         double tmpScore =  ((meanFullTime.toMillis() - fullTime.toMillis())/ stdDeviFullTime);
-        if (tmpScore < -1) {
-            tmpScore = -1;
-        } else if (tmpScore > 1) {
-            tmpScore = 1;
+        if (tmpScore < -2) {
+            tmpScore = -2;
+        } else if (tmpScore > 2) {
+            tmpScore = 2;
         }
-        return (tmpScore + 1)/2;
+        return (tmpScore + 2)/4;
     }
 
     public double calcNormalizeLastRapTime() {
@@ -69,31 +69,31 @@ public class RaceResult {
             return 0;
         }
         double tmpScore =  ((meanLastRapTime.toMillis() - lastRapTime.toMillis())/ stdDeviLastRapTime);
-        if (tmpScore < -1) {
-            tmpScore = -1;
-        } else if (tmpScore > 1) {
-            tmpScore = 1;
+        if (tmpScore < -2) {
+            tmpScore = -2;
+        } else if (tmpScore > 2) {
+            tmpScore = 2;
         }
-        return (tmpScore + 1)/2;
+        return (tmpScore + 2)/4;
     }
 
     public double calcNormalizeRaceFulltime() {
         double tmpScore =  ((meanTargetRaceFullTime.toMillis() - fullTime.toMillis())/ stdDeviTargetRaceFullTime);
-        if (tmpScore < -1) {
-            tmpScore = -1;
-        } else if (tmpScore > 1) {
-            tmpScore = 1;
+        if (tmpScore < -2) {
+            tmpScore = -2;
+        } else if (tmpScore > 2) {
+            tmpScore = 2;
         }
-        return (tmpScore + 1)/2;
+        return (tmpScore + 2)/4;
     }
 
     public double calcNormalizeRaceLastRapTime() {
         double tmpScore =  ((meanTargetRaceLastRapTime.toMillis() - lastRapTime.toMillis())/ stdDeviTargetRaceLastRapTime);
-        if (tmpScore < -1) {
-            tmpScore = -1;
-        } else if (tmpScore > 1) {
-            tmpScore = 1;
+        if (tmpScore < -2) {
+            tmpScore = -2;
+        } else if (tmpScore > 2) {
+            tmpScore = 2;
         }
-        return (tmpScore + 1)/2;
+        return (tmpScore + 2)/4;
     }
 }

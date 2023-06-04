@@ -57,13 +57,12 @@ public class ScoreService {
                                 double lengthDiffScore = (double) Math.abs(targetRace.getRaceLength() - recentRace.getRaceLength()) /2600;
                                 double frameScore = (double) targetHorse.getFrameNumber()/18;
                                 double oldScore = (double) Math.abs(targetHorse.getOld() - 4) /5;
-                                double weightScore = (double) Math.abs(targetHorse.getWeight() - 490) /200;
                                 Float jockeyRanking = jockeyRepository.fetchJockeyRanking(targetHorse.getJockey().getId(),recentRace.getRaceLength(),recentRace.getStadium(),recentRace.getRaceType());
                                 if(jockeyRanking == null) {
                                     jockeyRanking = (float) 0;
                                 }
                                 double jockeyScore = 1-jockeyRanking/18;
-                                int tmpScore = (int) ((gradeScore+rankScore*0.3+fullTimeScore*0.3+lastRapTimeScore*0.1+raceFullTimeScore*0.5+raceLastRapTimeScore*0.1+sexScore*0.2+frameScore*0.1+oldScore*0.1+raceTypeScore+weightScore*0.05+lengthDiffScore+lengthScore*0.3+lengthScore*stadiumScore*0.2+jockeyScore*0.2)*100);
+                                int tmpScore = (int) ((gradeScore*1.5+rankScore+fullTimeScore*0.5+lastRapTimeScore*0.1+raceFullTimeScore*0.8+raceLastRapTimeScore*0.2+sexScore*0.2+frameScore*0.1+oldScore*0.2+raceTypeScore+lengthDiffScore+lengthScore*0.3+lengthScore*stadiumScore*0.2+jockeyScore*0.2)*100);
                                 score.addAndGet(tmpScore);
                                 maxScore.set(Math.max(maxScore.get(),tmpScore));
                                 count.addAndGet(1);

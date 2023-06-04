@@ -14,4 +14,8 @@ public class ResultResponse {
     float devLastRapTime;
     float devTargetRaceFullTime;
     float devTargetRaceLastRapTime;
+    float normalFullTime;
+    float normalLastRapTime;
+    float normalTargetRaceFullTime;
+    float normalTargetRaceLastRapTime;
 }

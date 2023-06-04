@@ -16,6 +16,10 @@ public class ResultResponseConverter {
                 .devFullTime(raceResult.calcDevFullTime())
                 .devTargetRaceFullTime(raceResult.calcTargetRaceDevFullTime())
                 .devTargetRaceLastRapTime(raceResult.calcTargetRaceDevLastRapTime())
+                .normalLastRapTime((float) raceResult.calcNormalizeLastRapTime())
+                .normalFullTime((float) raceResult.calcNormalizeFulltime())
+                .normalTargetRaceLastRapTime((float) raceResult.calcNormalizeRaceLastRapTime())
+                .normalTargetRaceFullTime((float) raceResult.calcNormalizeRaceFulltime())
                 .build();
     }
 }
