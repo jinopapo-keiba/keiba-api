@@ -148,14 +148,4 @@ public class RaceService {
                                 .build())
                 .collect(Collectors.toList());
     }
-
-    /**
-     * 該当レースの出走馬が走ったことのあるレースの距離一覧を取得
-     *
-     * @param raceId raceid
-     * @return 出走経験のある距離
-     */
-    public List<RaceLength> fetchRaceLength(String raceId) {
-        return raceRepository.fetchRanRaceLength(raceId);
-    }
 }

@@ -277,36 +277,4 @@
         race.round ASC,
         raceHorse.frameNumber ASC
     </select>
-
-    <select id="fetchRanRaceLength" resultType="com.example.demo.entity.RaceLength">
-        SELECT
-            raceLength,count(DISTINCT horse.id) as count
-        FROM
-            race
-        JOIN
-            raceResult
-        ON
-            race.id = raceResult.raceId
-        JOIN
-            raceHorse
-        ON
-            raceHorse.raceId = raceResult.raceId
-        AND
-            raceHorse.frameNumber = raceResult.frameNumber
-        JOIN
-            horse
-        ON
-            raceHorse.horseId = horse.id
-        WHERE
-            race.raceDate &gt; now() - INTERVAL 12 MONTH
-        AND
-            horse.id
-        IN (
-            select horse.id from race join raceHorse on race.id = raceHorse.raceId join horse on raceHorse.horseId = horse.id WHERE race.id = #{raceId}
-        )
-        GROUP BY
-            raceLength
-        ORDER BY
-            raceLength
-    </select>
 </mapper>

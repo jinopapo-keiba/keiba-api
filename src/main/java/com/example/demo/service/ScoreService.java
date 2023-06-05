@@ -62,7 +62,7 @@ public class ScoreService {
                                     jockeyRanking = (float) 0;
                                 }
                                 double jockeyScore = 1-jockeyRanking/18;
-                                int tmpScore = (int) ((gradeScore*1.5+rankScore+fullTimeScore*0.5+lastRapTimeScore*0.1+raceFullTimeScore*0.8+raceLastRapTimeScore*0.2+sexScore*0.2+frameScore*0.1+oldScore*0.2+raceTypeScore+lengthDiffScore+lengthScore*0.3+lengthScore*stadiumScore*0.2+jockeyScore*0.2)*100);
+                                int tmpScore = (int) ((gradeScore*1.5+rankScore+fullTimeScore*0.5+lastRapTimeScore*0.2+raceFullTimeScore*0.5+raceLastRapTimeScore*0.2+sexScore*0.2+frameScore*0.1+oldScore*0.2+raceTypeScore+lengthDiffScore+lengthScore*0.3+lengthScore*stadiumScore*0.2+jockeyScore*0.2)*100);
                                 score.addAndGet(tmpScore);
                                 maxScore.set(Math.max(maxScore.get(),tmpScore));
                                 count.addAndGet(1);

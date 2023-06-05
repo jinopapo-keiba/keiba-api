@@ -1,16 +1,14 @@
 package com.example.demo.contoller;
 
 import com.example.demo.contoller.converter.GetHorseRaceResultResponseConverter;
-import com.example.demo.contoller.converter.GetLengthResponseConverter;
 import com.example.demo.contoller.converter.GetRaceResponseConverter;
 import com.example.demo.contoller.request.SaveRaceRequest;
 import com.example.demo.contoller.response.GetHorseRaceResultResponse;
-import com.example.demo.contoller.response.GetLengthResponse;
 import com.example.demo.contoller.response.GetRaceResponse;
 import com.example.demo.converter.RaceConverter;
+import com.example.demo.entity.HorseScore;
 import com.example.demo.service.RaceService;
 import com.example.demo.service.ScoreService;
-import com.example.demo.entity.HorseScore;
 import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.valueobject.RaceCondition;
 import lombok.AllArgsConstructor;
@@ -29,7 +27,6 @@ public class RaceController {
     private ScoreService scoreService;
     private RaceConverter raceConverter;
     private GetRaceResponseConverter getRaceResponseConverter;
-    private GetLengthResponseConverter getLengthResponseConverter;
     private final GetHorseRaceResultResponseConverter getHorseRaceResultResponseConverter;
 
     @PostMapping
@@ -43,13 +40,6 @@ public class RaceController {
         return raceService.fetchBeforeRace().stream()
                 .map(getRaceResponseConverter::convert)
                 .collect(Collectors.toList());
-    }
-
-    @GetMapping("/length")
-    GetLengthResponse getLength(String raceId) {
-        return getLengthResponseConverter.convert(
-                raceService.fetchRaceLength(raceId)
-        );
     }
 
     /**

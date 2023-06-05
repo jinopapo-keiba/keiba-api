@@ -3,13 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.repository.RaceResultRepository">
-    <resultMap id="BestTimeResultMap" type="com.example.demo.service.dto.BestRaceTimeDto">
-        <id column="id"/>
-        <result column="summaryFullTime" property="fullTime"/>
-        <result column="summaryLastRapTime" property="lastRapTime"/>
-        <result column="count" property="count"/>
-        <association resultMap="com.example.demo.repository.RaceHorseRepository.raceHorsesResultMap" property="raceHorse"/>
-    </resultMap>
 
     <resultMap id="RaceResultMap" type="com.example.demo.entity.RaceResult">
         <id column="id"/>
@@ -26,28 +19,6 @@
         <result property="meanTargetRaceLastRapTime" column="meanTargetRaceLastRapTime"/>
         <result property="stdDeviTargetRaceFullTime" column="stdDeviTargetRaceFullTime"/>
         <result property="stdDeviTargetRaceLastRapTime" column="stdDeviTargetRaceLastRapTime"/>
-    </resultMap>
-
-    <resultMap id="HorseResultMap" type="com.example.demo.service.dto.HorseResultDto">
-        <id column="race.id"/>
-        <result column="meanFullTime" property="meanFullTime"/>
-        <result column="meanLastRapTime" property="meanLastRapTime"/>
-        <result column="stdevpFullTime" property="stdevpFullTime"/>
-        <result column="stdevpLastRapTime" property="stdevpLastRapTime"/>
-        <association resultMap="RaceResultMap" property="raceResult"/>
-        <association javaType="com.example.demo.entity.Race" property="race">
-            <id property="id" column="id"/>
-            <result property="raceName" column="raceName"/>
-            <result property="stadium" column="stadium"/>
-            <result property="round" column="round"/>
-            <result property="raceType" column="raceType"/>
-            <result property="raceLength" column="raceLength"/>
-            <result property="clockwise" column="clockwise"/>
-            <result property="raceCondition" column="raceCondition"/>
-            <result property="raceWeather" column="raceWeather"/>
-            <result property="grade" column="grade"/>
-            <result property="raceDate" column="raceDate"/>
-        </association>
     </resultMap>
 
     <insert id="saveRaceResult">
@@ -74,163 +45,6 @@
             ranking = #{raceResult.ranking},
             lastRapTime = #{raceResult.lastRapTime}
     </insert>
-
-    <sql id="raceJoin">
-        SELECT DISTINCT
-            ${column}
-        FROM
-            race
-        JOIN
-            raceResult
-        ON
-            race.id = raceResult.raceId
-        JOIN
-            raceHorse
-        ON
-            raceHorse.raceId = raceResult.raceId
-        AND
-            raceHorse.frameNumber = raceResult.frameNumber
-        WHERE
-            raceHorse.horseId = horse.id
-        AND
-            race.raceDate &gt; now() - INTERVAL 12 MONTH
-    </sql>
-
-    <sql id="fetchHorseResultSub">
-        SELECT
-            ${column}
-        FROM
-            race as subRace
-        JOIN
-            raceResult as subRaceResult
-        ON
-            subRace.id = subRaceResult.raceId
-        JOIN
-            raceHorse
-        ON
-            raceHorse.raceId = subRaceResult.raceId
-        AND
-            raceHorse.frameNumber = subRaceResult.frameNumber
-        WHERE
-            subRace.id = race.id
-    </sql>
-
-    <select id="fetchBestRaceTimes" resultMap="BestTimeResultMap">
-        SELECT
-            horse.id as horseId,
-            horse.name as horseName,
-            horse.gender as horseGender,
-            raceHorse.old as old,
-            raceHorse.weight as weight,
-            raceHorse.frameNumber as frameNumber,
-            race.stadium as raceStadium,
-            jockey.name as jockeyName,
-            (
-                <choose>
-                    <when test='summaryType == @com.example.demo.valueobject.SummaryType@AVG'>
-                        <include refid="raceJoin">
-                            <property name="column" value="avg(fullTime)"/>
-                        </include>
-                    </when>
-                    <otherwise>
-                        <include refid="raceJoin">
-                            <property name="column" value="min(fullTime)"/>
-                        </include>
-                    </otherwise>
-                </choose>
-                <if test="raceLength != null">
-                AND
-                    race.raceLength = #{raceLength}
-                </if>
-                <if test="raceCondition != null">
-                AND
-                    race.raceCondition = #{raceCondition.value}
-                </if>
-                <if test="stadium != null">
-                AND
-                    race.stadium = #{stadium}
-                </if>
-                <if test="stadium == null">
-                AND
-                    race.stadium = raceStadium
-                </if>
-            ) as summaryFullTime,
-            (
-                <include refid="raceJoin">
-                    <property name="column" value="count(fullTime)"/>
-                </include>
-                <if test="raceLength != null">
-                AND
-                    race.raceLength = #{raceLength}
-                </if>
-                <if test="raceCondition != null">
-                AND
-                    race.raceCondition = #{raceCondition.value}
-                </if>
-                <if test="stadium != null">
-                AND
-                    race.stadium = #{stadium}
-                </if>
-                <if test="stadium == null">
-                AND
-                    race.stadium = raceStadium
-                </if>
-            ) as count,
-            (
-                <choose>
-                    <when test='summaryType == @com.example.demo.valueobject.SummaryType@AVG'>
-                        <include refid="raceJoin">
-                            <property name="column" value="avg(lastRapTime)"/>
-                        </include>
-                    </when>
-                    <otherwise>
-                        <include refid="raceJoin">
-                            <property name="column" value="min(lastRapTime)"/>
-                        </include>
-                    </otherwise>
-                </choose>
-                <if test="raceLength != null">
-                AND
-                    race.raceLength = #{raceLength}
-                </if>
-                <if test="raceCondition != null">
-                AND
-                    race.raceCondition = #{raceCondition.value}
-                </if>
-                <if test="stadium != null">
-                AND
-                    race.stadium = #{stadium}
-                </if>
-                <if test="stadium == null">
-                AND
-                    race.stadium = raceStadium
-                </if>
-            ) as summaryLastRapTime
-        FROM
-            horse
-        JOIN
-            raceHorse
-        ON
-            raceHorse.horseId = horse.id
-        JOIN
-            jockey
-        ON
-            raceHorse.jockeyId = jockey.id
-        JOIN
-            race
-        ON
-            raceHorse.raceId = race.id
-        WHERE
-            horse.id
-        IN
-            (
-                select horse.id from race join raceHorse on race.id = raceHorse.raceId join horse on raceHorse.horseId = horse.id WHERE race.id = #{raceId}
-            )
-        AND
-            raceHorse.raceId = #{raceId}
-        ORDER BY
-            raceHorse.frameNumber
-    </select>
 
     <select id="fetchStadiumSummaryTimes" resultType="com.example.demo.entity.StadiumTime">
         SELECT DISTINCT
@@ -311,47 +125,4 @@
         </if>
     </select>
 
-    <select id="fetchHorseResult" resultMap="HorseResultMap">
-        SELECT
-            raceResult.*,
-            race.*,
-            (
-                <include refid="fetchHorseResultSub">
-                    <property name="column" value="avg(fullTIme) as meanFullTime"/>
-                </include>
-            ) as meanFullTime,
-            (
-                <include refid="fetchHorseResultSub">
-                    <property name="column" value="avg(lastRapTime) as meanLastRapTime"/>
-                </include>
-            ) as meanLastRapTime,
-            (
-                <include refid="fetchHorseResultSub">
-                    <property name="column" value="stddev_pop(fullTime) as stdevpFullTime"/>
-                </include>
-            ) as stdevpFullTime,
-            (
-                <include refid="fetchHorseResultSub">
-                    <property name="column" value="stddev_pop(lastRapTime) as stdevpLastRapTime"/>
-                </include>
-            ) as stdevpLastRapTime
-        FROM
-            race
-        JOIN
-            raceResult
-        ON
-            race.id = raceResult.raceId
-        JOIN
-            raceHorse
-        ON
-            raceHorse.raceId = raceResult.raceId
-        AND
-            raceHorse.frameNumber = raceResult.frameNumber
-        JOIN
-            horse
-        ON
-            horse.id = raceHorse.horseId
-        WHERE
-            horse.id = #{horseId}
-    </select>
 </mapper>
