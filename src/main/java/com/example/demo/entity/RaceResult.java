@@ -51,7 +51,7 @@ public class RaceResult {
     }
 
     public double calcNormalizeFulltime() {
-        if(stdDeviFullTime == null){
+        if(stdDeviFullTime == null || stdDeviFullTime == 0){
             return 0;
         }
 
@@ -65,7 +65,7 @@ public class RaceResult {
     }
 
     public double calcNormalizeLastRapTime() {
-        if(stdDeviLastRapTime == null){
+        if(stdDeviLastRapTime == null || stdDeviLastRapTime == 0){
             return 0;
         }
         double tmpScore =  ((meanLastRapTime.toMillis() - lastRapTime.toMillis())/ stdDeviLastRapTime);
@@ -78,6 +78,9 @@ public class RaceResult {
     }
 
     public double calcNormalizeRaceFulltime() {
+        if(stdDeviTargetRaceFullTime == null || stdDeviTargetRaceFullTime == 0){
+            return 0;
+        }
         double tmpScore =  ((meanTargetRaceFullTime.toMillis() - fullTime.toMillis())/ stdDeviTargetRaceFullTime);
         if (tmpScore < -2) {
             tmpScore = -2;
@@ -88,6 +91,9 @@ public class RaceResult {
     }
 
     public double calcNormalizeRaceLastRapTime() {
+        if(stdDeviTargetRaceLastRapTime == null || stdDeviTargetRaceLastRapTime == 0){
+            return 0;
+        }
         double tmpScore =  ((meanTargetRaceLastRapTime.toMillis() - lastRapTime.toMillis())/ stdDeviTargetRaceLastRapTime);
         if (tmpScore < -2) {
             tmpScore = -2;

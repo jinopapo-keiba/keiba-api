@@ -7,4 +7,5 @@ import lombok.Getter;
 @Builder
 public class JockeyResponse {
     String name;
+    Integer id;
 }

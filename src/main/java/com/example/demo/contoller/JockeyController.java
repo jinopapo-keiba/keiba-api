@@ -27,7 +27,8 @@ public class JockeyController {
      * @return 平均順位
      */
     @GetMapping("result")
-    Float getJockeyResult(int id,int raceLength,String stadium,int raceType) {
-        return jockeyRepository.fetchJockeyRanking(id, raceLength, stadium, RaceType.toEnum(raceType));
+    Float getJockeyResult(int id,int raceLength,String stadium,String raceType) {
+        Float score =  jockeyRepository.fetchJockeyRanking(id, raceLength, stadium, RaceType.toEnum(raceType));
+        return score == null ? 0.0f : score;
     }
 }

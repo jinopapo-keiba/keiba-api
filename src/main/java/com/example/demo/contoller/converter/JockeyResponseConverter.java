@@ -9,6 +9,7 @@ public class JockeyResponseConverter {
     public JockeyResponse convert(Jockey jockey){
         return JockeyResponse.builder()
                 .name(jockey.getName())
+                .id(jockey.getId())
                 .build();
     }
 }

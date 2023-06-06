@@ -87,4 +87,8 @@ public class RaceController {
         return scoreService.calcScore(raceId);
     }
 
+    @GetMapping("/all")
+    public List<Integer> allRace() {
+        return raceService.fetchAllRace();
+    }
 }

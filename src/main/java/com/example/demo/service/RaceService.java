@@ -148,4 +148,10 @@ public class RaceService {
                                 .build())
                 .collect(Collectors.toList());
     }
+
+    public List<Integer> fetchAllRace() {
+        return raceRepository.fetchAllRace().stream()
+                .map(Race::getId)
+                .collect(Collectors.toList());
+    }
 }
