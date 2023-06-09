@@ -15,6 +15,7 @@ public class GetHorseRaceResultResponseConverter {
     private RaceResultResponseConverter raceResultResponseConverter;
 
     public GetHorseRaceResultResponse converter(RecentHorseResultDto recentHorseResultDto){
+
         return GetHorseRaceResultResponse.builder()
                 .name(recentHorseResultDto.getRaceHorse().getHorse().getName())
                 .id(recentHorseResultDto.getRaceHorse().getHorse().getId())
@@ -24,7 +25,6 @@ public class GetHorseRaceResultResponseConverter {
                                 race,
                                 race.getRaceHorses().stream()
                                         .filter(raceHorse -> raceHorse.getHorse().getId().equals(recentHorseResultDto.getRaceHorse().getHorse().getId()))
-                                        .map(RaceHorse::getRaceResult)
                                         .findFirst()
                                         .get()
                         )))

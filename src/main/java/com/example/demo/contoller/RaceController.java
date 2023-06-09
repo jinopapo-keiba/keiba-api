@@ -88,7 +88,7 @@ public class RaceController {
     }
 
     @GetMapping("/all")
-    public List<Integer> allRace() {
-        return raceService.fetchAllRace();
+    public List<Integer> allRace(@RequestParam(required = false, defaultValue = "false") boolean testFlag) {
+        return raceService.fetchAllRace(testFlag);
     }
 }

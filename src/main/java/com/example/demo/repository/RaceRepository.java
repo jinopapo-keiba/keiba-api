@@ -14,6 +14,11 @@ public interface RaceRepository {
     void updateRace(@Param("race")Race race);
     List<Race> fetchRace(@Param("queryParam")RaceQueryParam queryParam);
 
-    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and grade > 0;")
-    List<Race> fetchAllRace();
+    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200;")
+    List<Integer> fetchAllRace();
+    @Select("select id from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and grade > 0 and raceDate > \"2020-01-01\" group by id order by raceDate limit 10;")
+    List<Integer> fetchTestGradeRace();
+
+    @Select("select id from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and grade = 0 and raceDate > \"2020-01-01\" group by id order by raceDate limit 90;")
+    List<Integer> fetchTestNoneGradeRace();
 }

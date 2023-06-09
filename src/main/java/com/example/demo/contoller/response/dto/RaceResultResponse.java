@@ -7,5 +7,5 @@ import lombok.Getter;
 @Builder
 public class RaceResultResponse {
     RaceResponse race;
-    ResultResponse result;
+    RaceHorseResponse raceHorse;
 }

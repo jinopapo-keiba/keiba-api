@@ -149,9 +149,20 @@ public class RaceService {
                 .collect(Collectors.toList());
     }
 
-    public List<Integer> fetchAllRace() {
-        return raceRepository.fetchAllRace().stream()
-                .map(Race::getId)
-                .collect(Collectors.toList());
+    /**
+     * 学習用のraceIdの一覧を取得する
+     * testFlagがtrueのときは検証用のテストidだけ取得する
+     *
+     * @param testFlag 検証フラグ
+     * @return raceId
+     */
+    public List<Integer> fetchAllRace(boolean testFlag) {
+        if(testFlag) {
+            List<Integer> ids = raceRepository.fetchTestGradeRace();
+            ids.addAll(raceRepository.fetchTestNoneGradeRace());
+            return ids;
+        } else {
+            return raceRepository.fetchAllRace();
+        }
     }
 }
