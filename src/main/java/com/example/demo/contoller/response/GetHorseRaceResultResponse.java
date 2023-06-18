@@ -12,6 +12,6 @@ public class GetHorseRaceResultResponse {
     private int id;
     private String name;
     private Integer frameNumber;
-    private Integer handicap;
+    private Float handicap;
     private List<RaceResultResponse> raceResults;
 }

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,7 +63,8 @@ public class RaceService {
                 .forEach(jockeyRepository::saveJockey);
 
         //調教師の保存
-        List<Trainer> trainers = race.getRaceHorses().stream().map(RaceHorse::getTrainer).collect(Collectors.toList());
+        Set<Trainer> trainers = race.getRaceHorses().stream().map(RaceHorse::getTrainer).collect(Collectors.toSet());
+
         List<Trainer> savedTrainers = trainerRepository.fetchTrainers(
                 trainers.stream().map(Trainer::getName).collect(Collectors.toList())
         );

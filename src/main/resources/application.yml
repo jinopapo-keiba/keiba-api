@@ -1,7 +1,7 @@
 spring:
   dataSource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost/keiba
+    url: jdbc:mysql://localhost/keibav2
     username: ji-no
 logging:
   level:
