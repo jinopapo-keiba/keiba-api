@@ -22,6 +22,7 @@ public class GetRaceResponseConverter {
                 .clockwise(race.getClockwise().getText())
                 .raceWeather(race.getRaceWeather().getText())
                 .grade(race.getGrade().getText())
+                .oldLimit(race.getOldLimit().getText())
                 .raceDate(dateFormat.format(race.getRaceDate()))
                 .id(race.getId())
                 .round(race.getRound())

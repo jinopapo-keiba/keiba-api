@@ -9,10 +9,17 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 public enum Grade {
-    G3("G3",3),
-    G2("G2",2),
-    G1("G1",1),
-    NONE("",0);
+    G1("G1",0),
+    G2("G2",1),
+    G3("G3",2),
+    LISTED("リステッド",3),
+    OPEN("オープン",4),
+    WIN3("3勝クラス",5),
+    WIN2("2勝クラス",6),
+    WIN1("1勝クラス",7),
+    NEW("新馬",8),
+    WIN0("未勝利",9),
+    NONE("",-1);
     private String text;
     private int value;
 

@@ -18,6 +18,7 @@ public class Race {
     RaceCondition raceCondition;
     RaceWeather raceWeather;
     Grade grade;
+    OldLimit oldLimit;
     Date raceDate;
     Integer id;
     Integer round;

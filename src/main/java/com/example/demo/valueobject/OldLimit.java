@@ -7,25 +7,26 @@ import java.util.Arrays;
 
 @AllArgsConstructor
 @Getter
-public enum Clockwise {
-    LEFT("左",0),
-    RIGHT("右",1),
-    NONE("",-1);
+public enum OldLimit {
+    ONLY2("2歳",0),
+    ONLY3("3歳",1),
+    UPPER3("3歳以上",2),
+    UPPER4("4歳以上",3);
+
     private String text;
     private int value;
 
-
-    public static Clockwise toEnum(int value){
+    public static OldLimit toEnum(int value){
         return Arrays.stream(values())
                 .filter(v -> v.getValue() == value)
                 .findFirst()
-                .orElse(NONE);
+                .orElse(null);
     }
 
-    public static Clockwise toEnum(String text){
+    public static OldLimit toEnum(String text){
         return Arrays.stream(values())
                 .filter(v -> v.getText().equals(text))
                 .findFirst()
-                .orElse(NONE);
+                .orElse(null);
     }
 }

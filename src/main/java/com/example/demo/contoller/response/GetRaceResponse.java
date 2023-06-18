@@ -16,6 +16,7 @@ public class GetRaceResponse {
     String raceCondition;
     String raceWeather;
     String grade;
+    String oldLimit;
     String raceDate;
     int id;
     int round;

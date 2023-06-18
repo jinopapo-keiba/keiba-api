@@ -24,6 +24,7 @@ public class RaceConverter {
                 .raceLength(saveRaceRequest.getRaceLength())
                 .clockwise(Clockwise.toEnum(saveRaceRequest.getClockwise()))
                 .grade(Grade.toEnum(saveRaceRequest.getGrade()))
+                .oldLimit(OldLimit.toEnum(saveRaceRequest.getOldLimit()))
                 .raceWeather(RaceWeather.toEnum(saveRaceRequest.getRaceWeather()))
                 .raceCondition(RaceCondition.toEnum(saveRaceRequest.getRaceCondition()))
                 .raceDate(dateFormat.parse(saveRaceRequest.getRaceDate()))

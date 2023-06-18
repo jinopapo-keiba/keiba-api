@@ -12,6 +12,7 @@ public class SaveRaceRequest {
     Integer raceLength;
     String clockwise;
     String grade;
+    String oldLimit;
     String stadium;
     Integer round;
     String raceWeather;

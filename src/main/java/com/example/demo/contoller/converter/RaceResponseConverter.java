@@ -16,6 +16,7 @@ public class RaceResponseConverter {
         return RaceResponse.builder()
                 .id(race.getId())
                 .grade(race.getGrade().getText())
+                .oldLimit(race.getOldLimit().getText())
                 .raceLength(race.getRaceLength())
                 .clockwise(race.getClockwise().getText())
                 .raceCondition(race.getRaceCondition().getText())

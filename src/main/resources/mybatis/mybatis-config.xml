@@ -11,5 +11,6 @@
         <typeHandler handler="com.example.demo.repository.handler.ClockwiseTypeHandler"/>
         <typeHandler handler="com.example.demo.repository.handler.GradeTypeHandler"/>
         <typeHandler handler="com.example.demo.repository.handler.RaceConditionTypeHandler"/>
+        <typeHandler handler="com.example.demo.repository.handler.OldLimitTypeHandler"/>
     </typeHandlers>
 </configuration>
