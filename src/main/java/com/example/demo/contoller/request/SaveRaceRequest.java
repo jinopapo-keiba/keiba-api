@@ -27,6 +27,7 @@ public class SaveRaceRequest {
         Integer weight;
         Integer old;
         Integer frameNumber;
+        Integer handicap;
         RaceResult raceResult;
     }
 

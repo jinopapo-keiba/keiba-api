@@ -9,6 +9,7 @@
         <id column="id"/>
         <result property="weight" column="weight"/>
         <result property="old" column="old"/>
+        <result property="handicap" column="handicap"/>
         <result property="frameNumber" column="frameNumber"/>
         <association javaType="com.example.demo.entity.Horse" property="horse">
             <id property="id" column="horseId"/>
@@ -37,6 +38,7 @@
             jockeyId,
             frameNumber,
             weight,
+            handicap,
             old
         )
         SELECT
@@ -52,6 +54,7 @@
             ) as jockeyId,
             #{raceHorse.frameNumber},
             #{raceHorse.weight},
+            #{raceHorse.handicap}
             #{raceHorse.old}
         FROM
             horse
@@ -61,6 +64,7 @@
         UPDATE
             frameNumber = #{raceHorse.frameNumber},
             weight = #{raceHorse.weight},
+            handicap = #{raceHorse.handicap},
             old = #{raceHorse.old}
     </insert>
 </mapper>

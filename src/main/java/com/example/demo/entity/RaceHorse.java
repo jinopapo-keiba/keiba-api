@@ -13,4 +13,5 @@ public class RaceHorse {
     Horse horse;
     Jockey jockey;
     RaceResult raceResult;
+    Integer handicap;
 }

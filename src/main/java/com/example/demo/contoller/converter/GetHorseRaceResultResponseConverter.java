@@ -2,7 +2,6 @@ package com.example.demo.contoller.converter;
 
 
 import com.example.demo.contoller.response.GetHorseRaceResultResponse;
-import com.example.demo.entity.RaceHorse;
 import com.example.demo.service.dto.RecentHorseResultDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,6 +18,7 @@ public class GetHorseRaceResultResponseConverter {
         return GetHorseRaceResultResponse.builder()
                 .name(recentHorseResultDto.getRaceHorse().getHorse().getName())
                 .id(recentHorseResultDto.getRaceHorse().getHorse().getId())
+                .handicap(recentHorseResultDto.getRaceHorse().getHandicap())
                 .frameNumber(recentHorseResultDto.getRaceHorse().getFrameNumber())
                 .raceResults(recentHorseResultDto.getRaces().stream()
                         .map((race -> raceResultResponseConverter.convert(
