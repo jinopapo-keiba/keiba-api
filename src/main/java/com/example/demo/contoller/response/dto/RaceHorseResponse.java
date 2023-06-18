@@ -11,5 +11,6 @@ public class RaceHorseResponse {
     Integer frameNumber;
     HorseResponse horse;
     JockeyResponse jockey;
+    TrainerResponse trainer;
     ResultResponse raceResult;
 }

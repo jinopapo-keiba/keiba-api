@@ -6,6 +6,7 @@
     <resultMap id="raceHorsesResultMap" type="com.example.demo.entity.RaceHorse">
         <id column="horseId"/>
         <id column="jockeyId"/>
+        <id column="trainerId"/>
         <id column="id"/>
         <result property="weight" column="weight"/>
         <result property="old" column="old"/>
@@ -20,6 +21,11 @@
             <id column="horseId"/>
             <id column="jockeyId"/>
             <result property="name" column="jockeyName"/>
+        </association>
+        <association javaType="com.example.demo.entity.Trainer" property="trainer">
+            <id column="horseId"/>
+            <id column="trainerId"/>
+            <result property="name" column="trainerName"/>
         </association>
         <association javaType="com.example.demo.entity.RaceResult" property="raceResult">
             <id column="id"/>
@@ -36,6 +42,7 @@
             raceId,
             horseId,
             jockeyId,
+            trainerId,
             frameNumber,
             weight,
             handicap,
@@ -52,6 +59,14 @@
                 WHERE
                     name = #{raceHorse.jockey.name}
             ) as jockeyId,
+            (
+                SELECT
+                    id
+                FROM
+                    trainer
+                WHERE
+                    name = #{raceHorse.trainer.name}
+                ) as trainerId,
             #{raceHorse.frameNumber},
             #{raceHorse.weight},
             #{raceHorse.handicap}

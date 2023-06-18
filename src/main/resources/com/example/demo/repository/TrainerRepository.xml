@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.repository.TrainerRepository">
+    <select id="fetchTrainers" resultType="com.example.demo.entity.Trainer">
+        SELECT name,id from trainer where name in
+        <foreach item="name" collection="names" open="(" separator="," close=")">
+            #{name}
+        </foreach>
+    </select>
+    <select id="fetchTrainerRanking" resultType="Float">
+        SELECT avg(ranking)
+        FROM race
+        JOIN raceResult ON race.id = raceResult.raceId
+        JOIN raceHorse ON race.id = raceHorse.raceId AND raceResult.frameNumber = raceHorse.frameNumber
+        join trainer on trainer.id = raceHorse.trainerId
+        where trainer.id = #{id} AND stadium = #{stadium} AND raceLength = #{raceLength} AND raceType = #{raceType}
+        group by trainerId,stadium,raceLength
+        having count(ranking) > 10;
+    </select>
+    <insert id="saveTrainer" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO trainer (name) VALUES (#{trainer.name})
+    </insert>
+</mapper>

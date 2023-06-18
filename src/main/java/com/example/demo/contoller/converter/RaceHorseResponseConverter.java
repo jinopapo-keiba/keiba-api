@@ -11,6 +11,7 @@ public class RaceHorseResponseConverter {
     private HorseResponseConverter horseResponseConverter;
     private JockeyResponseConverter jockeyResponseConverter;
     private ResultResponseConverter resultResponseConverter;
+    private TrainerResponseConverter trainerResponseConverter;
 
     public RaceHorseResponse convert(RaceHorse raceHorse){
         return RaceHorseResponse.builder()
@@ -19,6 +20,7 @@ public class RaceHorseResponseConverter {
                 .frameNumber(raceHorse.getFrameNumber())
                 .horse(horseResponseConverter.convert(raceHorse.getHorse()))
                 .jockey(jockeyResponseConverter.convert(raceHorse.getJockey()))
+                .trainer(trainerResponseConverter.convert(raceHorse.getTrainer()))
                 .raceResult(raceHorse.getRaceResult() == null ? null : resultResponseConverter.convert(raceHorse.getRaceResult()))
                 .build();
     }

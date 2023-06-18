@@ -12,6 +12,7 @@ public class RaceHorse {
     Integer frameNumber;
     Horse horse;
     Jockey jockey;
+    Trainer trainer;
     RaceResult raceResult;
     Integer handicap;
 }

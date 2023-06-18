@@ -1,6 +1,7 @@
 package com.example.demo.contoller.request;
 
 import com.example.demo.entity.Jockey;
+import com.example.demo.entity.Trainer;
 import lombok.Data;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class SaveRaceRequest {
     static public class RaceHorse {
         Horse horse;
         Jockey jockey;
+        Trainer trainer;
         Integer weight;
         Integer old;
         Integer frameNumber;

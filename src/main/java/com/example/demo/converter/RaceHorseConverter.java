@@ -15,6 +15,7 @@ public class RaceHorseConverter {
         return RaceHorse.builder()
                 .horse(horseConverter.convert(raceHorse.getHorse()))
                 .jockey(raceHorse.getJockey())
+                .trainer(raceHorse.getTrainer())
                 .frameNumber(raceHorse.getFrameNumber())
                 .old(raceHorse.getOld())
                 .handicap(raceHorse.getHandicap())

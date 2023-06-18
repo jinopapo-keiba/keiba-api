@@ -25,6 +25,7 @@ public class RaceService {
     private final JockeyRepository jockeyRepository;
     private final RaceHorseRepository raceHorseRepository;
     private final RaceResultRepository raceResultRepository;
+    private final TrainerRepository trainerRepository;
 
     @Transactional
     public void saveRace(Race race){
@@ -59,6 +60,15 @@ public class RaceService {
         jockeys.stream()
                 .filter(jockey -> ListUtils.search(jockey,savedJockey,(a,b) -> a.getName().equals(b.getName())) == null)
                 .forEach(jockeyRepository::saveJockey);
+
+        //調教師の保存
+        List<Trainer> trainers = race.getRaceHorses().stream().map(RaceHorse::getTrainer).collect(Collectors.toList());
+        List<Trainer> savedTrainers = trainerRepository.fetchTrainers(
+                trainers.stream().map(Trainer::getName).collect(Collectors.toList())
+        );
+        trainers.stream()
+                .filter(trainer -> ListUtils.search(trainer,savedTrainers,(a,b) -> a.getName().equals(b.getName())) == null)
+                .forEach(trainerRepository::saveTrainer);
 
         //レースの馬情報の保存
         race.getRaceHorses().forEach(
