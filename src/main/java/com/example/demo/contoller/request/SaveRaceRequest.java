@@ -43,6 +43,7 @@ public class SaveRaceRequest {
     static public class RaceResult{
         String fullTime;
         Integer ranking;
+        Integer popular;
         String lastRapTime;
         String cornerRanking;
     }

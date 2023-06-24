@@ -33,6 +33,11 @@
                 <id property="id" column="jockeyId"/>
                 <result property="name" column="jockeyName"/>
             </association>
+            <association javaType="com.example.demo.entity.Trainer" property="trainer">
+                <id column="horseId"/>
+                <id property="id" column="trainerId"/>
+                <result property="name" column="trainerName"/>
+            </association>
             <association resultMap="com.example.demo.repository.RaceResultRepository.RaceResultMap" property="raceResult"/>
         </collection>
     </resultMap>

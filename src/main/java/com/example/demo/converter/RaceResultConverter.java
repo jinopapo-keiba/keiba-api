@@ -25,6 +25,7 @@ public class RaceResultConverter {
                     .fullTime(Duration.ZERO)
                     .ranking(raceResult.getRanking())
                     .lastRapTime(Duration.ZERO)
+                    .popular(raceResult.getPopular())
                     .cornerRanking(raceResult.getCornerRanking())
                     .build();
         }
@@ -42,6 +43,7 @@ public class RaceResultConverter {
                 .fullTime(fullTime)
                 .ranking(raceResult.getRanking())
                 .lastRapTime(lastRapTime)
+                .popular(raceResult.getPopular())
                 .cornerRanking(raceResult.getCornerRanking())
                 .build();
     }

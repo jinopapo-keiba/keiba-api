@@ -38,8 +38,8 @@ public class RaceService {
                         .raceDate(race.getRaceDate())
                         .build());
         if(!races.isEmpty()) {
-            raceRepository.updateRace(races.get(0));
             race.setId(races.get(0).getId());
+            raceRepository.updateRace(race);
         } else {
             raceRepository.saveRace(race);
         }
@@ -140,7 +140,7 @@ public class RaceService {
                                 .map(raceHorse -> raceHorse.getHorse().getId())
                                 .collect(Collectors.toList()))
                         .raceCondition(query.getRaceCondition())
-                        .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.ofInstant(targeRace.getRaceDate().toInstant(), ZoneId.systemDefault()).minusYears(1)))
+                        .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.ofInstant(targeRace.getRaceDate().toInstant(), ZoneId.systemDefault()).minusYears(2)))
                         .endRaceDate(targeRace.getRaceDate())
                         .stadiums(query.getStadiums())
                         .minRaceLength(query.getMinRaceLength())
