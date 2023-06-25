@@ -15,7 +15,7 @@
         JOIN raceResult ON race.id = raceResult.raceId
         JOIN raceHorse ON race.id = raceHorse.raceId AND raceResult.frameNumber = raceHorse.frameNumber
         join trainer on trainer.id = raceHorse.trainerId
-        where trainer.id = #{id} AND stadium = #{stadium} AND raceLength = #{raceLength} AND raceType = #{raceType}
+        where trainer.id = #{id} AND stadium = #{stadium} AND raceLength = #{raceLength} AND raceType = #{raceType} AND raceDate >= #{raceDate}
         group by trainerId,stadium,raceLength
         having count(ranking) > 10;
     </select>

@@ -5,6 +5,7 @@ import com.example.demo.valueobject.RaceType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -13,5 +14,5 @@ public interface JockeyRepository {
     List<Jockey> fetchJockeys(List<String> names);
     void saveJockey(@Param("jockey") Jockey jockey);
 
-    Float fetchJockeyRanking(int id, int raceLength, String stadium, RaceType raceType);
+    Float fetchJockeyRanking(int id, int raceLength, String stadium, RaceType raceType, Date raceDate);
 }

@@ -57,7 +57,7 @@ public class ScoreService {
                                 double lengthDiffScore = (double) Math.abs(targetRace.getRaceLength() - recentRace.getRaceLength()) /2600;
                                 double frameScore = (double) targetHorse.getFrameNumber()/18;
                                 double oldScore = (double) Math.abs(targetHorse.getOld() - 4) /5;
-                                Float jockeyRanking = jockeyRepository.fetchJockeyRanking(targetHorse.getJockey().getId(),recentRace.getRaceLength(),recentRace.getStadium(),recentRace.getRaceType());
+                                Float jockeyRanking = jockeyRepository.fetchJockeyRanking(targetHorse.getJockey().getId(),recentRace.getRaceLength(),recentRace.getStadium(),recentRace.getRaceType(),recentRace.getRaceDate());
                                 if(jockeyRanking == null) {
                                     jockeyRanking = (float) 0;
                                 }
@@ -71,7 +71,7 @@ public class ScoreService {
 
                     double frameScore = 1 - (double) recentHorseResultDto.getRaceHorse().getFrameNumber() /18;
                     double oldScore = 1 - (double) Math.abs(recentHorseResultDto.getRaceHorse().getOld() - 4) /5;
-                    Float jockeyRanking = jockeyRepository.fetchJockeyRanking(recentHorseResultDto.getRaceHorse().getJockey().getId(),targetRace.getRaceLength(),targetRace.getStadium(),targetRace.getRaceType());
+                    Float jockeyRanking = jockeyRepository.fetchJockeyRanking(recentHorseResultDto.getRaceHorse().getJockey().getId(),targetRace.getRaceLength(),targetRace.getStadium(),targetRace.getRaceType(),targetRace.getRaceDate());
                     if(jockeyRanking == null) {
                         jockeyRanking = (float) 0;
                     }
