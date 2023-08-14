@@ -17,29 +17,50 @@
         <result property="oldLimit" column="oldLimit"/>
         <result property="raceDate" column="raceDate"/>
         <collection property="raceHorses" ofType="com.example.demo.entity.RaceHorse">
-            <id column="horseId"/>
-            <id column="jockeyId"/>
-            <id column="id"/>
+            <id column="id" property="raceId"/>
+            <id property="frameNumber" column="frameNumber"/>
             <result property="weight" column="weight"/>
             <result property="old" column="old"/>
-            <result property="frameNumber" column="frameNumber"/>
             <association javaType="com.example.demo.entity.Horse" property="horse">
                 <id property="id" column="horseId"/>
                 <result property="name" column="horseName"/>
                 <result property="gender" column="horseGender"/>
             </association>
             <association javaType="com.example.demo.entity.Jockey" property="jockey">
-                <id column="horseId"/>
                 <id property="id" column="jockeyId"/>
                 <result property="name" column="jockeyName"/>
             </association>
             <association javaType="com.example.demo.entity.Trainer" property="trainer">
-                <id column="horseId"/>
                 <id property="id" column="trainerId"/>
                 <result property="name" column="trainerName"/>
             </association>
-            <association resultMap="com.example.demo.repository.RaceResultRepository.RaceResultMap" property="raceResult"/>
+            <association javaType="com.example.demo.entity.RaceResult" property="raceResult">
+                <id property="raceId" column="id" />
+                <id property="frameNumber" column="frameNumber"/>
+                <result property="fullTime" column="fullTime"/>
+                <result property="ranking" column="ranking"/>
+                <result property="cornerRanking" column="cornerRanking"/>
+                <result property="popular" column="popular"/>
+                <result property="lastRapTime" column="lastRapTime"/>
+                <result property="meanFullTime" column="meanFullTime"/>
+                <result property="meanLastRapTime" column="meanLastRapTime"/>
+                <result property="stdDeviFullTime" column="stdDeviFullTime"/>
+                <result property="stdDeviLastRapTime" column="stdDeviLastRapTime"/>
+                <result property="meanTargetRaceFullTime" column="meanTargetRaceFullTime"/>
+                <result property="meanTargetRaceLastRapTime" column="meanTargetRaceLastRapTime"/>
+                <result property="stdDeviTargetRaceFullTime" column="stdDeviTargetRaceFullTime"/>
+                <result property="stdDeviTargetRaceLastRapTime" column="stdDeviTargetRaceLastRapTime"/>
+            </association>
         </collection>
+    </resultMap>
+
+    <resultMap id="deviBaseMap" type="com.example.demo.repository.dto.DeviBase">
+        <constructor>
+            <arg column="meanFullTime" javaType="java.time.Duration"/>
+            <arg column="meanLastRapTime" javaType="java.time.Duration"/>
+            <arg column="stdDeviFullTime" javaType="float"/>
+            <arg column="stdDeviLastRapTime" javaType="float"/>
+        </constructor>
     </resultMap>
 
     <sql id="topHorseResultsColumn">
@@ -141,6 +162,37 @@
             id = #{race.id}
     </update>
 
+    <select id="fetchDeviBase" resultMap="deviBaseMap">
+        SELECT
+            avg(minFullTime) as meanFullTime,
+            avg(minLastRapTime) as meanLastRapTime,
+            stddev_pop(minFullTime) as stdDeviFullTime,
+            stddev_pop(minLastRapTime) as stdDeviLastRapTime
+        FROM
+        (
+            SELECT
+                min(fullTime) as minFullTime,
+                min(lastRapTime) as minLastRapTime
+            FROM
+                race
+            JOIN
+                raceResult
+            ON
+                race.id = raceResult.raceId
+            WHERE
+                ranking > 0
+            AND
+                race.raceLength = #{raceLength}
+            AND
+                race.raceType = #{raceType}
+            AND
+                race.stadium = #{stadium}
+            AND
+                race.raceCondition = #{raceCondition}
+            GROUP BY race.id
+        ) minTime
+    </select>
+
     <select id="fetchRace" resultMap="raceMap">
         SELECT
             raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,oldLimit,raceDate,race.id as id,round,stadium,
@@ -152,50 +204,6 @@
             raceCondition as subRaceCondition,race.id as subId
         <if test="queryParam.beforeRace == false">
             ,fullTime,ranking,cornerRanking,lastRapTime,
-            (
-            <include refid="topHorseResultsColumn">
-                <property name="column" value="avg(fullTime)"/>
-                <property name="raceLength" value="subRaceLength"/>
-                <property name="grade" value="grade"/>
-                <property name="stadium" value="subStadium"/>
-                <property name="raceCondition" value="subRaceCondition"/>
-                <property name="raceType" value="subRaceType"/>
-                <property name="sortColumn" value="fullTime"/>
-            </include>
-            ) as meanFullTime,
-            (
-            <include refid="topHorseResultsColumn">
-                <property name="column" value="avg(lastRapTime)"/>
-                <property name="raceLength" value="subRaceLength"/>
-                <property name="grade" value="grade"/>
-                <property name="stadium" value="subStadium"/>
-                <property name="raceCondition" value="subRaceCondition"/>
-                <property name="raceType" value="subRaceType"/>
-                <property name="sortColumn" value="lastRapTime"/>
-            </include>
-            ) as meanLastRapTime,
-            (
-            <include refid="topHorseResultsColumn">
-                <property name="column" value="stddev_pop(fullTime)"/>
-                <property name="raceLength" value="subRaceLength"/>
-                <property name="grade" value="grade"/>
-                <property name="stadium" value="subStadium"/>
-                <property name="raceCondition" value="subRaceCondition"/>
-                <property name="raceType" value="subRaceType"/>
-                <property name="sortColumn" value="fullTime"/>
-            </include>
-            ) as stdDeviFullTime,
-            (
-            <include refid="topHorseResultsColumn">
-                <property name="column" value="stddev_pop(lastRapTime)"/>
-                <property name="raceLength" value="subRaceLength"/>
-                <property name="grade" value="grade"/>
-                <property name="stadium" value="subStadium"/>
-                <property name="raceCondition" value="raceCondition"/>
-                <property name="raceType" value="subRaceType"/>
-                <property name="sortColumn" value="lastRapTime"/>
-            </include>
-            ) as stdDeviLastRapTime,
             (
             <include refid="targetRaceHorseResultsColumn">
                 <property name="column" value="avg(fullTime)"/>
@@ -271,7 +279,7 @@
             </if>
             <if test="queryParam.horseIds != null">
                 AND
-                    raceHorse.horseId
+                    horse.id
                 IN
                 <foreach item="horseId" collection="queryParam.horseIds" open="(" separator="," close=")">
                     #{horseId}

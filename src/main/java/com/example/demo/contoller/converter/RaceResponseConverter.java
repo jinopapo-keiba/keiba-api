@@ -2,6 +2,7 @@ package com.example.demo.contoller.converter;
 
 import com.example.demo.contoller.response.dto.RaceResponse;
 import com.example.demo.entity.Race;
+import com.example.demo.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +11,6 @@ import java.text.DateFormat;
 @AllArgsConstructor
 @Component
 public class RaceResponseConverter {
-    private DateFormat dateFormat;
 
     public RaceResponse convert(Race race) {
         return RaceResponse.builder()
@@ -20,7 +20,7 @@ public class RaceResponseConverter {
                 .raceLength(race.getRaceLength())
                 .clockwise(race.getClockwise().getText())
                 .raceCondition(race.getRaceCondition().getText())
-                .raceDate(dateFormat.format(race.getRaceDate()))
+                .raceDate(DateUtils.getDateFormat().format(race.getRaceDate()))
                 .round(race.getRound())
                 .stadium(race.getStadium())
                 .raceName(race.getRaceName())

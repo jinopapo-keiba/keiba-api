@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
+import com.example.demo.repository.dto.DeviBase;
 import com.example.demo.repository.dto.HorseQueryParam;
 import com.example.demo.repository.dto.RaceQueryParam;
 import com.example.demo.service.dto.RecentHorseResultDto;
@@ -9,6 +10,7 @@ import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.utils.DateUtils;
 import com.example.demo.utils.ListUtils;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class RaceService {
     private final RaceRepository raceRepository;
     private final HorseRepository horseRepository;
@@ -153,8 +156,20 @@ public class RaceService {
                                 .raceHorse(raceHorse)
                                 .races(recentRanRaces.stream()
                                         .filter(
-                                            race -> race.getRaceHorses().stream()
-                                                .anyMatch(horse -> Objects.equals(raceHorse.getHorse().getId(),horse.getHorse().getId()))
+                                                race -> race.getRaceHorses().stream()
+                                                        .anyMatch(horse -> Objects.equals(raceHorse.getHorse().getId(),horse.getHorse().getId()))
+                                        )
+                                        .map(
+                                                race -> {
+                                                    DeviBase deviBase = raceRepository.fetchDeviBase(race.getRaceType(),race.getRaceCondition(),race.getStadium(),race.getRaceLength());
+                                                    RaceResult raceResult = race.getRaceHorses().get(0).getRaceResult();
+                                                    raceResult.setMeanFullTime(deviBase.meanFullTime());
+                                                    raceResult.setMeanLastRapTime(deviBase.meanLastRapTime());
+                                                    raceResult.setStdDeviFullTime(deviBase.stdDeviFullTime());
+                                                    raceResult.setStdDeviLastRapTime(deviBase.stdDeviLastRapTime());
+                                                    race.getRaceHorses().get(0).setRaceResult(raceResult);
+                                                    return race;
+                                                }
                                         )
                                         .collect(Collectors.toList()))
                                 .build())

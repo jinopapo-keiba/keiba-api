@@ -2,6 +2,7 @@ package com.example.demo.contoller.converter;
 
 import com.example.demo.contoller.response.GetRaceResponse;
 import com.example.demo.entity.*;
+import com.example.demo.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,6 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class GetRaceResponseConverter {
-    private DateFormat dateFormat;
     private RaceHorseResponseConverter raceHorseResponseConverter;
 
     public GetRaceResponse convert(Race race){
@@ -23,7 +23,7 @@ public class GetRaceResponseConverter {
                 .raceWeather(race.getRaceWeather().getText())
                 .grade(race.getGrade().getText())
                 .oldLimit(race.getOldLimit().getText())
-                .raceDate(dateFormat.format(race.getRaceDate()))
+                .raceDate(DateUtils.getDateFormat().format(race.getRaceDate()))
                 .id(race.getId())
                 .round(race.getRound())
                 .stadium(race.getStadium())

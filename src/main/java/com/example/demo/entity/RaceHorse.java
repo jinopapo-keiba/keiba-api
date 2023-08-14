@@ -7,12 +7,13 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class RaceHorse {
+    Integer raceId;
     Integer weight;
     Integer old;
     Integer frameNumber;
+    Float handicap;
     Horse horse;
     Jockey jockey;
     Trainer trainer;
     RaceResult raceResult;
-    Float handicap;
 }

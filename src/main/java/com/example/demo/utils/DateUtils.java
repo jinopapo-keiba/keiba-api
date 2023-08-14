@@ -2,6 +2,8 @@ package com.example.demo.utils;
 
 import lombok.experimental.UtilityClass;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.util.Date;
 
@@ -12,4 +14,9 @@ public class DateUtils {
         Instant instant = zonedDateTime.toInstant();
         return Date.from(instant);
     }
+
+    public DateFormat getDateFormat(){
+        return new SimpleDateFormat("yyyyMMdd");
+    }
+
 }

@@ -9,6 +9,8 @@ import java.time.Duration;
 @AllArgsConstructor
 @Builder
 public class RaceResult {
+    Integer raceId;
+    Integer frameNumber;
     Duration fullTime;
     Integer ranking;
     String cornerRanking;

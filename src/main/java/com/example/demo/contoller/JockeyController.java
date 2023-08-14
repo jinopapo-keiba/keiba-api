@@ -18,7 +18,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class JockeyController {
     private JockeyRepository jockeyRepository;
-    private DateFormat dateFormat;
 
     @GetMapping
     Jockey getJockey(int id){
@@ -38,7 +37,7 @@ public class JockeyController {
     Float getJockeyResult(int id,int raceLength,String stadium,String raceType,String raceDate) throws ParseException {
         Date targetDate = DateUtils.convertLocalDateTime2Date(
                 LocalDateTime.ofInstant(
-                        dateFormat.parse(raceDate).toInstant(), ZoneId.systemDefault())
+                        DateUtils.getDateFormat().parse(raceDate).toInstant(), ZoneId.systemDefault())
                 .minusYears(2)
         );
 
