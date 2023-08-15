@@ -45,7 +45,7 @@
             trainerId,
             frameNumber,
             handicap,
-            frameNumber,
+            weight,
             old
         )
         SELECT
@@ -68,6 +68,8 @@
                     name = #{raceHorse.trainer.name}
             ) as trainerId,
             #{raceHorse.frameNumber},
+            #{raceHorse.handicap},
+            #{raceHorse.weight},
             #{raceHorse.old}
         FROM
             horse

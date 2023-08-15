@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -120,10 +121,31 @@ public class RaceService {
      * @return レース
      */
     public List<Race> fetchRace(Integer raceId, Boolean beforeFlag) {
-        return raceRepository.fetchRace(RaceQueryParam.builder()
-                .raceId(raceId)
-                .beforeRace(beforeFlag)
-                .build());
+        if (beforeFlag) {
+            return raceRepository.fetchRace(RaceQueryParam.builder()
+                    .raceId(raceId)
+                    .beforeRace(true)
+                    .build());
+        } else {
+            List<Race> race = raceRepository.fetchRace(RaceQueryParam.builder()
+                    .raceId(raceId)
+                    .beforeRace(true)
+                    .build());
+            List<Race> raceWithResult = raceRepository.fetchRace(RaceQueryParam.builder()
+                    .raceId(raceId)
+                    .beforeRace(false)
+                    .build());
+            race.get(0).setRaceHorses(race.get(0).getRaceHorses().stream()
+                    .map(
+                            raceHorse -> {
+                                Optional<RaceHorse> targetRaceHorse = raceWithResult.get(0).getRaceHorses().stream().filter(
+                                        raceHorseWithResult -> raceHorseWithResult.getHorse().getId().equals(raceHorse.getHorse().getId())
+                                ).findFirst();
+                                return targetRaceHorse.orElse(raceHorse);
+                            })
+                    .toList());
+            return race;
+        }
     }
 
     /**
@@ -159,6 +181,7 @@ public class RaceService {
                                                 race -> race.getRaceHorses().stream()
                                                         .anyMatch(horse -> Objects.equals(raceHorse.getHorse().getId(),horse.getHorse().getId()))
                                         )
+                                        .limit(5)
                                         .map(
                                                 race -> {
                                                     DeviBase deviBase = raceRepository.fetchDeviBase(race.getRaceType(),race.getRaceCondition(),race.getStadium(),race.getRaceLength());

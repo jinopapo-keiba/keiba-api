@@ -9,7 +9,7 @@ public class ResultResponseConverter {
     public ResultResponse convert(RaceResult raceResult){
         return ResultResponse.builder()
                 .fullTime(raceResult.getFullTime().toMillis())
-                .ranking(raceResult.getRanking())
+                .ranking(raceResult.getRanking() == null ? -1 : raceResult.getRanking())
                 .cornerRanking(raceResult.getCornerRanking())
                 .popelar(raceResult.getPopular() == null ? 0 : raceResult.getPopular())
                 .lastRapTime(raceResult.getLastRapTime().toMillis())
