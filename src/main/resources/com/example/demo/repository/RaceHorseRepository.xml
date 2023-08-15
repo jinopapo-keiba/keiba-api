@@ -44,6 +44,8 @@
             jockeyId,
             trainerId,
             frameNumber,
+            handicap,
+            frameNumber,
             old
         )
         SELECT
@@ -74,6 +76,8 @@
         ON DUPLICATE KEY
         UPDATE
             frameNumber = #{raceHorse.frameNumber},
-            old = #{raceHorse.old}
+            old = #{raceHorse.old},
+            handicap = #{raceHorse.handicap},
+            weight = #{raceHorse.weight}
     </insert>
 </mapper>
