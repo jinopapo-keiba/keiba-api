@@ -185,12 +185,18 @@ public class RaceService {
                                         .map(
                                                 race -> {
                                                     DeviBase deviBase = raceRepository.fetchDeviBase(race.getRaceType(),race.getRaceCondition(),race.getStadium(),race.getRaceLength());
-                                                    RaceResult raceResult = race.getRaceHorses().get(0).getRaceResult();
-                                                    raceResult.setMeanFullTime(deviBase.meanFullTime());
-                                                    raceResult.setMeanLastRapTime(deviBase.meanLastRapTime());
-                                                    raceResult.setStdDeviFullTime(deviBase.stdDeviFullTime());
-                                                    raceResult.setStdDeviLastRapTime(deviBase.stdDeviLastRapTime());
-                                                    race.getRaceHorses().get(0).setRaceResult(raceResult);
+                                                    race.setRaceHorses(race.getRaceHorses().stream().map(
+                                                            updateRaceHorse -> {
+                                                                RaceResult raceResult = updateRaceHorse.getRaceResult();
+                                                                raceResult.setMeanFullTime(deviBase.meanFullTime());
+                                                                raceResult.setMeanLastRapTime(deviBase.meanLastRapTime());
+                                                                raceResult.setStdDeviFullTime(deviBase.stdDeviFullTime());
+                                                                raceResult.setStdDeviLastRapTime(deviBase.stdDeviLastRapTime());
+                                                                updateRaceHorse.setRaceResult(raceResult);
+                                                                return updateRaceHorse;
+                                                            })
+                                                            .toList()
+                                                    );
                                                     return race;
                                                 }
                                         )
