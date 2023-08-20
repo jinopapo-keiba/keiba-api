@@ -214,9 +214,7 @@ public class RaceService {
      */
     public List<Integer> fetchAllRace(boolean testFlag) {
         if(testFlag) {
-            List<Integer> ids = raceRepository.fetchTestGradeRace();
-            ids.addAll(raceRepository.fetchTestNoneGradeRace());
-            return ids;
+            return raceRepository.fetchTestRace();
         } else {
             return raceRepository.fetchAllRace();
         }
