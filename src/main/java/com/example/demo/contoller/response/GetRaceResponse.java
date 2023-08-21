@@ -21,5 +21,6 @@ public class GetRaceResponse {
     int id;
     int round;
     String stadium;
+    int horseCount;
     List<RaceHorseResponse> raceHorses;
 }

@@ -25,6 +25,7 @@ public class RaceResponseConverter {
                 .stadium(race.getStadium())
                 .raceName(race.getRaceName())
                 .raceType(race.getRaceType().getText())
+                .horseCount(race.getHorseCount())
                 .build();
     }
 }

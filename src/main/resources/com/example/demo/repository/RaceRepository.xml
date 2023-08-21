@@ -16,6 +16,7 @@
         <result property="grade" column="grade"/>
         <result property="oldLimit" column="oldLimit"/>
         <result property="raceDate" column="raceDate"/>
+        <result property="horseCount" column="horseCount"/>
         <collection property="raceHorses" ofType="com.example.demo.entity.RaceHorse">
             <id column="id" property="raceId"/>
             <id property="frameNumber" column="frameNumber"/>
@@ -60,36 +61,6 @@
             <arg column="stdDeviLastRapTime" javaType="float"/>
         </constructor>
     </resultMap>
-
-    <sql id="topHorseResultsColumn">
-        SELECT
-            ${column}
-        FROM (
-            SELECT
-                min(${sortColumn}) as ${sortColumn}
-            FROM
-                race
-            JOIN
-                raceResult
-            ON
-                race.id = raceResult.raceId
-            WHERE
-                ranking > 0
-            AND
-                race.raceLength = ${raceLength}
-            AND
-                race.raceType = ${raceType}
-            AND
-                race.stadium = ${stadium}
-            AND
-                race.raceCondition = ${raceCondition}
-            GROUP BY race.id
-            <!-- グレードが取れてないレースがあるので一旦コメントあうと
-            AND
-                race.grade = ${grade}
-            -->
-        ) ${sortColumn}
-    </sql>
 
     <sql id="targetRaceHorseResultsColumn">
         SELECT
@@ -194,7 +165,7 @@
     <select id="fetchRace" resultMap="raceMap">
         SELECT
             raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,oldLimit,raceDate,race.id as id,round,stadium,
-            weight,old,handicap,raceHorse.frameNumber as frameNumber,
+            weight,old,handicap,raceHorse.frameNumber as frameNumber,horseCount,
             jockey.id as jockeyId,jockey.name as jockeyName,
             trainer.id as trainerId,trainer.name as trainerName,
             horse.id as horseId,horse.name as horseName, gender as horseGender,
@@ -244,6 +215,10 @@
             trainer
         ON
             trainerId = trainer.id
+        JOIN
+            horseCount
+        ON
+            horseCount.raceId = race.id
         <if test="queryParam.beforeRace == false">
             JOIN
                 raceResult

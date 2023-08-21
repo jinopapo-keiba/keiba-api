@@ -6,7 +6,6 @@ import com.example.demo.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.text.DateFormat;
 import java.util.stream.Collectors;
 
 @Component
@@ -28,6 +27,7 @@ public class GetRaceResponseConverter {
                 .round(race.getRound())
                 .stadium(race.getStadium())
                 .raceCondition(race.getRaceCondition().getText())
+                .horseCount(race.getHorseCount())
                 .raceHorses(race.getRaceHorses().stream()
                         .map(raceHorseResponseConverter::convert)
                         .collect(Collectors.toList())

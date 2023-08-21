@@ -24,4 +24,5 @@ public class Race {
     Integer round;
     String stadium;
     List<RaceHorse> raceHorses;
+    Integer horseCount;
 }

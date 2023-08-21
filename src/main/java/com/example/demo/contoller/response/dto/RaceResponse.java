@@ -18,4 +18,5 @@ public class RaceResponse {
     int id;
     int round;
     String stadium;
+    int horseCount;
 }
