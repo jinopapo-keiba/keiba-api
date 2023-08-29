@@ -9,7 +9,7 @@ public class ResultResponse {
     long fullTime;
     int ranking;
     String cornerRanking;
-    int popelar;
+    int popular;
     long lastRapTime;
     float devFullTime;
     float devLastRapTime;

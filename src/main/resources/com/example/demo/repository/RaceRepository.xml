@@ -171,7 +171,7 @@
             horse.id as horseId,horse.name as horseName, gender as horseGender,
             race.id as subId
         <if test="queryParam.beforeRace == false">
-            ,fullTime,ranking,cornerRanking,lastRapTime,
+            ,fullTime,ranking,cornerRanking,lastRapTime,popular,
             (
             <include refid="targetRaceHorseResultsColumn">
                 <property name="column" value="avg(fullTime)"/>

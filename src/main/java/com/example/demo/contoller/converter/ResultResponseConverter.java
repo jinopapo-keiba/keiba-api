@@ -11,7 +11,7 @@ public class ResultResponseConverter {
                 .fullTime(raceResult.getFullTime().toMillis())
                 .ranking(raceResult.getRanking() == null ? -1 : raceResult.getRanking())
                 .cornerRanking(raceResult.getCornerRanking())
-                .popelar(raceResult.getPopular() == null ? 0 : raceResult.getPopular())
+                .popular(raceResult.getPopular() == null ? 0 : raceResult.getPopular())
                 .lastRapTime(raceResult.getLastRapTime().toMillis())
                 .devLastRapTime(raceResult.calcDevLastRapTime())
                 .devFullTime(raceResult.calcDevFullTime())
