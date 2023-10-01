@@ -181,7 +181,6 @@ public class RaceService {
                                                 race -> race.getRaceHorses().stream()
                                                         .anyMatch(horse -> Objects.equals(raceHorse.getHorse().getId(),horse.getHorse().getId()))
                                         )
-                                        .limit(5)
                                         .map(
                                                 race -> {
                                                     DeviBase deviBase = raceRepository.fetchDeviBase(race.getRaceType(),race.getRaceCondition(),race.getStadium(),race.getRaceLength());
