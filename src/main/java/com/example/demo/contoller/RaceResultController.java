@@ -29,4 +29,15 @@ public class RaceResultController {
                 .map(getStadiumSummaryResponseConverter::convert)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * 学習用
+     * 勝ち馬を人気別に集計した結果を取得する
+     *
+     * @return 集計データ
+     */
+    @GetMapping("/winHorsePopular")
+    public List<Integer> getWinHorsePopular() {
+        return raceResultService.fetchWinHorsePopular();
+    }
 }

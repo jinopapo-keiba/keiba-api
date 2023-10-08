@@ -20,7 +20,7 @@ public interface RaceRepository {
     @Cacheable("devi")
     DeviBase fetchDeviBase(@Param("raceType") RaceType raceType, @Param("raceCondition") RaceCondition raceCondition, @Param("stadium") String stadium, @Param("raceLength") Integer raceLength);
 
-    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"2018-01-01\" and \"2023-04-01\";")
+    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"2017-10-01\" and \"2023-04-01\";")
     List<Integer> fetchAllRace();
     @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"2023-04-01\" and \"2023-09-01\";")
     List<Integer> fetchTestRace();
