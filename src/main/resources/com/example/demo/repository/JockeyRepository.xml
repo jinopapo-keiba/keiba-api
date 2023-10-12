@@ -22,6 +22,39 @@
         group by jockeyId,stadium,raceLength
         having count(ranking) > 10;
     </select>
+
+    <select id="fetchJockeyWinRate" resultType="Float">
+        SELECT
+            SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate
+        FROM
+            raceHorse rh
+        JOIN
+            jockey j ON rh.jockeyId = j.id
+        JOIN
+            raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
+        JOIN
+            race r ON r.id = rr.raceId
+        WHERE
+            j.id = #{id}
+            AND r.raceDate >= #{startDate} AND r.raceDate &lt;= #{endDate}
+        <if test="stadium != null">
+            AND stadium = #{stadium}
+        </if>
+        <if test="raceLength != null">
+            AND raceLength = #{raceLength}
+        </if>
+        <if test="raceType != null">
+            AND raceType = #{raceType}
+        </if>
+        <if test="grade != -1">
+            AND grade = #{grade}
+        </if>
+        GROUP BY
+            j.id
+        ORDER BY
+            win_rate DESC;
+    </select>
+
     <insert id="saveJockey" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO jockey (name) VALUES (#{jockey.name})
     </insert>

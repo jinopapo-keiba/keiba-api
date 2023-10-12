@@ -199,6 +199,7 @@ public class RaceService {
                                                     return race;
                                                 }
                                         )
+                                        .limit(5)
                                         .collect(Collectors.toList()))
                                 .build())
                 .collect(Collectors.toList());
