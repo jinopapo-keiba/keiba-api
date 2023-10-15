@@ -21,7 +21,6 @@ import java.util.List;
 @AllArgsConstructor
 public class JockeyController {
     private JockeyRepository jockeyRepository;
-    private DateFormat dateFormat;
 
     @GetMapping
     Jockey getJockey(int id){
@@ -66,7 +65,7 @@ public class JockeyController {
                                 DateUtils.getDateFormat().parse(raceDate).toInstant(), ZoneId.systemDefault())
                         .minusYears(2)
         );
-        Date endDate = dateFormat.parse(raceDate);
+        Date endDate = DateUtils.getDateFormat().parse(raceDate);
 
         List<Float> scores = new ArrayList<>();
         Float allScore =  jockeyRepository.fetchJockeyWinRate(id, null, null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(null).getValue());
