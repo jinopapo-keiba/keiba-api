@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -90,5 +91,20 @@ public class RaceController {
     @GetMapping("/all")
     public List<Integer> allRace(@RequestParam(required = false, defaultValue = "false") boolean testFlag) {
         return raceService.fetchAllRace(testFlag);
+    }
+
+    /**
+     *
+     * 学習用エントリポイント
+     * 該当のスタジアムで重賞が開催されていた比率を正規化された状態で取得する
+     *
+     * @param raceDate
+     * @param stadium
+     * @return
+     * @throws ParseException
+     */
+    @GetMapping("/majorGradeRate")
+    public Float majorGradeRate(String raceDate,String stadium) throws ParseException {
+        return raceService.fetchMajorGradeRate(raceDate,stadium);
     }
 }

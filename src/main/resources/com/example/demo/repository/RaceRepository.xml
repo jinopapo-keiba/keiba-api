@@ -247,7 +247,7 @@
                 AND raceDate >= #{queryParam.startRaceDate}
             </if>
             <if test="queryParam.endRaceDate != null">
-                AND raceDate &lt;= #{queryParam.endRaceDate}
+                AND raceDate &lt; #{queryParam.endRaceDate}
             </if>
             <if test="queryParam.horseIds != null">
                 AND

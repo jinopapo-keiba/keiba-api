@@ -5,6 +5,7 @@ import com.example.demo.repository.*;
 import com.example.demo.repository.dto.DeviBase;
 import com.example.demo.repository.dto.HorseQueryParam;
 import com.example.demo.repository.dto.RaceQueryParam;
+import com.example.demo.service.dto.MajorGradeRateDto;
 import com.example.demo.service.dto.RecentHorseResultDto;
 import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.utils.DateUtils;
@@ -14,11 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.time.*;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +32,7 @@ public class RaceService {
     private final TrainerRepository trainerRepository;
 
     @Transactional
-    public void saveRace(Race race){
+    public void saveRace(Race race) {
         List<Race> races = raceRepository.fetchRace(
                 RaceQueryParam.builder()
                         .stadiums(List.of(race.getStadium()))
@@ -41,7 +40,7 @@ public class RaceService {
                         .beforeRace(true)
                         .raceDate(race.getRaceDate())
                         .build());
-        if(!races.isEmpty()) {
+        if (!races.isEmpty()) {
             race.setId(races.get(0).getId());
             raceRepository.updateRace(race);
         } else {
@@ -54,7 +53,7 @@ public class RaceService {
                         .names(horses.stream().map(Horse::getName).collect(Collectors.toList()))
                         .build());
         horses.stream()
-                .filter(horse -> ListUtils.search(horse,savedHorses,(a,b) -> a.getName().equals(b.getName())) == null)
+                .filter(horse -> ListUtils.search(horse, savedHorses, (a, b) -> a.getName().equals(b.getName())) == null)
                 .forEach(horseRepository::saveHorse);
 
         //ジョッキーの保存
@@ -63,7 +62,7 @@ public class RaceService {
                 jockeys.stream().map(Jockey::getName).collect(Collectors.toList())
         );
         jockeys.stream()
-                .filter(jockey -> ListUtils.search(jockey,savedJockey,(a,b) -> a.getName().equals(b.getName())) == null)
+                .filter(jockey -> ListUtils.search(jockey, savedJockey, (a, b) -> a.getName().equals(b.getName())) == null)
                 .forEach(jockeyRepository::saveJockey);
 
         //調教師の保存
@@ -73,19 +72,19 @@ public class RaceService {
                 trainers.stream().map(Trainer::getName).collect(Collectors.toList())
         );
         trainers.stream()
-                .filter(trainer -> ListUtils.search(trainer,savedTrainers,(a,b) -> a.getName().equals(b.getName())) == null)
+                .filter(trainer -> ListUtils.search(trainer, savedTrainers, (a, b) -> a.getName().equals(b.getName())) == null)
                 .forEach(trainerRepository::saveTrainer);
 
         //レースの馬情報の保存
         race.getRaceHorses().forEach(
-                raceHorse -> raceHorseRepository.saveRaceHorse(raceHorse,race)
+                raceHorse -> raceHorseRepository.saveRaceHorse(raceHorse, race)
         );
 
         //レース結果の情報保存
         //予想するレースはまだ結果が出てないので、それの場合は何もしない
         race.getRaceHorses().stream()
                 .filter(raceHorse -> raceHorse.getRaceResult() != null)
-                .forEach(raceHorse -> raceResultRepository.saveRaceResult(raceHorse.getRaceResult(),race,raceHorse)
+                .forEach(raceHorse -> raceResultRepository.saveRaceResult(raceHorse.getRaceResult(), race, raceHorse)
                 );
     }
 
@@ -94,7 +93,7 @@ public class RaceService {
      *
      * @return
      */
-    public List<Race> fetchBeforeRace(){
+    public List<Race> fetchBeforeRace() {
         LocalDateTime now = LocalDateTime.now().minusMonths(1);
         return raceRepository.fetchRace(
                 RaceQueryParam.builder()
@@ -154,7 +153,7 @@ public class RaceService {
      * @param query 絞り込みパラメーター
      * @return
      */
-    public List<RecentHorseResultDto> fetchHorseRanRecentRace(RecentRaceQuery query){
+    public List<RecentHorseResultDto> fetchHorseRanRecentRace(RecentRaceQuery query) {
         Race targeRace = raceRepository.fetchRace(RaceQueryParam.builder()
                 .raceId(query.getRaceId())
                 .beforeRace(true)
@@ -179,21 +178,21 @@ public class RaceService {
                                 .races(recentRanRaces.stream()
                                         .filter(
                                                 race -> race.getRaceHorses().stream()
-                                                        .anyMatch(horse -> Objects.equals(raceHorse.getHorse().getId(),horse.getHorse().getId()))
+                                                        .anyMatch(horse -> Objects.equals(raceHorse.getHorse().getId(), horse.getHorse().getId()))
                                         )
                                         .map(
                                                 race -> {
-                                                    DeviBase deviBase = raceRepository.fetchDeviBase(race.getRaceType(),race.getRaceCondition(),race.getStadium(),race.getRaceLength());
+                                                    DeviBase deviBase = raceRepository.fetchDeviBase(race.getRaceType(), race.getRaceCondition(), race.getStadium(), race.getRaceLength());
                                                     race.setRaceHorses(race.getRaceHorses().stream().map(
-                                                            updateRaceHorse -> {
-                                                                RaceResult raceResult = updateRaceHorse.getRaceResult();
-                                                                raceResult.setMeanFullTime(deviBase.meanFullTime());
-                                                                raceResult.setMeanLastRapTime(deviBase.meanLastRapTime());
-                                                                raceResult.setStdDeviFullTime(deviBase.stdDeviFullTime());
-                                                                raceResult.setStdDeviLastRapTime(deviBase.stdDeviLastRapTime());
-                                                                updateRaceHorse.setRaceResult(raceResult);
-                                                                return updateRaceHorse;
-                                                            })
+                                                                    updateRaceHorse -> {
+                                                                        RaceResult raceResult = updateRaceHorse.getRaceResult();
+                                                                        raceResult.setMeanFullTime(deviBase.meanFullTime());
+                                                                        raceResult.setMeanLastRapTime(deviBase.meanLastRapTime());
+                                                                        raceResult.setStdDeviFullTime(deviBase.stdDeviFullTime());
+                                                                        raceResult.setStdDeviLastRapTime(deviBase.stdDeviLastRapTime());
+                                                                        updateRaceHorse.setRaceResult(raceResult);
+                                                                        return updateRaceHorse;
+                                                                    })
                                                             .toList()
                                                     );
                                                     return race;
@@ -213,10 +212,39 @@ public class RaceService {
      * @return raceId
      */
     public List<Integer> fetchAllRace(boolean testFlag) {
-        if(testFlag) {
+        if (testFlag) {
             return raceRepository.fetchTestRace();
         } else {
             return raceRepository.fetchAllRace();
         }
+    }
+
+    /**
+     * 過去2年間該当のスタジアムで重賞が開催された比率を正規化された状態で取得する
+     *
+     * @param raceDate
+     * @param stadium
+     * @return
+     * @throws ParseException
+     */
+    public Float fetchMajorGradeRate(String raceDate, String stadium) throws ParseException {
+        Date startDate = DateUtils.convertLocalDateTime2Date(
+                LocalDateTime.ofInstant(
+                                DateUtils.getDateFormat().parse(raceDate).toInstant(), ZoneId.systemDefault())
+                        .minusYears(2)
+        );
+        Date endDate = DateUtils.getDateFormat().parse(raceDate);
+        List<MajorGradeRateDto> majorGradeRateDtos = raceRepository.fetchMajorGradeRate(startDate, endDate);
+        Float maxRate = majorGradeRateDtos.stream().max(
+                Comparator.comparing(MajorGradeRateDto::getRate)
+        ).get().getRate();
+        Float minRate = majorGradeRateDtos.stream().min(
+                Comparator.comparing(MajorGradeRateDto::getRate)
+        ).get().getRate();
+        Float targetRate = majorGradeRateDtos.stream()
+                .filter(majorGradeRateDto -> majorGradeRateDto.getStadium().equals(stadium))
+                .findFirst()
+                .get().getRate();
+        return (targetRate - minRate) / (maxRate - minRate);
     }
 }
