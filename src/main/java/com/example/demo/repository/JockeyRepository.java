@@ -5,6 +5,7 @@ import com.example.demo.valueobject.Grade;
 import com.example.demo.valueobject.RaceType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.Date;
 import java.util.List;
@@ -17,5 +18,6 @@ public interface JockeyRepository {
 
     Float fetchJockeyRanking(int id, int raceLength, String stadium, RaceType raceType, Date raceDate);
 
+    @Cacheable("jockeyWinRate")
     Float fetchJockeyWinRate(int id, Integer raceLength, String stadium, RaceType raceType, Date startDate, Date endDate, int grade);
 }
