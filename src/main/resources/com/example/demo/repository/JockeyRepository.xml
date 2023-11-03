@@ -36,7 +36,7 @@
             race r ON r.id = rr.raceId
         WHERE
             j.id = #{id}
-            AND r.raceDate >= #{startDate} AND r.raceDate &lt;= #{endDate}
+            AND r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
         <if test="stadium != null">
             AND stadium = #{stadium}
         </if>
