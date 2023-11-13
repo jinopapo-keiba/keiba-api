@@ -68,9 +68,9 @@ public class JockeyController {
         Date endDate = DateUtils.getDateFormat().parse(raceDate);
 
         List<Float> scores = new ArrayList<>();
-        Float allScore =  jockeyRepository.fetchJockeyWinRate(id, null, null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(null).getValue());
-        Float sameRaceScore =  jockeyRepository.fetchJockeyWinRate(id, raceLength, stadium, RaceType.toEnum(raceType),startDate,endDate, Grade.toEnum(null).getValue());
-        Float sameGradeScore =  jockeyRepository.fetchJockeyWinRate(id, null, null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(grade).getValue());
+        Float allScore =  jockeyRepository.fetchJockeyWinRate(id,  null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(null).getValue());
+        Float sameRaceScore =  jockeyRepository.fetchJockeyWinRate(id,  stadium, RaceType.toEnum(raceType),startDate,endDate, Grade.toEnum(null).getValue());
+        Float sameGradeScore =  jockeyRepository.fetchJockeyWinRate(id,  null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(grade).getValue());
         scores.add(allScore == null ? 0.0f : allScore);
         scores.add(sameRaceScore == null ? 0.0f : sameRaceScore);
         scores.add(sameGradeScore == null ? 0.0f : sameGradeScore);

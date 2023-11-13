@@ -40,9 +40,6 @@
         <if test="stadium != null">
             AND stadium = #{stadium}
         </if>
-        <if test="raceLength != null">
-            AND raceLength = #{raceLength}
-        </if>
         <if test="raceType != null">
             AND raceType = #{raceType}
         </if>
