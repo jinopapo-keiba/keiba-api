@@ -165,7 +165,7 @@
     <select id="fetchRace" resultMap="raceMap">
         SELECT
             raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,oldLimit,raceDate,race.id as id,round,stadium,
-            weight,old,handicap,raceHorse.frameNumber as frameNumber,horseCount,
+            weight,old,handicap,raceHorse.frameNumber as frameNumber,(select count(*) from race sr join raceHorse srh on sr.id=srh.raceId where sr.id = race.id group by sr.id ) as  horseCount,
             jockey.id as jockeyId,jockey.name as jockeyName,
             trainer.id as trainerId,trainer.name as trainerName,
             horse.id as horseId,horse.name as horseName, gender as horseGender,
@@ -215,10 +215,6 @@
             trainer
         ON
             trainerId = trainer.id
-        JOIN
-            horseCount
-        ON
-            horseCount.raceId = race.id
         <if test="queryParam.beforeRace == false">
             JOIN
                 raceResult

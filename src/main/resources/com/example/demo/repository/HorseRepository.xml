@@ -7,7 +7,7 @@
         SELECT name,gender,id from horse where id = #{id};
     </select>
     <select id="fetchHorses" resultType="com.example.demo.entity.Horse" parameterType="com.example.demo.repository.dto.HorseQueryParam">
-        SELECT name,gender,id from horse where name in
+        SELECT name,gender,id from horse where name collate utf8mb4_bin in
         <foreach item="name" collection="names" open="(" separator="," close=")">
             #{name}
         </foreach>

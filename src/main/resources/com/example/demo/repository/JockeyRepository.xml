@@ -7,7 +7,7 @@
         SELECT name,id from jockey where id = #{id};
     </select>
     <select id="fetchJockeys" resultType="com.example.demo.entity.Jockey">
-        SELECT name,id from jockey where name in
+        SELECT name,id from jockey where name collate utf8mb4_bin in
         <foreach item="name" collection="names" open="(" separator="," close=")">
             #{name}
         </foreach>

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.repository.TrainerRepository">
     <select id="fetchTrainers" resultType="com.example.demo.entity.Trainer">
-        SELECT name,id from trainer where name in
+        SELECT name,id from trainer where name collate utf8mb4_bin in
         <foreach item="name" collection="names" open="(" separator="," close=")">
             #{name}
         </foreach>
