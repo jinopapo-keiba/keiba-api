@@ -11,7 +11,7 @@ public class RaceHorse {
     Integer weight;
     Integer old;
     Integer frameNumber;
-    Float handicap;
+    Integer handicap;
     Horse horse;
     Jockey jockey;
     Trainer trainer;

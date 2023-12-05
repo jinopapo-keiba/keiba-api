@@ -21,6 +21,7 @@
             <id column="id" property="raceId"/>
             <id property="frameNumber" column="frameNumber"/>
             <result property="weight" column="weight"/>
+            <result property="handicap" column="handicap"/>
             <result property="old" column="old"/>
             <association javaType="com.example.demo.entity.Horse" property="horse">
                 <id property="id" column="horseId"/>

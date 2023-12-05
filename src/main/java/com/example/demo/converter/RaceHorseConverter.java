@@ -18,7 +18,7 @@ public class RaceHorseConverter {
                 .trainer(raceHorse.getTrainer())
                 .frameNumber(raceHorse.getFrameNumber())
                 .old(raceHorse.getOld())
-                .handicap(raceHorse.getHandicap())
+                .handicap(raceHorse.getHandicap().intValue())
                 .weight(raceHorse.getWeight())
                 .raceResult(raceHorse.getRaceResult() == null ? null : raceResultConverter.converter(raceHorse.getRaceResult()))
                 .build();

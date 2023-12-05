@@ -1,6 +1,7 @@
 package com.example.demo.contoller;
 
 import com.example.demo.entity.Jockey;
+import com.example.demo.entity.JockeyWinRate;
 import com.example.demo.repository.JockeyRepository;
 import com.example.demo.utils.DateUtils;
 import com.example.demo.valueobject.Grade;
@@ -59,7 +60,7 @@ public class JockeyController {
      * @return 勝率
      */
     @GetMapping("winRate")
-    List<Float> getJockeyWinRate(int id, Integer raceLength, String stadium, String raceType, String raceDate, String grade) throws ParseException {
+    List<JockeyWinRate> getJockeyWinRate(int id, Integer raceLength, String stadium, String raceType, String raceDate, String grade) throws ParseException {
         Date startDate = DateUtils.convertLocalDateTime2Date(
                 LocalDateTime.ofInstant(
                                 DateUtils.getDateFormat().parse(raceDate).toInstant(), ZoneId.systemDefault())
@@ -67,13 +68,31 @@ public class JockeyController {
         );
         Date endDate = DateUtils.getDateFormat().parse(raceDate);
 
-        List<Float> scores = new ArrayList<>();
-        Float allScore =  jockeyRepository.fetchJockeyWinRate(id,  null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(null).getValue());
-        Float sameRaceScore =  jockeyRepository.fetchJockeyWinRate(id,  stadium, RaceType.toEnum(raceType),startDate,endDate, Grade.toEnum(null).getValue());
-        Float sameGradeScore =  jockeyRepository.fetchJockeyWinRate(id,  null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(grade).getValue());
-        scores.add(allScore == null ? 0.0f : allScore);
-        scores.add(sameRaceScore == null ? 0.0f : sameRaceScore);
-        scores.add(sameGradeScore == null ? 0.0f : sameGradeScore);
+        List<JockeyWinRate> scores = new ArrayList<>();
+        JockeyWinRate allScore =  jockeyRepository.fetchJockeyWinRate(id,  null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(null).getValue());
+        JockeyWinRate sameRaceScore =  jockeyRepository.fetchJockeyWinRate(id,  stadium, RaceType.toEnum(raceType),startDate,endDate, Grade.toEnum(null).getValue());
+        JockeyWinRate sameGradeScore =  jockeyRepository.fetchJockeyWinRate(id,  null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(grade).getValue());
+        if(sameGradeScore == null){
+            sameGradeScore = JockeyWinRate.builder()
+                    .count(0)
+                    .winRate(0)
+                    .build();
+        }
+        if(sameRaceScore == null){
+            sameRaceScore = JockeyWinRate.builder()
+                    .count(0)
+                    .winRate(0)
+                    .build();
+        }
+        if(allScore == null){
+            allScore = JockeyWinRate.builder()
+                    .count(0)
+                    .winRate(0)
+                    .build();
+        }
+        scores.add(allScore);
+        scores.add(sameRaceScore);
+        scores.add(sameGradeScore);
         return scores;
     }
 }

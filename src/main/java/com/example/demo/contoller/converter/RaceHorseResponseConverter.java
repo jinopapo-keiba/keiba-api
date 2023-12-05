@@ -18,6 +18,7 @@ public class RaceHorseResponseConverter {
                 .weight(raceHorse.getWeight())
                 .old(raceHorse.getOld())
                 .frameNumber(raceHorse.getFrameNumber())
+                .handicap(raceHorse.getHandicap())
                 .horse(horseResponseConverter.convert(raceHorse.getHorse()))
                 .jockey(jockeyResponseConverter.convert(raceHorse.getJockey()))
                 .trainer(trainerResponseConverter.convert(raceHorse.getTrainer()))
