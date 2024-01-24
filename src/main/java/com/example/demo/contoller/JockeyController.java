@@ -1,5 +1,6 @@
 package com.example.demo.contoller;
 
+import com.example.demo.contoller.response.GetJockeyWinRateResponse;
 import com.example.demo.entity.Jockey;
 import com.example.demo.entity.JockeyWinRate;
 import com.example.demo.repository.JockeyRepository;
@@ -60,7 +61,7 @@ public class JockeyController {
      * @return 勝率
      */
     @GetMapping("winRate")
-    List<JockeyWinRate> getJockeyWinRate(int id, Integer raceLength, String stadium, String raceType, String raceDate, String grade) throws ParseException {
+    GetJockeyWinRateResponse getJockeyWinRate(int id, Integer raceLength, String stadium, String raceType, String raceDate, String grade) throws ParseException {
         Date startDate = DateUtils.convertLocalDateTime2Date(
                 LocalDateTime.ofInstant(
                                 DateUtils.getDateFormat().parse(raceDate).toInstant(), ZoneId.systemDefault())
@@ -93,6 +94,19 @@ public class JockeyController {
         scores.add(allScore);
         scores.add(sameRaceScore);
         scores.add(sameGradeScore);
-        return scores;
+
+        List<Float> meanScores = new ArrayList<>();
+        Float allMeanScore =  jockeyRepository.fetchJockeyMeanWinRate(id,  null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(null).getValue());
+        Float sameMeanRaceScore =  jockeyRepository.fetchJockeyMeanWinRate(id,  stadium, RaceType.toEnum(raceType),startDate,endDate, Grade.toEnum(null).getValue());
+        Float sameMeanGradeScore =  jockeyRepository.fetchJockeyMeanWinRate(id,  null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(grade).getValue());
+
+        meanScores.add(allMeanScore);
+        meanScores.add(sameMeanRaceScore);
+        meanScores.add(sameMeanGradeScore);
+
+        return GetJockeyWinRateResponse.builder()
+                .jockeyWinRates(scores)
+                .jockeyMeanWinRates(meanScores)
+                .build();
     }
 }
