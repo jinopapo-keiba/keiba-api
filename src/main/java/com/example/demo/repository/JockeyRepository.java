@@ -22,6 +22,6 @@ public interface JockeyRepository {
     JockeyWinRate fetchJockeyWinRate(int id, String stadium, RaceType raceType, Date startDate, Date endDate, int grade);
 
     @Cacheable("jockeyMeanWinRate")
-    Float fetchJockeyMeanWinRate(int id, String stadium, RaceType raceType, Date startDate, Date endDate, int grade);
+    Float fetchJockeyMeanWinRate(String stadium, RaceType raceType, Date startDate, Date endDate, int grade);
 
 }

@@ -96,9 +96,9 @@ public class JockeyController {
         scores.add(sameGradeScore);
 
         List<Float> meanScores = new ArrayList<>();
-        Float allMeanScore =  jockeyRepository.fetchJockeyMeanWinRate(id,  null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(null).getValue());
-        Float sameMeanRaceScore =  jockeyRepository.fetchJockeyMeanWinRate(id,  stadium, RaceType.toEnum(raceType),startDate,endDate, Grade.toEnum(null).getValue());
-        Float sameMeanGradeScore =  jockeyRepository.fetchJockeyMeanWinRate(id,  null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(grade).getValue());
+        Float allMeanScore =  jockeyRepository.fetchJockeyMeanWinRate( null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(null).getValue());
+        Float sameMeanRaceScore =  jockeyRepository.fetchJockeyMeanWinRate( stadium, RaceType.toEnum(raceType),startDate,endDate, Grade.toEnum(null).getValue());
+        Float sameMeanGradeScore =  jockeyRepository.fetchJockeyMeanWinRate(null, RaceType.toEnum(null),startDate,endDate, Grade.toEnum(grade).getValue());
 
         meanScores.add(allMeanScore);
         meanScores.add(sameMeanRaceScore);
