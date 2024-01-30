@@ -3,6 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.repository.TrainerRepository">
+    <resultMap id="trainerWinRateMap" type="com.example.demo.entity.TrainerWinRate">
+        <id column="win_rate" property="winRate"/>
+        <result column="count" property="count"/>
+    </resultMap>
+
+    <resultMap id="trainerWinRateMapParStadium" type="com.example.demo.repository.dto.TrainerWinRateParStadium">
+        <id column="stadium" property="stadium"/>
+        <association property="trainerWinRate" resultMap="trainerWinRateMap"/>
+    </resultMap>
+
+    <resultMap id="trainerWinRateMeanMapParStadium" type="com.example.demo.repository.dto.TrainerWinRateMeanParStadium">
+        <id column="stadium" property="stadium"/>
+        <result property="trainerWinRate" column="avg"/>
+    </resultMap>
+
     <select id="fetchTrainers" resultType="com.example.demo.entity.Trainer">
         SELECT name,id from trainer where name collate utf8mb4_bin in
         <foreach item="name" collection="names" open="(" separator="," close=")">
@@ -22,4 +37,91 @@
     <insert id="saveTrainer" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO trainer (name) VALUES (#{trainer.name})
     </insert>
+
+    <select id="fetchTrainerWinRateParStadium" resultMap="trainerWinRateMapParStadium">
+        SELECT
+        r.stadium as stadium,
+        SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
+        COUNT(rr.ranking) as count
+        FROM
+        raceHorse rh
+        JOIN
+        trainer t ON rh.trainerId = t.id
+        JOIN
+        raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
+        JOIN
+        race r ON r.id = rr.raceId
+        WHERE
+        t.id = #{id}
+        AND r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
+        GROUP BY
+        t.id,r.stadium;
+    </select>
+
+    <select id="fetchTrainerMeanWinRateParStadium" resultMap="trainerWinRateMeanMapParStadium" >
+        SELECT
+        AVG(win_rate) as avg,
+        stadium
+        FROM (
+        SELECT
+        r.stadium as stadium,
+        SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
+        COUNT(rr.ranking) as count
+        FROM
+        raceHorse rh
+        JOIN
+        trainer t ON rh.trainerId = t.id
+        JOIN
+        raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
+        JOIN
+        race r ON r.id = rr.raceId
+        WHERE
+        r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
+        GROUP BY
+        t.id,r.stadium
+        ) trainerWinRate GROUP BY stadium;
+    </select>
+
+    <select id="fetchTrainerWinRate" resultMap="trainerWinRateMap">
+        SELECT
+        SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
+        COUNT(rr.ranking) as count
+        FROM
+        raceHorse rh
+        JOIN
+        trainer t ON rh.trainerId = t.id
+        JOIN
+        raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
+        JOIN
+        race r ON r.id = rr.raceId
+        WHERE
+        t.id = #{id}
+        AND r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
+        GROUP BY
+        t.id
+        ORDER BY
+        win_rate DESC;
+    </select>
+
+    <select id="fetchTrainerMeanWinRate" resultType="float">
+        SELECT
+        AVG(win_rate)
+        FROM (
+        SELECT
+        SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
+        COUNT(rr.ranking) as count
+        FROM
+        raceHorse rh
+        JOIN
+        trainer t ON rh.trainerId = t.id
+        JOIN
+        raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
+        JOIN
+        race r ON r.id = rr.raceId
+        WHERE
+        r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
+        GROUP BY
+        t.id
+        ) trainerWinRate;
+    </select>
 </mapper>
