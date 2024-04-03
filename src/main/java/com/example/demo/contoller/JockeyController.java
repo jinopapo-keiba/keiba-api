@@ -8,15 +8,14 @@ import com.example.demo.utils.DateUtils;
 import com.example.demo.valueobject.Grade;
 import com.example.demo.valueobject.RaceType;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/v1/jockey")
@@ -54,14 +53,13 @@ public class JockeyController {
      * ジョッキーの勝率を取得する
      *
      * @param id jockeyId
-     * @param raceLength 距離
      * @param stadium　競技場
      * @param raceType レース種別
      * @param grade grade
      * @return 勝率
      */
     @GetMapping("winRate")
-    GetJockeyWinRateResponse getJockeyWinRate(int id, Integer raceLength, String stadium, String raceType, String raceDate, String grade) throws ParseException {
+    GetJockeyWinRateResponse getJockeyWinRate(int id, String stadium, String raceType, String raceDate, String grade) throws ParseException {
         Date startDate = DateUtils.convertLocalDateTime2Date(
                 LocalDateTime.ofInstant(
                                 DateUtils.getDateFormat().parse(raceDate).toInstant(), ZoneId.systemDefault())
@@ -104,9 +102,20 @@ public class JockeyController {
         meanScores.add(sameMeanRaceScore);
         meanScores.add(sameMeanGradeScore);
 
+        JockeyWinRate allWinRate =  jockeyRepository.fetchJockeyAllWinRate(id,startDate,endDate);
+        if(allWinRate == null){
+            allWinRate = JockeyWinRate.builder()
+                    .count(0)
+                    .winRate(0)
+                    .build();
+        }
+        Float meanAllScore = jockeyRepository.fetchJockeyAllMeanWinRate(startDate,endDate);
+
         return GetJockeyWinRateResponse.builder()
                 .jockeyWinRates(scores)
                 .jockeyMeanWinRates(meanScores)
+                .jockeyAllWinRates(allWinRate)
+                .jockeyAllMeanWinRates(meanAllScore)
                 .build();
     }
 }

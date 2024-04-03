@@ -8,6 +8,17 @@
         <id column="count" property="count"/>
     </resultMap>
 
+    <resultMap id="jockeyWinRateMapParStadium" type="com.example.demo.repository.dto.JockeyWinRateParStadium">
+        <id column="stadium" property="stadium"/>
+        <association property="jockeyWinRate" resultMap="jockeyWinRateMap"/>
+    </resultMap>
+
+    <resultMap id="jockeyWinRateMeanMapParStadium" type="com.example.demo.repository.dto.JockeyWinRateMeanParStadium">
+        <id column="stadium" property="stadium"/>
+        <result property="meanWinRate" column="avg"/>
+        <result property="stddevdWinRate" column="stddevd"/>
+    </resultMap>
+
 
     <select id="fetchJockey" resultType="com.example.demo.entity.Jockey">
         SELECT name,id from jockey where id = #{id};
@@ -93,4 +104,97 @@
     <insert id="saveJockey" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO jockey (name) VALUES (#{jockey.name})
     </insert>
+
+    <select id="fetchJockeyWinRateParStadium" resultMap="jockeyWinRateMapParStadium">
+        SELECT
+        r.stadium as stadium,
+        SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
+        COUNT(rr.ranking) as count
+        FROM
+        raceHorse rh
+        JOIN
+        jockey j ON rh.jockeyId = j.id
+        JOIN
+        raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
+        JOIN
+        race r ON r.id = rr.raceId
+        WHERE
+        j.id = #{id}
+        AND r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
+        AND
+        r.raceType = #{raceType}
+        GROUP BY
+        j.id,r.stadium;
+    </select>
+
+    <select id="fetchJockeyMeanWinRateParStadium" resultMap="jockeyWinRateMeanMapParStadium" >
+        SELECT
+        AVG(win_rate) as avg,
+        STDDEV_POP(win_rate) AS stddevd,
+        stadium
+        FROM (
+        SELECT
+        r.stadium as stadium,
+        SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
+        COUNT(rr.ranking) as count
+        FROM
+        raceHorse rh
+        JOIN
+        jockey j ON rh.jockeyId = j.id
+        JOIN
+        raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
+        JOIN
+        race r ON r.id = rr.raceId
+        WHERE
+        r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
+        AND
+        r.raceType = #{raceType}
+        GROUP BY
+        j.id,r.stadium
+        ) jockeyWinRate GROUP BY stadium;
+    </select>
+
+    <select id="fetchJockeyAllWinRate" resultMap="jockeyWinRateMap">
+        SELECT
+        SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
+        COUNT(rr.ranking) as count
+        FROM
+        raceHorse rh
+        JOIN
+        jockey j ON rh.jockeyId = j.id
+        JOIN
+        raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
+        JOIN
+        race r ON r.id = rr.raceId
+        WHERE
+        j.id = #{id}
+        AND r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
+        GROUP BY
+        j.id
+        ORDER BY
+        win_rate DESC;
+    </select>
+
+    <select id="fetchJockeyAllMeanWinRate" resultType="float">
+        SELECT
+        AVG(win_rate)
+        FROM (
+        SELECT
+        SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
+        COUNT(rr.ranking) as count
+        FROM
+        raceHorse rh
+        JOIN
+        jockey j ON rh.jockeyId = j.id
+        JOIN
+        raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
+        JOIN
+        race r ON r.id = rr.raceId
+        WHERE
+        r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
+        GROUP BY
+        j.id
+        ) jockeyWinRate;
+    </select>
+
 </mapper>
