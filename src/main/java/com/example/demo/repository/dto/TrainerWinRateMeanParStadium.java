@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TrainerWinRateMeanParStadium {
     private String stadium;
-    private Float trainerWinRate;
+    private Float meanWinRate;
+    private Float stddevdWinRate;;
 }

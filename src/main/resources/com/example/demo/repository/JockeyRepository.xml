@@ -5,7 +5,7 @@
 <mapper namespace="com.example.demo.repository.JockeyRepository">
     <resultMap id="jockeyWinRateMap" type="com.example.demo.entity.JockeyWinRate">
         <id column="win_rate" property="winRate"/>
-        <id column="count" property="count"/>
+        <result column="count" property="count"/>
     </resultMap>
 
     <resultMap id="jockeyWinRateMapParStadium" type="com.example.demo.repository.dto.JockeyWinRateParStadium">

@@ -15,7 +15,8 @@
 
     <resultMap id="trainerWinRateMeanMapParStadium" type="com.example.demo.repository.dto.TrainerWinRateMeanParStadium">
         <id column="stadium" property="stadium"/>
-        <result property="trainerWinRate" column="avg"/>
+        <result property="meanWinRate" column="avg"/>
+        <result property="stddevdWinRate" column="stddevd"/>
     </resultMap>
 
     <select id="fetchTrainers" resultType="com.example.demo.entity.Trainer">
@@ -61,6 +62,7 @@
     <select id="fetchTrainerMeanWinRateParStadium" resultMap="trainerWinRateMeanMapParStadium" >
         SELECT
         AVG(win_rate) as avg,
+        STDDEV_POP(win_rate) AS stddevd,
         stadium
         FROM (
         SELECT
@@ -77,6 +79,8 @@
         race r ON r.id = rr.raceId
         WHERE
         r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
+        AND
+        r.raceType = #{raceType}
         GROUP BY
         t.id,r.stadium
         ) trainerWinRate GROUP BY stadium;
