@@ -31,18 +31,18 @@ public interface JockeyRepository {
     JockeyWinRate fetchJockeyAllWinRate(int id, Date startDate, Date endDate);
 
     @Cacheable("jockeyWinRateParStadium")
-    List<JockeyWinRateParStadium> fetchJockeyWinRateParStadium(int id, RaceType raceType, Date startDate, Date endDate);
+    List<JockeyWinRateParStadium> fetchJockeyWinRateParStadium(int id, RaceType raceType, Date startDate, Date endDate, int minLength, int maxLength);
 
     @Cacheable("jockeyAllMeanWinRate")
     Float fetchJockeyAllMeanWinRate(Date startDate, Date endDate);
 
     @Cacheable("jockeyWinRateParStadium")
-    List<JockeyWinRateMeanParStadium> fetchJockeyMeanWinRateParStadium(RaceType raceType, Date startDate, Date endDate);
+    List<JockeyWinRateMeanParStadium> fetchJockeyMeanWinRateParStadium(RaceType raceType, Date startDate, Date endDate, int minLength, int maxLength);
 
     @Cacheable("jockeyMeanCount")
     @Select(
-            "select stadium,AVG(total) as count from (SELECT r.stadium as stadium, r.raceType as raceType, COUNT(*) AS total FROM raceHorse rh JOIN race r ON rh.raceId = r.id JOIN jockey j ON rh.jockeyId = j.id WHERE r.raceDate >= #{startDate} AND r.raceDate < #{endDate} and raceType = #{raceType} GROUP BY r.stadium, r.raceType,j.id) hoge GROUP BY stadium,raceType order by stadium;"
+            "select stadium,AVG(total) as count from (SELECT r.stadium as stadium, r.raceType as raceType, COUNT(*) AS total FROM raceHorse rh JOIN race r ON rh.raceId = r.id JOIN jockey j ON rh.jockeyId = j.id WHERE r.raceDate >= #{startDate} AND r.raceDate < #{endDate} and raceType = #{raceType} and r.raceLength >= #{minLength} AND r.raceLength < #{maxLength} GROUP BY r.stadium, r.raceType,j.id) hoge GROUP BY stadium,raceType order by stadium;"
     )
-    List<JockeyMeanCount> fetchJockeyMeanCount(RaceType raceType, Date startDate, Date endDate);
+    List<JockeyMeanCount> fetchJockeyMeanCount(RaceType raceType, Date startDate, Date endDate, int minLength, int maxLength);
 
 }

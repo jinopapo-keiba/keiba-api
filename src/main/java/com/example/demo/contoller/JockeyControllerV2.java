@@ -1,8 +1,7 @@
 package com.example.demo.contoller;
 
-import com.example.demo.contoller.response.GetJockeyWinRateResponse;
-import com.example.demo.entity.JockeyWinRate;
-import com.example.demo.repository.JockeyRepository;
+import com.example.demo.contoller.response.v2.GetJockeyMeanCountResponse;
+import com.example.demo.contoller.response.v2.GetJockeyWinRateResponse;
 import com.example.demo.service.JockeyService;
 import com.example.demo.valueobject.RaceType;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/v2/jockey")
@@ -30,7 +28,7 @@ public class JockeyControllerV2 {
      * @return 勝率
      */
     @GetMapping("winRate")
-    Map<String, JockeyWinRate> getJockeyWinRate(int id, String raceType, String raceDate) throws ParseException {
+    List<GetJockeyWinRateResponse> getJockeyWinRate(int id, String raceType, String raceDate) throws ParseException {
         return jockeyService.getJockeyWinRatePerStadium(id, RaceType.toEnum(raceType), raceDate);
     }
 
@@ -43,7 +41,7 @@ public class JockeyControllerV2 {
      * @throws ParseException
      */
     @GetMapping("meanCount")
-    Map<String, Float> getJockeyMeanCount(String raceType, String raceDate) throws ParseException {
+    List<GetJockeyMeanCountResponse> getJockeyMeanCount(String raceType, String raceDate) throws ParseException {
         return jockeyService.getJockeyMeanCount(RaceType.toEnum(raceType),raceDate);
     }
 }
