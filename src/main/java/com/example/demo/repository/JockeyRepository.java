@@ -1,17 +1,15 @@
 package com.example.demo.repository;
 
+import com.example.demo.entity.JockekMeanCountParRange;
 import com.example.demo.entity.Jockey;
 import com.example.demo.entity.JockeyWinRate;
-import com.example.demo.repository.dto.JockeyMeanCount;
-import com.example.demo.repository.dto.JockeyWinRateMeanParStadium;
-import com.example.demo.repository.dto.JockeyWinRateParStadium;
+import com.example.demo.repository.dto.*;
 import com.example.demo.valueobject.RaceType;
 import org.apache.ibatis.annotations.*;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface JockeyRepository {
@@ -45,4 +43,238 @@ public interface JockeyRepository {
     )
     List<JockeyMeanCount> fetchJockeyMeanCount(RaceType raceType, Date startDate, Date endDate, int minLength, int maxLength);
 
+    @Cacheable("jockeyWinRateParRange")
+    @Select(
+            """
+                    -- 全体の勝率および出走回数を持つジョッキーのみを対象とするサブクエリ
+                    WITH JockeyOverallStats AS (
+                        SELECT
+                            jockey.id AS JockeyId,
+                            COUNT(*) AS count,
+                            ROUND(SUM(CASE WHEN raceResult.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS winRate
+                        FROM
+                            race
+                        JOIN
+                            raceHorse ON race.id = raceHorse.raceId
+                        JOIN
+                            jockey ON raceHorse.jockeyId = jockey.id
+                        JOIN
+                            raceResult ON raceHorse.raceId = raceResult.raceId AND raceHorse.frameNumber = raceResult.frameNumber
+                        WHERE
+                            race.raceDate >= #{startDate}
+                        AND
+                            race.raceDate < #{endDate}
+                        AND
+                            raceHorse.jockeyId = #{id}
+                        AND
+                            raceType in (0,1)
+                        GROUP BY
+                            jockey.id
+                    )
+                    -- 全体の勝率
+                    SELECT
+                        NULL AS raceType,
+                        NULL AS raceRange,
+                        count,
+                        winRate
+                    FROM
+                        JockeyOverallStats
+                    UNION ALL
+                    -- レース種別および距離別の勝率
+                    SELECT
+                        CASE
+                            WHEN race.raceType = 0 THEN '芝'
+                            WHEN race.raceType = 1 THEN 'ダート'
+                        END AS raceType,
+                        CASE
+                            WHEN race.raceLength < 1400 THEN 'SPRINT'
+                            WHEN race.raceLength >= 1400 AND race.raceLength < 1800 THEN 'MILE'
+                            WHEN race.raceLength >= 1800 AND race.raceLength < 2400 THEN 'MIDDLE'
+                            ELSE 'STAYER'
+                        END AS raceRange,
+                        COUNT(*) AS count,
+                        ROUND(SUM(CASE WHEN raceResult.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS winRate
+                    FROM
+                        race
+                    JOIN
+                        raceHorse ON race.id = raceHorse.raceId
+                    JOIN
+                        jockey ON raceHorse.jockeyId = jockey.id
+                    JOIN
+                        raceResult ON raceHorse.raceId = raceResult.raceId AND raceHorse.frameNumber = raceResult.frameNumber
+                    JOIN
+                        JockeyOverallStats AS JOS ON jockey.id = JOS.JockeyId
+                    WHERE
+                        race.raceDate >= #{startDate}
+                    AND
+                        race.raceDate < #{endDate}
+                    AND
+                        raceHorse.jockeyId = #{id}
+                    AND
+                        raceType in (0,1)
+                    GROUP BY
+                        jockey.id,
+                        raceType,
+                        raceRange
+                    ORDER BY
+                        raceType, raceRange;
+           """
+    )
+    List<JockeyWinRateParRangeDto> fetchJockeyWinRateParRange(@Param("id") int id, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    @Cacheable("jockeyMeanWinRateParRange")
+    @Select(
+            """
+                    -- 全体の勝率および出走回数を持つジョッキーのみを対象とするサブクエリ
+                    WITH JockeyOverallStats AS (
+                        SELECT
+                            jockey.id AS JockeyId,
+                            COUNT(*) AS count,
+                            ROUND(SUM(CASE WHEN raceResult.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS winRate
+                        FROM
+                            race
+                        JOIN
+                            raceHorse ON race.id = raceHorse.raceId
+                        JOIN
+                            jockey ON raceHorse.jockeyId = jockey.id
+                        JOIN
+                            raceResult ON raceHorse.raceId = raceResult.raceId AND raceHorse.frameNumber = raceResult.frameNumber
+                        WHERE
+                            race.raceDate >= #{startDate}
+                        AND
+                            race.raceDate < #{endDate}
+                        AND
+                            raceType in (0,1)
+                        GROUP BY
+                            jockey.id
+                        HAVING
+                            count > 100
+                    ),
+                    MeanWinRate AS (
+                        -- 全体の勝率
+                        SELECT
+                            NULL AS raceType,
+                            NULL AS raceRange,
+                            count,
+                            winRate
+                        FROM
+                            JockeyOverallStats
+                        UNION ALL
+                        -- レース種別および距離別の勝率
+                        SELECT
+                            CASE
+                                WHEN race.raceType = 0 THEN '芝'
+                                WHEN race.raceType = 1 THEN 'ダート'
+                            END AS raceType,
+                            CASE
+                                WHEN race.raceLength < 1400 THEN 'SPRINT'
+                                WHEN race.raceLength >= 1400 AND race.raceLength < 1800 THEN 'MILE'
+                                WHEN race.raceLength >= 1800 AND race.raceLength < 2400 THEN 'MIDDLE'
+                                ELSE 'STAYER'
+                            END AS raceRange,
+                            COUNT(*) AS count,
+                            ROUND(SUM(CASE WHEN raceResult.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS winRate
+                        FROM
+                            race
+                        JOIN
+                            raceHorse ON race.id = raceHorse.raceId
+                        JOIN
+                            jockey ON raceHorse.jockeyId = jockey.id
+                        JOIN
+                            raceResult ON raceHorse.raceId = raceResult.raceId AND raceHorse.frameNumber = raceResult.frameNumber
+                        JOIN
+                            JockeyOverallStats AS JOS ON jockey.id = JOS.JockeyId
+                        WHERE
+                            race.raceDate >= #{startDate}
+                        AND
+                            race.raceDate < #{endDate}
+                        AND
+                            raceType in (0,1)
+                        GROUP BY
+                            jockey.id,
+                            raceType,
+                            raceRange
+                    )
+                    SELECT
+                        AVG(winRate) as avg,
+                        STDDEV_POP(winRate) AS stddevd,
+                        raceType,
+                        raceRange
+                    FROM
+                        MeanWinRate
+                    GROUP BY
+                        raceType,
+                        raceRange;
+           """
+    )
+    List<JockeyMeanWinRateParRangeDto> fetchJockeyMeanWinRateParRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    @Cacheable("jockeyMeanCountParRange")
+    @Select(
+            """
+               WITH CountRace AS (
+                    SELECT
+                        NULL AS raceType,
+                        NULL AS raceRange,
+                        COUNT(*) AS count
+                    FROM
+                        race
+                    JOIN
+                        raceHorse ON race.id = raceHorse.raceId
+                    JOIN
+                        jockey ON raceHorse.jockeyId = jockey.id
+                    JOIN
+                        raceResult ON raceHorse.raceId = raceResult.raceId AND raceHorse.frameNumber = raceResult.frameNumber
+                    WHERE
+                        race.raceDate >= #{startDate}
+                    AND
+                        race.raceDate < #{endDate}
+                    AND
+                        raceType in (0,1)
+                    GROUP BY
+                        jockey.id
+                    UNION
+                    SELECT
+                        CASE
+                            WHEN race.raceType = 0 THEN '芝'
+                            WHEN race.raceType = 1 THEN 'ダート'
+                        END AS raceType,
+                        CASE
+                            WHEN race.raceLength < 1400 THEN 'SPRINT'
+                            WHEN race.raceLength >= 1400 AND race.raceLength < 1800 THEN 'MILE'
+                            WHEN race.raceLength >= 1800 AND race.raceLength < 2400 THEN 'MIDDLE'
+                            ELSE 'STAYER'
+                        END AS raceRange,
+                        COUNT(*) AS count
+                    FROM
+                        race
+                    JOIN
+                        raceHorse ON race.id = raceHorse.raceId
+                    JOIN
+                        jockey ON raceHorse.jockeyId = jockey.id
+                    JOIN
+                        raceResult ON raceHorse.raceId = raceResult.raceId AND raceHorse.frameNumber = raceResult.frameNumber
+                    WHERE
+                        race.raceDate >= #{startDate}
+                    AND
+                        race.raceDate < #{endDate}
+                    AND
+                        raceType in (0,1)
+                    GROUP BY
+                        jockey.id,
+                        raceType,
+                        raceRange
+               )
+               SELECT
+                    raceType,
+                    raceRange,
+                    AVG(count) AS count
+               FROM
+                   CountRace
+               GROUP BY
+                   raceType,
+                   raceRange;
+            """
+    )
+    List<JockekMeanCountParRange> fetchJockeyMeanCountParRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

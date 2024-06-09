@@ -2,11 +2,11 @@ package com.example.demo.service;
 
 import com.example.demo.contoller.response.v2.GetJockeyMeanCountResponse;
 import com.example.demo.contoller.response.v2.GetJockeyWinRateResponse;
+import com.example.demo.entity.JockekMeanCountParRange;
 import com.example.demo.entity.JockeyWinRate;
+import com.example.demo.entity.JockeyWinRateParRange;
 import com.example.demo.repository.JockeyRepository;
-import com.example.demo.repository.dto.JockeyMeanCount;
-import com.example.demo.repository.dto.JockeyWinRateMeanParStadium;
-import com.example.demo.repository.dto.JockeyWinRateParStadium;
+import com.example.demo.repository.dto.*;
 import com.example.demo.utils.DateUtils;
 import com.example.demo.valueobject.RaceType;
 import com.example.demo.valueobject.Range;
@@ -98,5 +98,56 @@ public class JockeyService {
             );
         }
         return responses;
+    }
+
+    public List<JockeyWinRateParRange> fetchJockeyWinRateParRange(int id, String raceDate) throws ParseException {
+        Date startDate = DateUtils.convertLocalDateTime2Date(
+                LocalDateTime.ofInstant(
+                                DateUtils.getDateFormat().parse(raceDate).toInstant(), ZoneId.systemDefault())
+                        .minusYears(2)
+        );
+        Date endDate = DateUtils.getDateFormat().parse(raceDate);
+        List<JockeyWinRateParRangeDto> jockeyWinRateParRangeDtos = jockeyRepository.fetchJockeyWinRateParRange(id,startDate,endDate);
+        List<JockeyMeanWinRateParRangeDto> jockeyMeanWinRateParRangeDtos = jockeyRepository.fetchJockeyMeanWinRateParRange(startDate,endDate);
+        return jockeyWinRateParRangeDtos.stream().map(
+                winRate -> {
+                    JockeyMeanWinRateParRangeDto meanWinRate = jockeyMeanWinRateParRangeDtos.stream()
+                            .filter(meanDto ->
+                                    Objects.equals(meanDto.getRaceRange(), winRate.getRaceRange())
+                                    && Objects.equals(meanDto.getRaceType(), winRate.getRaceType())
+                            ).findFirst().orElse(null);
+                    if(meanWinRate == null) {
+                        return JockeyWinRateParRange.builder()
+                                .jockeyWinRate(
+                                        JockeyWinRate.builder()
+                                                .winRate(50)
+                                                .count(winRate.getCount())
+                                                .build())
+                                .range(winRate.getRaceRange())
+                                .raceType(winRate.getRaceType())
+                                .build();
+                    }
+                    float winRateDevd = (winRate.getWinRate() - meanWinRate.getAvg()) / meanWinRate.getStddevd() * 10 + 50;
+                    return JockeyWinRateParRange.builder()
+                            .jockeyWinRate(
+                                    JockeyWinRate.builder()
+                                            .winRate(winRateDevd)
+                                            .count(winRate.getCount())
+                                            .build())
+                            .range(winRate.getRaceRange())
+                            .raceType(winRate.getRaceType())
+                            .build();
+                })
+                .toList();
+    }
+
+    public List<JockekMeanCountParRange> fetchJockeyMeanCountParRange(String raceDate) throws ParseException {
+        Date startDate = DateUtils.convertLocalDateTime2Date(
+                LocalDateTime.ofInstant(
+                                DateUtils.getDateFormat().parse(raceDate).toInstant(), ZoneId.systemDefault())
+                        .minusYears(2)
+        );
+        Date endDate = DateUtils.getDateFormat().parse(raceDate);
+        return jockeyRepository.fetchJockeyMeanCountParRange(startDate, endDate);
     }
 }
