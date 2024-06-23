@@ -8,12 +8,12 @@
         <result column="count" property="count"/>
     </resultMap>
 
-    <resultMap id="jockeyWinRateMapParStadium" type="com.example.demo.repository.dto.JockeyWinRateParStadium">
+    <resultMap id="jockeyWinRateMapParRangeStadium" type="com.example.demo.repository.dto.JockeyWinRateParRangeStadium">
         <id column="stadium" property="stadium"/>
         <association property="jockeyWinRate" resultMap="jockeyWinRateMap"/>
     </resultMap>
 
-    <resultMap id="jockeyWinRateMeanMapParStadium" type="com.example.demo.repository.dto.JockeyWinRateMeanParStadium">
+    <resultMap id="jockeyWinRateMeanMapParRangeStadium" type="com.example.demo.repository.dto.JockeyWinRateMeanParRangeStadium">
         <id column="stadium" property="stadium"/>
         <result property="meanWinRate" column="avg"/>
         <result property="stddevdWinRate" column="stddevd"/>
@@ -105,53 +105,58 @@
         INSERT INTO jockey (name) VALUES (#{jockey.name})
     </insert>
 
-    <select id="fetchJockeyWinRateParStadium" resultMap="jockeyWinRateMapParStadium">
+    <select id="fetchJockeyWinRateParRangeStadium" resultMap="jockeyWinRateMapParRangeStadium">
         SELECT
-        r.stadium as stadium,
-        SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
-        COUNT(rr.ranking) as count
+            r.stadium as stadium,
+            SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
+            COUNT(rr.ranking) as count
         FROM
-        raceHorse rh
+            raceHorse rh
         JOIN
-        jockey j ON rh.jockeyId = j.id
+            jockey j ON rh.jockeyId = j.id
         JOIN
-        raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
+            raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
         JOIN
-        race r ON r.id = rr.raceId
+            race r ON r.id = rr.raceId
         WHERE
-        j.id = #{id}
-        AND r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
+            j.id = #{id}
         AND
-        r.raceType = #{raceType}
+            r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
+        AND
+            r.raceType = #{raceType}
+        AND
+            r.raceLength >= #{minLength} AND r.raceLength &lt; #{maxLength}
         GROUP BY
-        j.id,r.stadium;
+            j.id,r.stadium;
     </select>
 
-    <select id="fetchJockeyMeanWinRateParStadium" resultMap="jockeyWinRateMeanMapParStadium" >
+    <select id="fetchJockeyMeanWinRateParRangeStadium" resultMap="jockeyWinRateMeanMapParRangeStadium" >
         SELECT
-        AVG(win_rate) as avg,
-        STDDEV_POP(win_rate) AS stddevd,
-        stadium
+            AVG(win_rate) as avg,
+            STDDEV_POP(win_rate) AS stddevd,
+            stadium
         FROM (
-        SELECT
-        r.stadium as stadium,
-        SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
-        COUNT(rr.ranking) as count
-        FROM
-        raceHorse rh
-        JOIN
-        jockey j ON rh.jockeyId = j.id
-        JOIN
-        raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
-        JOIN
-        race r ON r.id = rr.raceId
-        WHERE
-        r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
-        AND
-        r.raceType = #{raceType}
-        GROUP BY
-        j.id,r.stadium
-        ) jockeyWinRate GROUP BY stadium;
+            SELECT
+                r.stadium as stadium,
+                SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
+                COUNT(rr.ranking) as count
+            FROM
+                raceHorse rh
+            JOIN
+                jockey j ON rh.jockeyId = j.id
+            JOIN
+                raceResult rr ON rh.raceId = rr.raceId AND rh.frameNumber = rr.frameNumber
+            JOIN
+                race r ON r.id = rr.raceId
+            WHERE
+                r.raceDate >= #{startDate} AND r.raceDate &lt; #{endDate}
+            AND
+                r.raceType = #{raceType}
+            AND
+                r.raceLength >= #{minLength} AND r.raceLength &lt; #{maxLength}
+            GROUP BY
+                j.id,r.stadium
+            ) jockeyWinRate GROUP BY stadium;
     </select>
 
     <select id="fetchJockeyAllWinRate" resultMap="jockeyWinRateMap">

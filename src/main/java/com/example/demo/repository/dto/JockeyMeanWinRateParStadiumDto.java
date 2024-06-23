@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JockeyWinRateMeanParStadium {
-    private String stadium;
-    private Float meanWinRate;
-    private Float stddevdWinRate;
+public class JockeyMeanWinRateParStadiumDto {
+    String raceType;
+    String stadium;
+    float avg;
+    float stddevd;
 }
