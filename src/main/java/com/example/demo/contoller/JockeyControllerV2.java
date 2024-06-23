@@ -3,7 +3,9 @@ package com.example.demo.contoller;
 import com.example.demo.contoller.response.v2.GetJockeyMeanCountResponse;
 import com.example.demo.contoller.response.v2.GetJockeyWinRateResponse;
 import com.example.demo.entity.JockekMeanCountParRange;
+import com.example.demo.entity.JockekMeanCountParStadium;
 import com.example.demo.entity.JockeyWinRateParRange;
+import com.example.demo.entity.JockeyWinRateParStadium;
 import com.example.demo.service.JockeyService;
 import com.example.demo.valueobject.RaceType;
 import lombok.AllArgsConstructor;
@@ -56,4 +58,15 @@ public class JockeyControllerV2 {
     List<JockekMeanCountParRange> getJockeyMeanCountByRange(String raceDate) throws ParseException {
         return jockeyService.fetchJockeyMeanCountParRange(raceDate);
     }
+
+    @GetMapping("stadium/winRate")
+    List<JockeyWinRateParStadium> getJockeyWinRateByStadium(int id, String raceDate) throws ParseException {
+        return jockeyService.fetchJockeyWinRateParStadium(id,raceDate);
+    }
+
+    @GetMapping("stadium/meanCount")
+    List<JockekMeanCountParStadium> getJockeyMeanCountByStadium(String raceDate) throws ParseException {
+        return jockeyService.fetchJockeyMeanCountParStadium(raceDate);
+    }
+
 }

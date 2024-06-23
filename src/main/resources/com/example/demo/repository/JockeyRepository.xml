@@ -8,12 +8,12 @@
         <result column="count" property="count"/>
     </resultMap>
 
-    <resultMap id="jockeyWinRateMapParStadium" type="com.example.demo.repository.dto.JockeyWinRateParStadium">
+    <resultMap id="jockeyWinRateMapParRangeStadium" type="com.example.demo.repository.dto.JockeyWinRateParRangeStadium">
         <id column="stadium" property="stadium"/>
         <association property="jockeyWinRate" resultMap="jockeyWinRateMap"/>
     </resultMap>
 
-    <resultMap id="jockeyWinRateMeanMapParStadium" type="com.example.demo.repository.dto.JockeyWinRateMeanParStadium">
+    <resultMap id="jockeyWinRateMeanMapParRangeStadium" type="com.example.demo.repository.dto.JockeyWinRateMeanParRangeStadium">
         <id column="stadium" property="stadium"/>
         <result property="meanWinRate" column="avg"/>
         <result property="stddevdWinRate" column="stddevd"/>
@@ -105,7 +105,7 @@
         INSERT INTO jockey (name) VALUES (#{jockey.name})
     </insert>
 
-    <select id="fetchJockeyWinRateParStadium" resultMap="jockeyWinRateMapParStadium">
+    <select id="fetchJockeyWinRateParRangeStadium" resultMap="jockeyWinRateMapParRangeStadium">
         SELECT
             r.stadium as stadium,
             SUM(CASE WHEN rr.ranking = 1 THEN 1 ELSE 0 END) / COUNT(*) AS win_rate,
@@ -130,7 +130,7 @@
             j.id,r.stadium;
     </select>
 
-    <select id="fetchJockeyMeanWinRateParStadium" resultMap="jockeyWinRateMeanMapParStadium" >
+    <select id="fetchJockeyMeanWinRateParRangeStadium" resultMap="jockeyWinRateMeanMapParRangeStadium" >
         SELECT
             AVG(win_rate) as avg,
             STDDEV_POP(win_rate) AS stddevd,
