@@ -107,4 +107,9 @@ public class RaceController {
     public Float majorGradeRate(String raceDate,String stadium) throws ParseException {
         return raceService.fetchMajorGradeRate(raceDate,stadium);
     }
+
+    @GetMapping("/id")
+    public String raceId(String raceDate, String stadium, Integer round) throws ParseException {
+        return raceService.fetchRaceId(raceDate, stadium, round);
+    }
 }

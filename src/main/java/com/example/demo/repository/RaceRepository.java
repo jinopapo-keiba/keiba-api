@@ -30,4 +30,7 @@ public interface RaceRepository {
     @Cacheable("majorGradeRate")
     @Select("SELECT stadium,SUM(CASE WHEN r.grade <= 2 THEN 1 ELSE 0 END) / COUNT(*) as rate FROM race r where r.raceDate between #{startDate} and #{endDate} GROUP BY r.stadium;")
     List<MajorGradeRateDto> fetchMajorGradeRate(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    @Select("select id from race where raceDate = #{date} and stadium = #{stadium} and round  = #{round}")
+    String fetchRaceId(@Param("date") Date date,@Param("stadium") String stadium, @Param("round") Integer round);
 }

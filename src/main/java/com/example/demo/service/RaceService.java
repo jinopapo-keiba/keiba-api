@@ -247,4 +247,12 @@ public class RaceService {
                 .get().getRate();
         return (targetRate - minRate) / (maxRate - minRate);
     }
+
+    public String fetchRaceId(String dateText, String stadium, Integer round) throws ParseException {
+        Date date = DateUtils.convertLocalDateTime2Date(
+                LocalDateTime.ofInstant(
+                                DateUtils.getDateFormat().parse(dateText).toInstant(), ZoneId.systemDefault())
+        );
+        return raceRepository.fetchRaceId(date,stadium,round);
+    }
 }
