@@ -22,5 +22,6 @@ public class GetRaceResponse {
     int round;
     String stadium;
     int horseCount;
+    Integer stadiumDay;
     List<RaceHorseResponse> raceHorses;
 }

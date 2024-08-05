@@ -19,4 +19,5 @@ public class RaceResponse {
     int round;
     String stadium;
     int horseCount;
+    int stadiumDay;
 }

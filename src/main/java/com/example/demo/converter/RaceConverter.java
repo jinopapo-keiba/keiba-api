@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
-import java.text.DateFormat;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,6 +33,7 @@ public class RaceConverter {
                         saveRaceRequest.getRaceHorses().stream()
                                 .map(raceHorseConverter::convert)
                                 .collect(Collectors.toList()))
+                .stadiumDay(saveRaceRequest.getStadiumDay())
                 .build();
     }
 }

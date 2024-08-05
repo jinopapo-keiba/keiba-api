@@ -19,6 +19,7 @@ public class SaveRaceRequest {
     String raceWeather;
     String raceCondition;
     String raceDate;
+    Integer stadiumDay;
     List<RaceHorse> raceHorses;
 
     @Data

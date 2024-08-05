@@ -25,4 +25,5 @@ public class Race {
     String stadium;
     List<RaceHorse> raceHorses;
     Integer horseCount;
+    Integer stadiumDay;
 }
