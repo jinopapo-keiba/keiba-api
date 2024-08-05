@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @RestController
 @Slf4j
+@CrossOrigin
 public class RaceController {
     private RaceService raceService;
     private ScoreService scoreService;
