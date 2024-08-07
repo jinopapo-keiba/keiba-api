@@ -11,6 +11,7 @@
         <result property="ranking" column="ranking"/>
         <result property="cornerRanking" column="cornerRanking"/>
         <result property="popular" column="popular"/>
+        <result property="odds" column="odds"/>
         <result property="lastRapTime" column="lastRapTime"/>
         <result property="meanFullTime" column="meanFullTime"/>
         <result property="meanLastRapTime" column="meanLastRapTime"/>
@@ -30,7 +31,8 @@
             cornerRanking,
             ranking,
             lastRapTime,
-            popular
+            popular,
+            odds
         )
         VALUE(
             #{race.id},
@@ -39,7 +41,8 @@
             #{raceResult.cornerRanking},
             #{raceResult.ranking},
             #{raceResult.lastRapTime},
-            #{raceResult.popular}
+            #{raceResult.popular},
+            #{raceResult.odds}
         )
         ON DUPLICATE KEY
         UPDATE
@@ -47,7 +50,8 @@
             cornerRanking = #{raceResult.cornerRanking},
             ranking = #{raceResult.ranking},
             lastRapTime = #{raceResult.lastRapTime},
-            popular = #{raceResult.popular}
+            popular = #{raceResult.popular},
+            odds = #{raceResult.odds}
     </insert>
 
     <select id="fetchStadiumSummaryTimes" resultType="com.example.demo.entity.StadiumTime">

@@ -13,6 +13,7 @@ public class RaceResult {
     Integer ranking;
     String cornerRanking;
     Integer popular;
+    Float odds;
     Duration lastRapTime;
     Duration meanFullTime;
     Duration meanLastRapTime;

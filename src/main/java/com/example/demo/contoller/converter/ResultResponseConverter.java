@@ -12,6 +12,7 @@ public class ResultResponseConverter {
                 .ranking(raceResult.getRanking() == null ? -1 : raceResult.getRanking())
                 .cornerRanking(raceResult.getCornerRanking())
                 .popular(raceResult.getPopular() == null ? 0 : raceResult.getPopular())
+                .odds(raceResult.getOdds() == null ? 0 : raceResult.getOdds())
                 .lastRapTime(raceResult.getLastRapTime().toMillis())
                 .devLastRapTime(raceResult.calcDevLastRapTime())
                 .devFullTime(raceResult.calcDevFullTime())

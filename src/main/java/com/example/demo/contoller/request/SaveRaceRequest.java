@@ -45,6 +45,7 @@ public class SaveRaceRequest {
         String fullTime;
         Integer ranking;
         Integer popular;
+        Float odds;
         String lastRapTime;
         String cornerRanking;
     }

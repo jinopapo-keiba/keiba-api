@@ -10,6 +10,7 @@ public class ResultResponse {
     int ranking;
     String cornerRanking;
     int popular;
+    float odds;
     long lastRapTime;
     float devFullTime;
     float devLastRapTime;

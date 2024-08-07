@@ -44,6 +44,7 @@ public class RaceResultConverter {
                 .ranking(raceResult.getRanking())
                 .lastRapTime(lastRapTime)
                 .popular(raceResult.getPopular())
+                .odds(raceResult.getOdds())
                 .cornerRanking(raceResult.getCornerRanking())
                 .build();
     }
