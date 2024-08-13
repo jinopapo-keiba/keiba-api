@@ -12,5 +12,6 @@
         <typeHandler handler="com.example.demo.repository.handler.GradeTypeHandler"/>
         <typeHandler handler="com.example.demo.repository.handler.RaceConditionTypeHandler"/>
         <typeHandler handler="com.example.demo.repository.handler.OldLimitTypeHandler"/>
+        <typeHandler handler="com.example.demo.repository.handler.BetTypeTypeHandler"/>
     </typeHandlers>
 </configuration>

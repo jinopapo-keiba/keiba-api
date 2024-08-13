@@ -30,6 +30,7 @@ public class RaceService {
     private final RaceHorseRepository raceHorseRepository;
     private final RaceResultRepository raceResultRepository;
     private final TrainerRepository trainerRepository;
+    private final PayoutRepository payoutRepository;
 
     @Transactional
     public void saveRace(Race race) {
@@ -86,6 +87,14 @@ public class RaceService {
                 .filter(raceHorse -> raceHorse.getRaceResult() != null)
                 .forEach(raceHorse -> raceResultRepository.saveRaceResult(raceHorse.getRaceResult(), race, raceHorse)
                 );
+
+        // 払戻金の保存
+        if(race.getPayouts() != null) {
+            race.getPayouts()
+                    .forEach(
+                            payout -> payoutRepository.savePayout(payout,race.getId())
+                    );
+        }
     }
 
     /**

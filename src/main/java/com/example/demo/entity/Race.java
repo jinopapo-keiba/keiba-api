@@ -26,4 +26,5 @@ public class Race {
     List<RaceHorse> raceHorses;
     Integer horseCount;
     Integer stadiumDay;
+    List<Payout> payouts;
 }

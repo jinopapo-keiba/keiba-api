@@ -21,6 +21,7 @@ public class SaveRaceRequest {
     String raceDate;
     Integer stadiumDay;
     List<RaceHorse> raceHorses;
+    List<Payout> payouts;
 
     @Data
     static public class RaceHorse {
@@ -38,6 +39,13 @@ public class SaveRaceRequest {
     static public class Horse {
         String name;
         String gender;
+    }
+
+    @Data
+    static public class Payout {
+        String betType;
+        Float payout;
+        String frameNumber;
     }
 
     @Data
