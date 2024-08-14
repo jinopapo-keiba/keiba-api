@@ -1,5 +1,6 @@
 package com.example.demo.contoller.response;
 
+import com.example.demo.contoller.response.dto.PayoutResponse;
 import com.example.demo.contoller.response.dto.RaceHorseResponse;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,4 +25,5 @@ public class GetRaceResponse {
     int horseCount;
     Integer stadiumDay;
     List<RaceHorseResponse> raceHorses;
+    List<PayoutResponse> payouts;
 }

@@ -54,6 +54,11 @@
                 <result property="stdDeviTargetRaceLastRapTime" column="stdDeviTargetRaceLastRapTime"/>
             </association>
         </collection>
+        <collection property="payouts" ofType="com.example.demo.entity.Payout">
+            <result property="frameNumber" column="payoutFrameNumber"/>
+            <result property="payout" column="payout"/>
+            <result property="betType" column="betType"/>
+        </collection>
     </resultMap>
 
     <resultMap id="deviBaseMap" type="com.example.demo.repository.dto.DeviBase">
@@ -201,7 +206,8 @@
                 <property name="column" value="stddev_pop(lastRapTime)"/>
                 <property name="sortColumn" value="lastRapTime"/>
             </include>
-            ) as stdDeviTargetRaceLastRapTime
+            ) as stdDeviTargetRaceLastRapTime,
+            payout.payout as payout,payout.frameNumber as payoutFrameNumber,payout.betType as betType
         </if>
         FROM
             race
@@ -228,6 +234,10 @@
                 raceResult.raceId = race.id
             AND
                 raceHorse.frameNumber = raceResult.frameNumber
+            JOIN
+                payout
+            ON
+                payout.raceId = race.id
         </if>
         <where>
             <if test="queryParam.raceId != null">

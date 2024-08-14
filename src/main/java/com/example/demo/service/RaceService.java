@@ -152,6 +152,7 @@ public class RaceService {
                                 return targetRaceHorse.orElse(raceHorse);
                             })
                     .toList());
+            race.get(0).setPayouts(raceWithResult.get(0).getPayouts());
             return race;
         }
     }
