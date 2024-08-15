@@ -8,7 +8,6 @@ import com.example.demo.contoller.response.GetRaceResponse;
 import com.example.demo.converter.RaceConverter;
 import com.example.demo.entity.HorseScore;
 import com.example.demo.service.RaceService;
-import com.example.demo.service.ScoreService;
 import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.valueobject.RaceCondition;
 import lombok.AllArgsConstructor;
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 @CrossOrigin
 public class RaceController {
     private RaceService raceService;
-    private ScoreService scoreService;
     private RaceConverter raceConverter;
     private GetRaceResponseConverter getRaceResponseConverter;
     private final GetHorseRaceResultResponseConverter getHorseRaceResultResponseConverter;
@@ -51,8 +49,8 @@ public class RaceController {
      * @return
      */
     @GetMapping
-    List<GetRaceResponse> getRace(Integer raceId,@RequestParam(required = false,defaultValue = "true") Boolean beforeFlag) {
-        return raceService.fetchRace(raceId,beforeFlag).stream()
+    List<GetRaceResponse> getRace(Integer raceId,@RequestParam(required = false,defaultValue = "true") Boolean beforeFlag,@RequestParam(required = false,defaultValue = "false") Boolean payoutFlag) {
+        return raceService.fetchRace(raceId,beforeFlag,payoutFlag).stream()
                 .map(getRaceResponseConverter::convert)
                 .collect(Collectors.toList());
     }
@@ -82,11 +80,6 @@ public class RaceController {
         return raceService.fetchHorseRanRecentRace(query).stream()
                 .map(getHorseRaceResultResponseConverter::converter)
                 .collect(Collectors.toList());
-    }
-
-    @GetMapping("/score")
-    public List<HorseScore> calcScore(Integer raceId) {
-        return scoreService.calcScore(raceId);
     }
 
     @GetMapping("/all")

@@ -90,10 +90,12 @@ public class RaceService {
 
         // 払戻金の保存
         if(race.getPayouts() != null) {
-            race.getPayouts()
-                    .forEach(
-                            payout -> payoutRepository.savePayout(payout,race.getId())
-                    );
+            if(!payoutRepository.fetchPayout(race.getId()).isEmpty()) {
+                race.getPayouts()
+                        .forEach(
+                                payout -> payoutRepository.savePayout(payout, race.getId())
+                        );
+            }
         }
     }
 
@@ -128,7 +130,7 @@ public class RaceService {
      * @param raceId レースid
      * @return レース
      */
-    public List<Race> fetchRace(Integer raceId, Boolean beforeFlag) {
+    public List<Race> fetchRace(Integer raceId, Boolean beforeFlag, Boolean payoutFlag) {
         if (beforeFlag) {
             return raceRepository.fetchRace(RaceQueryParam.builder()
                     .raceId(raceId)
@@ -138,10 +140,12 @@ public class RaceService {
             List<Race> race = raceRepository.fetchRace(RaceQueryParam.builder()
                     .raceId(raceId)
                     .beforeRace(true)
+                    .payoutFlag(false)
                     .build());
             List<Race> raceWithResult = raceRepository.fetchRace(RaceQueryParam.builder()
                     .raceId(raceId)
                     .beforeRace(false)
+                    .payoutFlag(payoutFlag)
                     .build());
             race.get(0).setRaceHorses(race.get(0).getRaceHorses().stream()
                     .map(

@@ -206,8 +206,11 @@
                 <property name="column" value="stddev_pop(lastRapTime)"/>
                 <property name="sortColumn" value="lastRapTime"/>
             </include>
-            ) as stdDeviTargetRaceLastRapTime,
-            payout.payout as payout,payout.frameNumber as payoutFrameNumber,payout.betType as betType
+            ) as stdDeviTargetRaceLastRapTime
+
+        </if>
+        <if test="queryParam.payoutFlag == true">
+            ,payout.payout as payout,payout.frameNumber as payoutFrameNumber,payout.betType as betType
         </if>
         FROM
             race
@@ -234,6 +237,8 @@
                 raceResult.raceId = race.id
             AND
                 raceHorse.frameNumber = raceResult.frameNumber
+        </if>
+        <if test="queryParam.payoutFlag == true">
             JOIN
                 payout
             ON

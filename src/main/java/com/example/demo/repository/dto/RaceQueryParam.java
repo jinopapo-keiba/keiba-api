@@ -14,6 +14,7 @@ public class RaceQueryParam {
     private Integer round;
     private Date raceDate;
     private boolean beforeRace;
+    private boolean payoutFlag;
     private Date startRaceDate;
     private Date endRaceDate;
     private RaceCondition raceCondition;
