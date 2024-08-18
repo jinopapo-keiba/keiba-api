@@ -10,10 +10,9 @@ import java.util.List;
 
 @Mapper
 public interface PayoutRepository {
-    @Insert("INSERT INTO payout (frameNumber,payout,betType,raceId) VALUES (#{payout.frameNumber},#{payout.payout},#{payout.betType},#{raceId})" +
-            "ON DUPLICATE KEY UPDATE frameNumber = #{payout.frameNumber},payout = #{payout.payout},betType = #{payout.betType}")
+    @Insert("INSERT INTO payout (frameNumber,payout,betType,raceId) VALUES (#{payout.frameNumber},#{payout.payout},#{payout.betType},#{raceId})")
     void savePayout(@Param("payout") Payout payout, @Param("raceId") Integer raceId);
 
-    @Select("SELECT * FROM payout WHERE racceId = #{raceID}")
+    @Select("SELECT * FROM payout WHERE raceId = #{raceId}")
     List<Payout> fetchPayout(@Param("raceId") Integer raceId);
 }

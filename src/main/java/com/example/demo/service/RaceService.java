@@ -90,7 +90,7 @@ public class RaceService {
 
         // 払戻金の保存
         if(race.getPayouts() != null) {
-            if(!payoutRepository.fetchPayout(race.getId()).isEmpty()) {
+            if(payoutRepository.fetchPayout(race.getId()).isEmpty()) {
                 race.getPayouts()
                         .forEach(
                                 payout -> payoutRepository.savePayout(payout, race.getId())

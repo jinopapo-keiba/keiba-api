@@ -15,9 +15,9 @@ import java.util.regex.Pattern;
 @Slf4j
 public class RaceResultConverter {
     public RaceResult converter(SaveRaceRequest.RaceResult raceResult){
-        Pattern fullTimePattern = Pattern.compile("(\\d+):(\\d+)\\.(\\d+)");
+        Pattern fullTimePattern = Pattern.compile("((\\d+):)?(\\d+)\\.(\\d+)");
         Matcher fullTimeMatcher = fullTimePattern.matcher(raceResult.getFullTime());
-        Pattern lastRapTimePattern = Pattern.compile("(\\d+)\\.(\\d+)");
+        Pattern lastRapTimePattern = Pattern.compile("((\\d+):)?(\\d+)\\.(\\d+)");
         Matcher lastRapTimeMatcher = lastRapTimePattern.matcher(raceResult.getLastRapTime());
         // matchesが走らないとgroupが取れない
         if(!fullTimeMatcher.matches() || !lastRapTimeMatcher.matches()) {
@@ -26,18 +26,20 @@ public class RaceResultConverter {
                     .ranking(raceResult.getRanking())
                     .lastRapTime(Duration.ZERO)
                     .popular(raceResult.getPopular())
+                    .odds(raceResult.getOdds())
                     .cornerRanking(raceResult.getCornerRanking())
                     .build();
         }
         Duration fullTime = Duration.ofMillis(
-                Long.parseLong(fullTimeMatcher.group(1)) * 60000
-                        + Long.parseLong(fullTimeMatcher.group(2)) * 1000
-                        + Long.parseLong(fullTimeMatcher.group(3)) * 100
+                (fullTimeMatcher.group(2) != null ? Long.parseLong(fullTimeMatcher.group(2)) : 0) * 6000
+                        + Long.parseLong(fullTimeMatcher.group(3)) * 1000
+                        + Long.parseLong(fullTimeMatcher.group(4)) * 100
         );
         // matchesが走らないとgroupが取れない
         Duration lastRapTime = Duration.ofMillis(
-                Long.parseLong(lastRapTimeMatcher.group(1))*1000
-                        + Long.parseLong(lastRapTimeMatcher.group(2))*100
+                (lastRapTimeMatcher.group(2) != null ? Long.parseLong(lastRapTimeMatcher.group(2)) : 0) * 6000
+                        + Long.parseLong(lastRapTimeMatcher.group(3))*1000
+                        + Long.parseLong(lastRapTimeMatcher.group(4))*100
         );
         return RaceResult.builder()
                 .fullTime(fullTime)
