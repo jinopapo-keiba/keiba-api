@@ -147,16 +147,18 @@ public class RaceService {
                     .beforeRace(false)
                     .payoutFlag(payoutFlag)
                     .build());
-            race.get(0).setRaceHorses(race.get(0).getRaceHorses().stream()
-                    .map(
-                            raceHorse -> {
-                                Optional<RaceHorse> targetRaceHorse = raceWithResult.get(0).getRaceHorses().stream().filter(
-                                        raceHorseWithResult -> raceHorseWithResult.getHorse().getId().equals(raceHorse.getHorse().getId())
-                                ).findFirst();
-                                return targetRaceHorse.orElse(raceHorse);
-                            })
-                    .toList());
-            race.get(0).setPayouts(raceWithResult.get(0).getPayouts());
+            if( !raceWithResult.isEmpty()) {
+                race.get(0).setRaceHorses(race.get(0).getRaceHorses().stream()
+                        .map(
+                                raceHorse -> {
+                                    Optional<RaceHorse> targetRaceHorse = raceWithResult.get(0).getRaceHorses().stream().filter(
+                                            raceHorseWithResult -> raceHorseWithResult.getHorse().getId().equals(raceHorse.getHorse().getId())
+                                    ).findFirst();
+                                    return targetRaceHorse.orElse(raceHorse);
+                                })
+                        .toList());
+                race.get(0).setPayouts(raceWithResult.get(0).getPayouts());
+            }
             return race;
         }
     }
@@ -196,7 +198,10 @@ public class RaceService {
                                         )
                                         .map(
                                                 race -> {
-                                                    DeviBase deviBase = raceRepository.fetchDeviBase(race.getRaceType(), race.getRaceCondition(), race.getStadium(), race.getRaceLength());
+                                                    DeviBase deviBase = raceRepository.fetchDeviBase(race.getRaceType(), race.getStadium(), race.getRaceLength(),
+                                                            DateUtils.convertLocalDateTime2Date(LocalDateTime.ofInstant(targeRace.getRaceDate().toInstant(), ZoneId.systemDefault()).minusYears(2)),targeRace.getRaceDate()
+
+                                                    );
                                                     race.setRaceHorses(race.getRaceHorses().stream().map(
                                                                     updateRaceHorse -> {
                                                                         RaceResult raceResult = updateRaceHorse.getRaceResult();

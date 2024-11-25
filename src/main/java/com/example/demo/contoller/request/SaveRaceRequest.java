@@ -20,6 +20,7 @@ public class SaveRaceRequest {
     String raceCondition;
     String raceDate;
     Integer stadiumDay;
+    Integer stadiumRound;
     List<RaceHorse> raceHorses;
     List<Payout> payouts;
 

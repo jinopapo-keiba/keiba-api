@@ -26,6 +26,8 @@ public class RaceResponseConverter {
                 .raceName(race.getRaceName())
                 .raceType(race.getRaceType().getText())
                 .horseCount(race.getHorseCount())
+                .stadiumDay(race.getStadiumDay() == null ? 0 :race.getStadiumDay())
+                .stadiumRound(race.getStadiumRound() == null ? 0 : race.getStadiumRound())
                 .build();
     }
 }

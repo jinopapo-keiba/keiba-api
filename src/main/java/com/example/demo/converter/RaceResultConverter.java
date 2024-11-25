@@ -31,13 +31,13 @@ public class RaceResultConverter {
                     .build();
         }
         Duration fullTime = Duration.ofMillis(
-                (fullTimeMatcher.group(2) != null ? Long.parseLong(fullTimeMatcher.group(2)) : 0) * 6000
+                (fullTimeMatcher.group(2) != null ? Long.parseLong(fullTimeMatcher.group(2)) : 0) * 60000
                         + Long.parseLong(fullTimeMatcher.group(3)) * 1000
                         + Long.parseLong(fullTimeMatcher.group(4)) * 100
         );
         // matchesが走らないとgroupが取れない
         Duration lastRapTime = Duration.ofMillis(
-                (lastRapTimeMatcher.group(2) != null ? Long.parseLong(lastRapTimeMatcher.group(2)) : 0) * 6000
+                (lastRapTimeMatcher.group(2) != null ? Long.parseLong(lastRapTimeMatcher.group(2)) : 0) * 60000
                         + Long.parseLong(lastRapTimeMatcher.group(3))*1000
                         + Long.parseLong(lastRapTimeMatcher.group(4))*100
         );

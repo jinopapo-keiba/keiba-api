@@ -3,10 +3,11 @@ package com.example.demo.contoller;
 import com.example.demo.contoller.converter.GetHorseRaceResultResponseConverter;
 import com.example.demo.contoller.converter.GetRaceResponseConverter;
 import com.example.demo.contoller.request.SaveRaceRequest;
+import com.example.demo.contoller.request.SaveStadiumRequest;
 import com.example.demo.contoller.response.GetHorseRaceResultResponse;
 import com.example.demo.contoller.response.GetRaceResponse;
 import com.example.demo.converter.RaceConverter;
-import com.example.demo.entity.HorseScore;
+import com.example.demo.repository.StadiumRepository;
 import com.example.demo.service.RaceService;
 import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.valueobject.RaceCondition;
@@ -27,11 +28,22 @@ public class RaceController {
     private RaceService raceService;
     private RaceConverter raceConverter;
     private GetRaceResponseConverter getRaceResponseConverter;
+    private StadiumRepository stadiumRepository;
     private final GetHorseRaceResultResponseConverter getHorseRaceResultResponseConverter;
 
     @PostMapping
     String saveRace(@RequestBody SaveRaceRequest saveRaceRequest) {
         raceService.saveRace(raceConverter.converter(saveRaceRequest));
+        return "success";
+    }
+
+    /**
+     * 開催の情報を保存するapi
+     *
+     */
+    @PostMapping("/stadium")
+    String saveStadiumInfo(@RequestBody SaveStadiumRequest saveStadiumRequest){
+        stadiumRepository.saveStadium(saveStadiumRequest);
         return "success";
     }
 

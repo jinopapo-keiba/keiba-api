@@ -18,6 +18,7 @@
         <result property="raceDate" column="raceDate"/>
         <result property="horseCount" column="horseCount"/>
         <result property="stadiumDay" column="stadiumDay"/>
+        <result property="stadiumRound" column="stadiumRound"/>
         <collection property="raceHorses" ofType="com.example.demo.entity.RaceHorse">
             <id column="id" property="raceId"/>
             <id property="frameNumber" column="frameNumber"/>
@@ -105,7 +106,8 @@
             grade,
             oldLimit,
             raceDate,
-            stadiumDay
+            stadiumDay,
+            stadiumRound
         ) VALUES (
             #{race.stadium},
             #{race.round},
@@ -118,7 +120,8 @@
             #{race.grade.value},
             #{race.oldLimit.value},
             #{race.raceDate},
-            #{race.stadiumDay}
+            #{race.stadiumDay},
+            #{race.stadiumRound}
         )
     </insert>
 
@@ -137,7 +140,8 @@
             grade = #{race.grade.value},
             oldLimit = #{race.oldLimit.value},
             raceDate = #{race.raceDate},
-            stadiumDay = #{race.stadiumDay}
+            stadiumDay = #{race.stadiumDay},
+            stadiumRound = #{race.stadiumRound}
         WHERE
             id = #{race.id}
     </update>
@@ -168,14 +172,16 @@
             AND
                 race.stadium = #{stadium}
             AND
-                race.raceCondition = #{raceCondition}
+                raceDate >= #{startDate}
+            AND
+                raceDate &lt; #{endDate}
             GROUP BY race.id
         ) minTime
     </select>
 
     <select id="fetchRace" resultMap="raceMap">
         SELECT
-            raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,oldLimit,raceDate,race.id as id,round,stadium,stadiumDay,
+            raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,oldLimit,raceDate,race.id as id,round,stadium,stadiumDay,stadiumRound,
             weight,old,handicap,raceHorse.frameNumber as frameNumber,(select count(*) from race sr join raceHorse srh on sr.id=srh.raceId where sr.id = race.id group by sr.id ) as  horseCount,
             jockey.id as jockeyId,jockey.name as jockeyName,
             trainer.id as trainerId,trainer.name as trainerName,

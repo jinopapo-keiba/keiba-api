@@ -20,11 +20,12 @@ public interface RaceRepository {
     void updateRace(@Param("race")Race race);
     List<Race> fetchRace(@Param("queryParam")RaceQueryParam queryParam);
     @Cacheable("devi")
-    DeviBase fetchDeviBase(@Param("raceType") RaceType raceType, @Param("raceCondition") RaceCondition raceCondition, @Param("stadium") String stadium, @Param("raceLength") Integer raceLength);
+    DeviBase fetchDeviBase(@Param("raceType") RaceType raceType, @Param("stadium") String stadium, @Param("raceLength") Integer raceLength,@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
-    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"1988-01-01\" and \"2023-07-01\";")
+//    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and oldLimit is not null and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"1995-06-01\" and \"2023-07-01\";")
+    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and oldLimit is not null and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"2013-01-01\" and \"2023-07-01\";")
     List<Integer> fetchAllRace();
-    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"2023-07-01\" and \"2024-07-01\";")
+    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and oldLimit is not null and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"2023-07-01\" and \"2024-07-01\";")
     List<Integer> fetchTestRace();
 
     @Cacheable("majorGradeRate")

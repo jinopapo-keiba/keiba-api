@@ -45,6 +45,7 @@ public class RaceConverter {
                                 .map(raceHorseConverter::convert)
                                 .collect(Collectors.toList()))
                 .stadiumDay(saveRaceRequest.getStadiumDay())
+                .stadiumRound(saveRaceRequest.getStadiumRound())
                 .payouts(payouts)
                 .build();
     }
