@@ -294,4 +294,112 @@
         race.round ASC,
         raceHorse.frameNumber ASC
     </select>
+
+    <select id="fetchRaceWithAllHorses" resultMap="raceMap">
+        SELECT
+            raceName,raceType,raceLength,clockwise,raceCondition,raceWeather,grade,oldLimit,raceDate,race.id as id,round,stadium,stadiumDay,stadiumRound,
+            weight,old,handicap,raceHorse.frameNumber as frameNumber,(select count(*) from race sr join raceHorse srh on sr.id=srh.raceId where sr.id = race.id group by sr.id ) as  horseCount,
+            jockey.id as jockeyId,jockey.name as jockeyName,
+            trainer.id as trainerId,trainer.name as trainerName,
+            horse.id as horseId,horse.name as horseName, gender as horseGender,
+            race.id as subId
+        <if test="queryParam.beforeRace == false">
+            ,fullTime,ranking,cornerRanking,lastRapTime,popular,odds,
+            (
+            <include refid="targetRaceHorseResultsColumn">
+                <property name="column" value="avg(fullTime)"/>
+                <property name="sortColumn" value="fullTime"/>
+            </include>
+            ) as meanTargetRaceFullTime,
+            (
+            <include refid="targetRaceHorseResultsColumn">
+                <property name="column" value="avg(lastRapTime)"/>
+                <property name="sortColumn" value="lastRapTime"/>
+            </include>
+            ) as meanTargetRaceLastRapTime,
+            (
+            <include refid="targetRaceHorseResultsColumn">
+                <property name="column" value="stddev_pop(fullTime)"/>
+                <property name="sortColumn" value="fullTime"/>
+            </include>
+            ) as stdDeviTargetRaceFullTime,
+            (
+            <include refid="targetRaceHorseResultsColumn">
+                <property name="column" value="stddev_pop(lastRapTime)"/>
+                <property name="sortColumn" value="lastRapTime"/>
+            </include>
+            ) as stdDeviTargetRaceLastRapTime
+
+        </if>
+        <if test="queryParam.payoutFlag == true">
+            ,payout.payout as payout,payout.frameNumber as payoutFrameNumber,payout.betType as betType
+        </if>
+        FROM
+            race
+        JOIN
+            raceHorse
+        ON
+            raceHorse.raceId = race.id
+        JOIN
+            horse
+        ON
+            horseId = horse.id
+        JOIN
+            jockey
+        ON
+            jockeyId = jockey.id
+        JOIN
+            trainer
+        ON
+            trainerId = trainer.id
+        <if test="queryParam.beforeRace == false">
+            JOIN
+                raceResult
+            ON
+                raceResult.raceId = race.id
+            AND
+                raceHorse.frameNumber = raceResult.frameNumber
+        </if>
+        <if test="queryParam.payoutFlag == true">
+            JOIN
+                payout
+            ON
+                payout.raceId = race.id
+        </if>
+        <where>
+            <if test="queryParam.raceId != null">
+                race.id = #{queryParam.raceId}
+            </if>
+            <if test="queryParam.stadiums != null and queryParam.stadiums.size &gt; 0">
+                AND stadium IN
+                <foreach item="stadium" open="(" close=")" collection="queryParam.stadiums" separator=",">
+                    #{stadium}
+                </foreach>
+            </if>
+            <if test="queryParam.round != null">
+                AND round = #{queryParam.round}
+            </if>
+            <if test="queryParam.raceDate != null">
+                AND raceDate = #{queryParam.raceDate}
+            </if>
+            <if test="queryParam.startRaceDate != null">
+                AND raceDate >= #{queryParam.startRaceDate}
+            </if>
+            <if test="queryParam.endRaceDate != null">
+                AND raceDate &lt; #{queryParam.endRaceDate}
+            </if>
+            <if test="queryParam.minRaceLength != null">
+                AND
+                raceLength &gt;= #{queryParam.minRaceLength}
+            </if>
+            <if test="queryParam.maxRaceLength != null">
+                AND
+                raceLength &lt;= #{queryParam.maxRaceLength}
+            </if>
+        </where>
+        ORDER BY
+        race.raceDate DESC,
+        race.round ASC,
+        raceHorse.frameNumber ASC
+    </select>
 </mapper>

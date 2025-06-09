@@ -174,11 +174,10 @@ public class RaceService {
                 .raceId(query.getRaceId())
                 .beforeRace(true)
                 .build()).get(0);
-        List<Race> recentRanRaces = raceRepository.fetchRace(
+        
+        // 過去レース取得時は全馬データを取得するため、fetchRaceWithAllHorsesを使用
+        List<Race> recentRanRaces = raceRepository.fetchRaceWithAllHorses(
                 RaceQueryParam.builder()
-                        .horseIds(targeRace.getRaceHorses().stream()
-                                .map(raceHorse -> raceHorse.getHorse().getId())
-                                .collect(Collectors.toList()))
                         .raceCondition(query.getRaceCondition())
                         .startRaceDate(DateUtils.convertLocalDateTime2Date(LocalDateTime.ofInstant(targeRace.getRaceDate().toInstant(), ZoneId.systemDefault()).minusYears(2)))
                         .endRaceDate(targeRace.getRaceDate())
@@ -187,6 +186,11 @@ public class RaceService {
                         .maxRaceLength(query.getMaxRaceLength())
                         .build()
         );
+        
+        // 対象馬のIDリストを取得
+        List<Integer> targetHorseIds = targeRace.getRaceHorses().stream()
+                .map(raceHorse -> raceHorse.getHorse().getId())
+                .collect(Collectors.toList());
         return targeRace.getRaceHorses().stream()
                 .map(
                         raceHorse -> RecentHorseResultDto.builder()

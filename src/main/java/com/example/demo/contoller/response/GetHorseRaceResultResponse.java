@@ -1,6 +1,7 @@
 package com.example.demo.contoller.response;
 
-import com.example.demo.contoller.response.dto.RaceResultResponse;
+import com.example.demo.contoller.response.dto.RecentRaceResultResponse;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,5 +14,5 @@ public class GetHorseRaceResultResponse {
     private String name;
     private Integer frameNumber;
     private Integer handicap;
-    private List<RaceResultResponse> raceResults;
+    private List<RecentRaceResultResponse> raceResults;
 }

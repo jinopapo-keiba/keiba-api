@@ -18,6 +18,7 @@ public interface RaceRepository {
     void saveRace(@Param("race") Race race);
     void updateRace(@Param("race")Race race);
     List<Race> fetchRace(@Param("queryParam")RaceQueryParam queryParam);
+    List<Race> fetchRaceWithAllHorses(@Param("queryParam")RaceQueryParam queryParam);
     @Cacheable("devi")
     DeviBase fetchDeviBase(@Param("raceType") RaceType raceType, @Param("stadium") String stadium, @Param("raceLength") Integer raceLength,@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 

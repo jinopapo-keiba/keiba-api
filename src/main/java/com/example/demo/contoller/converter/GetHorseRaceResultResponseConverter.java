@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class GetHorseRaceResultResponseConverter {
-    private RaceResultResponseConverter raceResultResponseConverter;
+    private RecentRaceResultResponseConverter recentRaceResultResponseConverter;
 
     public GetHorseRaceResultResponse converter(RecentHorseResultDto recentHorseResultDto){
 
@@ -21,7 +21,7 @@ public class GetHorseRaceResultResponseConverter {
                 .handicap(recentHorseResultDto.getRaceHorse().getHandicap())
                 .frameNumber(recentHorseResultDto.getRaceHorse().getFrameNumber())
                 .raceResults(recentHorseResultDto.getRaces().stream()
-                        .map((race -> raceResultResponseConverter.convert(
+                        .map((race -> recentRaceResultResponseConverter.convert(
                                 race,
                                 race.getRaceHorses().stream()
                                         .filter(raceHorse -> raceHorse.getHorse().getId().equals(recentHorseResultDto.getRaceHorse().getHorse().getId()))
