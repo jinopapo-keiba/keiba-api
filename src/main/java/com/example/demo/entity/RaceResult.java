@@ -1,9 +1,11 @@
 package com.example.demo.entity;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
 
+@Slf4j
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,6 +25,8 @@ public class RaceResult {
     Duration meanTargetRaceLastRapTime;
     Float stdDeviTargetRaceFullTime;
     Float stdDeviTargetRaceLastRapTime;
+    // 99%のデータを正しく表現するために標準偏差の3倍で正規化する(3sd)
+    private final Integer sd = 3;
 
     public float calcDevFullTime() {
         if(fullTime.toMillis() == 0 || stdDeviFullTime == null) {
@@ -53,55 +57,60 @@ public class RaceResult {
     }
 
     public double calcNormalizeFulltime() {
+        log.warn("標準偏差欠損");
         if(stdDeviFullTime == null || stdDeviFullTime == 0){
             return 0;
         }
 
         double tmpScore =  ((meanFullTime.toMillis() - fullTime.toMillis())/ stdDeviFullTime);
-        if (tmpScore < -2) {
-            tmpScore = -2;
-        } else if (tmpScore > 2) {
-            tmpScore = 2;
+        if (tmpScore < -sd) {
+            tmpScore = -sd;
+        } else if (tmpScore > sd) {
+            tmpScore = sd;
         }
-        return (tmpScore + 2)/4;
+        return tmpScore/sd/2 +0.5 ;
     }
 
     public double calcNormalizeLastRapTime() {
         if(stdDeviLastRapTime == null || stdDeviLastRapTime == 0){
+            log.warn("標準偏差欠損");
             return 0;
         }
         double tmpScore =  ((meanLastRapTime.toMillis() - lastRapTime.toMillis())/ stdDeviLastRapTime);
-        if (tmpScore < -2) {
-            tmpScore = -2;
-        } else if (tmpScore > 2) {
-            tmpScore = 2;
+        if (tmpScore < -sd) {
+            tmpScore = -sd;
+        } else if (tmpScore > sd) {
+            tmpScore = sd;
         }
-        return (tmpScore + 2)/4;
+        return tmpScore/sd/2 +0.5;
     }
 
     public double calcNormalizeRaceFulltime() {
         if(stdDeviTargetRaceFullTime == null || stdDeviTargetRaceFullTime == 0){
+            log.warn("レース内標準偏差欠損");
             return 0;
         }
         double tmpScore =  ((meanTargetRaceFullTime.toMillis() - fullTime.toMillis())/ stdDeviTargetRaceFullTime);
-        if (tmpScore < -2) {
-            tmpScore = -2;
-        } else if (tmpScore > 2) {
-            tmpScore = 2;
+        if (tmpScore < -sd) {
+            tmpScore = -sd;
+        } else if (tmpScore > sd) {
+            tmpScore = sd;
         }
-        return (tmpScore + 2)/4;
+        return tmpScore/sd/2 +0.5;
     }
 
     public double calcNormalizeRaceLastRapTime() {
         if(stdDeviTargetRaceLastRapTime == null || stdDeviTargetRaceLastRapTime == 0){
+            log.warn("レース内標準偏差欠損");
             return 0;
         }
         double tmpScore =  ((meanTargetRaceLastRapTime.toMillis() - lastRapTime.toMillis())/ stdDeviTargetRaceLastRapTime);
-        if (tmpScore < -2) {
-            tmpScore = -2;
-        } else if (tmpScore > 2) {
-            tmpScore = 2;
+
+        if (tmpScore < -sd) {
+            tmpScore = -sd;
+        } else if (tmpScore > sd) {
+            tmpScore = sd;
         }
-        return (tmpScore + 2)/4;
+        return tmpScore/sd/2 +0.5;
     }
 }

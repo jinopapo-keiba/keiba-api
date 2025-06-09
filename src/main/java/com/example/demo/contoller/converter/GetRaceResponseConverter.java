@@ -43,6 +43,8 @@ public class GetRaceResponseConverter {
                         .map(raceHorseResponseConverter::convert)
                         .collect(Collectors.toList())
                 )
+                .stadiumDay(race.getStadiumDay())
+                .stadiumRound(race.getStadiumRound())
                 .payouts(payouts)
                 .build();
     }

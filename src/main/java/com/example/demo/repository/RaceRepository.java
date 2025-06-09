@@ -4,7 +4,6 @@ import com.example.demo.entity.Race;
 import com.example.demo.repository.dto.DeviBase;
 import com.example.demo.repository.dto.RaceQueryParam;
 import com.example.demo.service.dto.MajorGradeRateDto;
-import com.example.demo.valueobject.RaceCondition;
 import com.example.demo.valueobject.RaceType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -22,10 +21,9 @@ public interface RaceRepository {
     @Cacheable("devi")
     DeviBase fetchDeviBase(@Param("raceType") RaceType raceType, @Param("stadium") String stadium, @Param("raceLength") Integer raceLength,@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
-//    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and oldLimit is not null and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"1995-06-01\" and \"2023-07-01\";")
-    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and oldLimit is not null and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"2013-01-01\" and \"2023-07-01\";")
+    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and oldLimit is not null and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"1995-06-01\" and \"2024-01-01\";")
     List<Integer> fetchAllRace();
-    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and oldLimit is not null and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"2023-07-01\" and \"2024-07-01\";")
+    @Select("select distinct(id) from race join raceResult on race.id = raceResult.raceId where raceLength >= 1200 and raceType < 2 and oldLimit is not null and grade in (0,1,2,3,4,5,6,7,9) and raceDate between \"2024-01-01\" and \"2025-01-01\";")
     List<Integer> fetchTestRace();
 
     @Cacheable("majorGradeRate")

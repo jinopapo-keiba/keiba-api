@@ -7,8 +7,8 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface StadiumRepository {
     @Update(
-            "update race set stadiumDay=#{saveStadiumRequest.stadiumDay},stadiumRound=#{saveStadiumRequest.stadiumRound}" +
-                    " where raceDate=#{saveStadiumRequest.raceDate} and stadium = #{saveStadiumRequest.stadium} and round = #{saveStadiumRequest.round}"
+            "update race set stadiumDay=#{stadiumDay},stadiumRound=#{stadiumRound}" +
+                    " where raceDate=#{raceDate} and stadium = #{stadium} and round = #{round}"
     )
     void saveStadium(SaveStadiumRequest saveStadiumRequest);
 }

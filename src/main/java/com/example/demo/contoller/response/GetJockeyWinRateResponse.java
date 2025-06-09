@@ -1,7 +1,6 @@
 package com.example.demo.contoller.response;
 
 import com.example.demo.entity.JockeyWinRate;
-import com.example.demo.entity.TrainerWinRate;
 import lombok.Builder;
 import lombok.Data;
 

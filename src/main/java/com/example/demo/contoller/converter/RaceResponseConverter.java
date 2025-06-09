@@ -6,8 +6,6 @@ import com.example.demo.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.text.DateFormat;
-
 @AllArgsConstructor
 @Component
 public class RaceResponseConverter {
