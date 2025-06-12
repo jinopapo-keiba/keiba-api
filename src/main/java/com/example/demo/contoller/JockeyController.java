@@ -7,6 +7,8 @@ import com.example.demo.repository.JockeyRepository;
 import com.example.demo.utils.DateUtils;
 import com.example.demo.valueobject.Grade;
 import com.example.demo.valueobject.RaceType;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +22,12 @@ import java.util.*;
 @RestController
 @RequestMapping("/v1/jockey")
 @AllArgsConstructor
+@Tag(name = "Jockey", description = "Operations about jockey")
 public class JockeyController {
     private JockeyRepository jockeyRepository;
 
     @GetMapping
+    @Operation(summary = "Get jockey", description = "Fetch jockey details by id")
     Jockey getJockey(int id){
         return jockeyRepository.fetchJockey(id);
     }
@@ -38,6 +42,7 @@ public class JockeyController {
      * @return 平均順位
      */
     @GetMapping("result")
+    @Operation(summary = "Get jockey result", description = "Get jockey average ranking")
     Float getJockeyResult(int id,int raceLength,String stadium,String raceType,String raceDate) throws ParseException {
         Date targetDate = DateUtils.convertLocalDateTime2Date(
                 LocalDateTime.ofInstant(
@@ -59,6 +64,7 @@ public class JockeyController {
      * @return 勝率
      */
     @GetMapping("winRate")
+    @Operation(summary = "Get jockey win rate", description = "Get jockey win rate statistics")
     GetJockeyWinRateResponse getJockeyWinRate(int id, String stadium, String raceType, String raceDate, String grade) throws ParseException {
         Date startDate = DateUtils.convertLocalDateTime2Date(
                 LocalDateTime.ofInstant(

@@ -4,6 +4,8 @@ import com.example.demo.contoller.converter.GetStadiumSummaryResponseConverter;
 import com.example.demo.contoller.response.GetStadiumSummaryResponse;
 import com.example.demo.service.RaceResultService;
 import com.example.demo.valueobject.Grade;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,11 +17,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/v1/raceResult")
 @RestController
 @AllArgsConstructor
+@Tag(name = "RaceResult", description = "Operations about race result")
 public class RaceResultController {
     private final RaceResultService raceResultService;
     private final GetStadiumSummaryResponseConverter getStadiumSummaryResponseConverter;
 
     @GetMapping("/stadiumSummary")
+    @Operation(summary = "Get stadium summary", description = "Fetch summary of stadium results")
     public List<GetStadiumSummaryResponse> getStadiumSummary(
             String time,
             Integer raceLength,
@@ -37,6 +41,7 @@ public class RaceResultController {
      * @return 集計データ
      */
     @GetMapping("/winHorsePopular")
+    @Operation(summary = "Get win horse popularity", description = "Fetch count of winning horse popularity")
     public List<Integer> getWinHorsePopular() {
         return raceResultService.fetchWinHorsePopular();
     }
