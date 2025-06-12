@@ -11,6 +11,8 @@ import com.example.demo.repository.StadiumRepository;
 import com.example.demo.service.RaceService;
 import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.valueobject.RaceCondition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 @RestController
 @Slf4j
 @CrossOrigin
+@Tag(name = "Race", description = "Operations about race")
 public class RaceController {
     private RaceService raceService;
     private RaceConverter raceConverter;
@@ -32,6 +35,7 @@ public class RaceController {
     private final GetHorseRaceResultResponseConverter getHorseRaceResultResponseConverter;
 
     @PostMapping
+    @Operation(summary = "Save race", description = "Save race information")
     String saveRace(@RequestBody SaveRaceRequest saveRaceRequest) {
         raceService.saveRace(raceConverter.converter(saveRaceRequest));
         return "success";
@@ -42,12 +46,14 @@ public class RaceController {
      *
      */
     @PostMapping("/stadium")
+    @Operation(summary = "Save stadium", description = "Save stadium information")
     String saveStadiumInfo(@RequestBody SaveStadiumRequest saveStadiumRequest){
         stadiumRepository.saveStadium(saveStadiumRequest);
         return "success";
     }
 
     @GetMapping("/before")
+    @Operation(summary = "Get current race", description = "Fetch upcoming races")
     List<GetRaceResponse> getCurrentRace() {
         return raceService.fetchBeforeRace().stream()
                 .map(getRaceResponseConverter::convert)
@@ -61,6 +67,7 @@ public class RaceController {
      * @return
      */
     @GetMapping
+    @Operation(summary = "Get race", description = "Fetch race information")
     List<GetRaceResponse> getRace(Integer raceId,@RequestParam(required = false,defaultValue = "true") Boolean beforeFlag,@RequestParam(required = false,defaultValue = "false") Boolean payoutFlag) {
         return raceService.fetchRace(raceId,beforeFlag,payoutFlag).stream()
                 .map(getRaceResponseConverter::convert)
@@ -75,6 +82,7 @@ public class RaceController {
      * @return
      */
     @GetMapping("/recent")
+    @Operation(summary = "Get recent race result", description = "Fetch recent race results before the target race")
     public List<GetHorseRaceResultResponse> getRecentRaceResult(
             Integer raceId,
             String raceCondition,
@@ -95,6 +103,7 @@ public class RaceController {
     }
 
     @GetMapping("/all")
+    @Operation(summary = "Get all race ids", description = "Fetch all race identifiers")
     public List<Integer> allRace(@RequestParam(required = false, defaultValue = "false") boolean testFlag) {
         return raceService.fetchAllRace(testFlag);
     }
@@ -110,11 +119,13 @@ public class RaceController {
      * @throws ParseException
      */
     @GetMapping("/majorGradeRate")
+    @Operation(summary = "Get major grade rate", description = "Fetch ratio of major grade races at stadium")
     public Float majorGradeRate(String raceDate,String stadium) throws ParseException {
         return raceService.fetchMajorGradeRate(raceDate,stadium);
     }
 
     @GetMapping("/id")
+    @Operation(summary = "Get race id", description = "Fetch race id from parameters")
     public String raceId(String raceDate, String stadium, Integer round) throws ParseException {
         return raceService.fetchRaceId(raceDate, stadium, round);
     }
