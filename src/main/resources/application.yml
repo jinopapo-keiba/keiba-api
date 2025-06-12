@@ -1,6 +1,7 @@
 spring:
-  dataSource:
-    driverClassName: com.mysql.jdbc.Driver
+  datasource:
+    # Updated driver class for MySQL 9.x
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost/keibav2
     username: ji-no
 logging:
@@ -16,4 +17,5 @@ server:
     accesslog:
       enabled: true
 mybatis:
-  configLocation: classpath:/mybatis/mybatis-config.xml
+  # Boot 3 uses kebab-case property names
+  config-location: classpath:/mybatis/mybatis-config.xml
