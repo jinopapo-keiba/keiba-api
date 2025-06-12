@@ -11,5 +11,6 @@ import java.util.List;
 @Builder
 @Schema(description = "距離情報レスポンス")
 public class GetLengthResponse {
+    @Schema(description = "距離一覧")
     List<RaceLength> length;
 }

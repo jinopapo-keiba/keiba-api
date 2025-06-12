@@ -10,7 +10,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Data
 @Schema(description = "騎手勝率レスポンス v2")
 public class GetJockeyWinRateResponse {
+    @Schema(description = "スタジアム")
     String stadium;
+
+    @Schema(description = "レンジ")
     Range range;
+
+    @Schema(description = "勝率情報")
     JockeyWinRate jockeyWinRates;
 }

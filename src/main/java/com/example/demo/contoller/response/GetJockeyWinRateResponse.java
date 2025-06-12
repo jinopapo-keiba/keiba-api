@@ -12,10 +12,21 @@ import java.util.Map;
 @Data
 @Schema(description = "騎手勝率レスポンス")
 public class GetJockeyWinRateResponse {
+    @Schema(description = "騎手勝率一覧")
     List<JockeyWinRate> jockeyWinRates;
+
+    @Schema(description = "騎手平均勝率一覧")
     List<Float> jockeyMeanWinRates;
+
+    @Schema(description = "全体勝率")
     JockeyWinRate jockeyAllWinRates;
+
+    @Schema(description = "スタジアム別勝率")
     Map<String,JockeyWinRate> jockeyAllWinRatesParStadium;
+
+    @Schema(description = "全体平均勝率")
     Float jockeyAllMeanWinRates;
+
+    @Schema(description = "スタジアム別平均勝率")
     Map<String,Float> jockeyAllWinRatesMeanParStadium;
 }

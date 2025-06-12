@@ -9,7 +9,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Data
 @Schema(description = "騎手平均騎乗数レスポンス v2")
 public class GetJockeyMeanCountResponse {
+    @Schema(description = "スタジアム")
     String stadium;
+
+    @Schema(description = "レンジ")
     Range range;
+
+    @Schema(description = "平均騎乗数")
     float count;
 }

@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Builder
 @Schema(description = "コーナー順位レスポンス")
 public class CornerRankingResponse {
+    @Schema(description = "枠番")
     Integer frame;
+
+    @Schema(description = "順位")
     String ranking;
 }

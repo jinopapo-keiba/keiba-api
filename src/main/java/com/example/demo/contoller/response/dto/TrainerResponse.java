@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Builder
 @Schema(description = "調教師レスポンス")
 public class TrainerResponse {
+    @Schema(description = "調教師名")
     String name;
+
+    @Schema(description = "調教師ID")
     Integer id;
 }
