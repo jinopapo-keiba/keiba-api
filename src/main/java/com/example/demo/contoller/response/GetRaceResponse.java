@@ -4,11 +4,13 @@ import com.example.demo.contoller.response.dto.PayoutResponse;
 import com.example.demo.contoller.response.dto.RaceHorseResponse;
 import lombok.Builder;
 import lombok.Getter;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
 @Getter
 @Builder
+@Schema(description = "レース情報レスポンス")
 public class GetRaceResponse {
     String raceName;
     String raceType;
