@@ -175,6 +175,11 @@ public class RaceService {
                 .beforeRace(true)
                 .build()).get(0);
         
+        // 対象馬のIDリストを取得
+        List<Integer> targetHorseIds = targeRace.getRaceHorses().stream()
+                .map(raceHorse -> raceHorse.getHorse().getId())
+                .collect(Collectors.toList());
+
         // 過去レース取得時は全馬データを取得するため、fetchRaceWithAllHorsesを使用
         List<Race> recentRanRaces = raceRepository.fetchRaceWithAllHorses(
                 RaceQueryParam.builder()
@@ -184,13 +189,9 @@ public class RaceService {
                         .stadiums(query.getStadiums())
                         .minRaceLength(query.getMinRaceLength())
                         .maxRaceLength(query.getMaxRaceLength())
+                        .horseIds(targetHorseIds)
                         .build()
         );
-        
-        // 対象馬のIDリストを取得
-        List<Integer> targetHorseIds = targeRace.getRaceHorses().stream()
-                .map(raceHorse -> raceHorse.getHorse().getId())
-                .collect(Collectors.toList());
         return targeRace.getRaceHorses().stream()
                 .map(
                         raceHorse -> RecentHorseResultDto.builder()

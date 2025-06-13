@@ -382,10 +382,27 @@
             <if test="queryParam.raceDate != null">
                 AND raceDate = #{queryParam.raceDate}
             </if>
-            <if test="queryParam.startRaceDate != null">
-                AND raceDate >= #{queryParam.startRaceDate}
+            <if test="queryParam.horseIds != null and queryParam.horseIds.size > 0">
+                AND race.id IN (
+                    SELECT DISTINCT sr.id
+                    FROM race sr
+                    JOIN raceHorse srh ON sr.id = srh.raceId
+                    WHERE srh.horseId IN
+                    <foreach item="horseId" collection="queryParam.horseIds" open="(" separator="," close=")">
+                        #{horseId}
+                    </foreach>
+                    <if test="queryParam.startRaceDate != null">
+                        AND sr.raceDate &gt;= #{queryParam.startRaceDate}
+                    </if>
+                    <if test="queryParam.endRaceDate != null">
+                        AND sr.raceDate &lt; #{queryParam.endRaceDate}
+                    </if>
+                )
             </if>
-            <if test="queryParam.endRaceDate != null">
+            <if test="(queryParam.horseIds == null or queryParam.horseIds.size == 0) and queryParam.startRaceDate != null">
+                AND raceDate &gt;= #{queryParam.startRaceDate}
+            </if>
+            <if test="(queryParam.horseIds == null or queryParam.horseIds.size == 0) and queryParam.endRaceDate != null">
                 AND raceDate &lt; #{queryParam.endRaceDate}
             </if>
             <if test="queryParam.minRaceLength != null">
