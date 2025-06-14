@@ -38,15 +38,15 @@ public class ResultResponse {
     @Schema(description = "対象レース上がり差")
     float devTargetRaceLastRapTime;
 
-    @Schema(description = "平均タイム")
+    @Schema(description = "平均タイム", example = "0.5", minimum = "0", maximum = "1")
     float normalFullTime;
 
-    @Schema(description = "平均上がり")
+    @Schema(description = "平均上がり", example = "0.5", minimum = "0", maximum = "1")
     float normalLastRapTime;
 
-    @Schema(description = "対象レース平均タイム")
+    @Schema(description = "対象レース平均タイム", example = "0.5", minimum = "0", maximum = "1")
     float normalTargetRaceFullTime;
 
-    @Schema(description = "対象レース平均上がり")
+    @Schema(description = "対象レース平均上がり", example = "0.5", minimum = "0", maximum = "1")
     float normalTargetRaceLastRapTime;
 }

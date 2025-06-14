@@ -12,16 +12,16 @@ import java.util.List;
 @Builder
 @Schema(description = "馬のレース結果レスポンス")
 public class GetHorseRaceResultResponse {
-    @Schema(description = "馬ID")
+    @Schema(description = "馬ID", example = "123")
     private int id;
 
-    @Schema(description = "馬名")
+    @Schema(description = "馬名", example = "ディープインパクト")
     private String name;
 
-    @Schema(description = "枠番")
+    @Schema(description = "枠番", example = "5")
     private Integer frameNumber;
 
-    @Schema(description = "ハンデ")
+    @Schema(description = "ハンデ", example = "55")
     private Integer handicap;
 
     @Schema(description = "直近レース結果一覧")

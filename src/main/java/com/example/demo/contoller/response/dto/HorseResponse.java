@@ -14,6 +14,7 @@ public class HorseResponse {
     @Schema(description = "馬名")
     String name;
 
-    @Schema(description = "性別")
+    @Schema(description = "性別",
+            allowableValues = {"牝","牡","せん"})
     String gender;
 }
