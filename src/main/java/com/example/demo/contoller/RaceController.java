@@ -13,6 +13,8 @@ import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.valueobject.RaceCondition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -68,7 +70,10 @@ public class RaceController {
      */
     @GetMapping
     @Operation(summary = "Get race", description = "Fetch race information")
-    List<GetRaceResponse> getRace(Integer raceId,@RequestParam(required = false,defaultValue = "true") Boolean beforeFlag,@RequestParam(required = false,defaultValue = "false") Boolean payoutFlag) {
+    List<GetRaceResponse> getRace(
+            @Parameter(description = "レースID。YYYYMMDD+開催地+レース番号の組み合わせ", example = "202301010801") Integer raceId,
+            @Parameter(description = "開催前の情報を取得するか", example = "true") @RequestParam(required = false,defaultValue = "true") Boolean beforeFlag,
+            @Parameter(description = "払戻情報を含めるか", example = "false") @RequestParam(required = false,defaultValue = "false") Boolean payoutFlag) {
         return raceService.fetchRace(raceId,beforeFlag,payoutFlag).stream()
                 .map(getRaceResponseConverter::convert)
                 .collect(Collectors.toList());
@@ -84,11 +89,12 @@ public class RaceController {
     @GetMapping("/recent")
     @Operation(summary = "Get recent race result", description = "Fetch recent race results before the target race")
     public List<GetHorseRaceResultResponse> getRecentRaceResult(
-            Integer raceId,
-            String raceCondition,
-            @RequestParam(required = false) List<String> stadiums,
-            @RequestParam(required = false) Integer minRaceLength,
-            @RequestParam(required = false) Integer maxRaceLength
+            @Parameter(description = "対象レースID", example = "202301010801") Integer raceId,
+            @Parameter(description = "馬場状態", example = "良",
+                    schema = @Schema(allowableValues = {"良","稍重","重","不良"})) String raceCondition,
+            @Parameter(description = "対象スタジアム", example = "[\"東京\",\"阪神\"]") @RequestParam(required = false) List<String> stadiums,
+            @Parameter(description = "最低距離", example = "1200", minimum = "1000", maximum = "3600") @RequestParam(required = false) Integer minRaceLength,
+            @Parameter(description = "最大距離", example = "1800", minimum = "1000", maximum = "3600") @RequestParam(required = false) Integer maxRaceLength
     ){
         RecentRaceQuery query = RecentRaceQuery.builder()
                 .raceId(raceId)
