@@ -19,3 +19,7 @@ server:
 mybatis:
   # Boot 3 uses kebab-case property names
   config-location: classpath:/mybatis/mybatis-config.xml
+
+springdoc:
+  swagger-ui:
+    path: /swagger
