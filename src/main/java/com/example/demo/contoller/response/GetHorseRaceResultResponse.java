@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Builder
-@Schema(description = "馬のレース結果レスポンス")
+@Schema(description = "馬の直近のレース結果レスポンス")
 public class GetHorseRaceResultResponse {
     @Schema(description = "馬ID", example = "123")
     private int id;
@@ -18,7 +18,7 @@ public class GetHorseRaceResultResponse {
     @Schema(description = "馬名", example = "ディープインパクト")
     private String name;
 
-    @Schema(description = "枠番", example = "5")
+    @Schema(description = "枠番", example = "5", minimum = "1", maximum = "18")
     private Integer frameNumber;
 
     @Schema(description = "ハンデ", example = "55")

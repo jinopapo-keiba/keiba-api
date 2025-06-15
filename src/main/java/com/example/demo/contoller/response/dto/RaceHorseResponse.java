@@ -8,16 +8,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Builder
 @Schema(description = "レース馬レスポンス")
 public class RaceHorseResponse {
-    @Schema(description = "馬体重")
+    @Schema(description = "馬体重", example = "500")
     Integer weight;
 
-    @Schema(description = "年齢")
+    @Schema(description = "年齢", minimum = "2", example = "4")
     Integer old;
 
-    @Schema(description = "枠番")
+    @Schema(description = "枠番", maximum = "18", minimum = "1")
     Integer frameNumber;
 
-    @Schema(description = "ハンデ")
+    @Schema(description = "ハンデ", example = "55")
     Integer handicap;
 
     @Schema(description = "馬情報")

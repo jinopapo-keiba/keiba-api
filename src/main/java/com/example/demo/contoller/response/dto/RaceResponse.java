@@ -39,19 +39,19 @@ public class RaceResponse {
             allowableValues = {"2歳","3歳","3歳以上","4歳以上"})
     String oldLimit;
 
-    @Schema(description = "開催日", example = "2023-05-28")
+    @Schema(description = "開催日", example = "20230528")
     String raceDate;
 
-    @Schema(description = "レースID", example = "202301010801")
+    @Schema(description = "レースID", example = "1")
     int id;
 
-    @Schema(description = "回数", example = "11")
+    @Schema(description = "何レース目か", example = "11")
     int round;
 
-    @Schema(description = "スタジアム", example = "東京")
+    @Schema(description = "スタジアム", example = "東京", allowableValues = {"札幌","函館","新潟","福島","東京","中山","中京","京都","阪神","小倉"})
     String stadium;
 
-    @Schema(description = "出走頭数", example = "18")
+    @Schema(description = "出走頭数", example = "18", minimum = "1",maximum = "18")
     int horseCount;
 
     @Schema(description = "開催日番号", example = "2")

@@ -71,7 +71,7 @@ public class RaceController {
     @GetMapping
     @Operation(summary = "Get race", description = "Fetch race information")
     List<GetRaceResponse> getRace(
-            @Parameter(description = "レースID。YYYYMMDD+開催地+レース番号の組み合わせ", example = "202301010801") Integer raceId,
+            @Parameter(description = "レースID", example = "1") Integer raceId,
             @Parameter(description = "開催前の情報を取得するか", example = "true") @RequestParam(required = false,defaultValue = "true") Boolean beforeFlag,
             @Parameter(description = "払戻情報を含めるか", example = "false") @RequestParam(required = false,defaultValue = "false") Boolean payoutFlag) {
         return raceService.fetchRace(raceId,beforeFlag,payoutFlag).stream()
@@ -87,14 +87,14 @@ public class RaceController {
      * @return
      */
     @GetMapping("/recent")
-    @Operation(summary = "Get recent race result", description = "Fetch recent race results before the target race")
+    @Operation(summary = "Get recent race result", description = "指定したレースに出走予定の馬の直近6レースの結果を取得する")
     public List<GetHorseRaceResultResponse> getRecentRaceResult(
             @Parameter(description = "対象レースID", example = "202301010801") Integer raceId,
-            @Parameter(description = "馬場状態", example = "良",
+            @Parameter(description = "直近6レースを馬場状態で絞り込む", example = "良",
                     schema = @Schema(allowableValues = {"良","稍重","重","不良"})) String raceCondition,
-            @Parameter(description = "対象スタジアム", example = "[\"東京\",\"阪神\"]") @RequestParam(required = false) List<String> stadiums,
-            @Parameter(description = "最低距離", example = "1200", minimum = "1000", maximum = "3600") @RequestParam(required = false) Integer minRaceLength,
-            @Parameter(description = "最大距離", example = "1800", minimum = "1000", maximum = "3600") @RequestParam(required = false) Integer maxRaceLength
+            @Parameter(description = "直近6レースを対象スタジアムで絞り込む", example = "[\"東京\",\"阪神\"]") @RequestParam(required = false) List<String> stadiums,
+            @Parameter(description = "直近6レースを最低距離で絞り込む", example = "1200") @RequestParam(required = false) Integer minRaceLength,
+            @Parameter(description = "直近6レースを最大距離で絞り込む", example = "1800") @RequestParam(required = false) Integer maxRaceLength
     ){
         RecentRaceQuery query = RecentRaceQuery.builder()
                 .raceId(raceId)
