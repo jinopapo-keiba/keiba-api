@@ -4,6 +4,7 @@ import com.example.demo.contoller.converter.GetStadiumSummaryResponseConverter;
 import com.example.demo.contoller.response.GetStadiumSummaryResponse;
 import com.example.demo.service.RaceResultService;
 import com.example.demo.valueobject.Grade;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/v1/raceResult")
 @RestController
 @AllArgsConstructor
+@Hidden
 @Tag(name = "RaceResult", description = "Operations about race result")
 public class RaceResultController {
     private final RaceResultService raceResultService;

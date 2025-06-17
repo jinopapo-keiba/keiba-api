@@ -7,6 +7,7 @@ import com.example.demo.repository.JockeyRepository;
 import com.example.demo.utils.DateUtils;
 import com.example.demo.valueobject.Grade;
 import com.example.demo.valueobject.RaceType;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.*;
 @RequestMapping("/v1/jockey")
 @AllArgsConstructor
 @Tag(name = "Jockey", description = "Operations about jockey")
+@Hidden
 public class JockeyController {
     private JockeyRepository jockeyRepository;
 

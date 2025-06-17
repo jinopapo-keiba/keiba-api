@@ -11,6 +11,7 @@ import com.example.demo.repository.StadiumRepository;
 import com.example.demo.service.RaceService;
 import com.example.demo.service.dto.RecentRaceQuery;
 import com.example.demo.valueobject.RaceCondition;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,6 +37,7 @@ public class RaceController {
     private StadiumRepository stadiumRepository;
     private final GetHorseRaceResultResponseConverter getHorseRaceResultResponseConverter;
 
+    @Hidden
     @PostMapping
     @Operation(summary = "Save race", description = "Save race information")
     String saveRace(@RequestBody SaveRaceRequest saveRaceRequest) {
@@ -47,6 +49,7 @@ public class RaceController {
      * 開催の情報を保存するapi
      *
      */
+    @Hidden
     @PostMapping("/stadium")
     @Operation(summary = "Save stadium", description = "Save stadium information")
     String saveStadiumInfo(@RequestBody SaveStadiumRequest saveStadiumRequest){
@@ -54,6 +57,7 @@ public class RaceController {
         return "success";
     }
 
+    @Hidden
     @GetMapping("/before")
     @Operation(summary = "Get current race", description = "Fetch upcoming races")
     List<GetRaceResponse> getCurrentRace() {
@@ -91,7 +95,7 @@ public class RaceController {
     public List<GetHorseRaceResultResponse> getRecentRaceResult(
             @Parameter(description = "対象レースID", example = "202301010801") Integer raceId,
             @Parameter(description = "直近6レースを馬場状態で絞り込む", example = "良",
-                    schema = @Schema(allowableValues = {"良","稍重","重","不良"})) String raceCondition,
+                    schema = @Schema(allowableValues = {"良","稍重","重","不良"})) @RequestParam(required = false) String raceCondition,
             @Parameter(description = "直近6レースを対象スタジアムで絞り込む", example = "[\"東京\",\"阪神\"]") @RequestParam(required = false) List<String> stadiums,
             @Parameter(description = "直近6レースを最低距離で絞り込む", example = "1200") @RequestParam(required = false) Integer minRaceLength,
             @Parameter(description = "直近6レースを最大距離で絞り込む", example = "1800") @RequestParam(required = false) Integer maxRaceLength
@@ -109,7 +113,7 @@ public class RaceController {
     }
 
     @GetMapping("/all")
-    @Operation(summary = "Get all race ids", description = "Fetch all race identifiers")
+    @Operation(summary = "Get all race ids", description = "学習用のデータセットのもととなるidのリストを返す。testFlagがついてるときはバリデーション用のデータセットとして直近1年分を返す")
     public List<Integer> allRace(@RequestParam(required = false, defaultValue = "false") boolean testFlag) {
         return raceService.fetchAllRace(testFlag);
     }
@@ -124,12 +128,14 @@ public class RaceController {
      * @return
      * @throws ParseException
      */
+    @Hidden
     @GetMapping("/majorGradeRate")
     @Operation(summary = "Get major grade rate", description = "Fetch ratio of major grade races at stadium")
     public Float majorGradeRate(String raceDate,String stadium) throws ParseException {
         return raceService.fetchMajorGradeRate(raceDate,stadium);
     }
 
+    @Hidden
     @GetMapping("/id")
     @Operation(summary = "Get race id", description = "Fetch race id from parameters")
     public String raceId(String raceDate, String stadium, Integer round) throws ParseException {
